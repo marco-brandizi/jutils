@@ -1,4 +1,4 @@
 # jutils Documentation
 
-## [README](../README.md)
-## [Javadocs](javadocs)
+## [README](https://github.com/marco-brandizi/jutils)
+## [Javadocs](javadocs/Summary)

@@ -7,6 +7,6 @@ if [[ "$TRAVIS_PULL_REQUEST" != "false" ]] || [[ "$TRAVIS_BRANCH" != 'master' ]]
 fi 
 	
 ./mk-javadocs.sh
-git remote set-url origin https://marco-brandizi:$REPO_PWD@github.com/ISA-tools/jUtils 
+git remote set-url origin https://marco-brandizi:$REPO_PWD@github.com/marco-brandizi/jutils 
 git commit -a -m 'Updating auto-generated files from Travis [ci skip]'
 git push origin HEAD:"$TRAVIS_BRANCH"

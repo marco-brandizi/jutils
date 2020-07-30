@@ -14,3 +14,5 @@ uk.ac.ebi.utils.threading.batchproc.collectors
 uk.ac.ebi.utils.threading.batchproc.processors
 uk.ac.ebi.utils.time
 uk.ac.ebi.utils.xml
+uk.ac.ebi.utils.xml.exceptions
+uk.ac.ebi.utils.xml.stax

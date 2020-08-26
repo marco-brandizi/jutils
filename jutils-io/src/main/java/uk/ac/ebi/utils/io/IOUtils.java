@@ -45,20 +45,24 @@ package uk.ac.ebi.utils.io;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static uk.ac.ebi.utils.exceptions.ExceptionUtils.throwEx;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
+import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -83,6 +87,7 @@ public class IOUtils
 		
 	/**
 	 * @see #readFile(String, Charset)
+	 * @deprecated use {@link StandardCharsets}
 	 */
 	public static String readFile ( String path, String charSet ) throws IOException {
 		return readFile ( path, Charset.forName ( charSet ) );
@@ -272,6 +277,34 @@ public class IOUtils
 		return readResource ( classLoader, path, UTF_8 );
 	}
 
+	
+	/**
+	 * Writes the string to the file and then closes it
+	 */	
+	public static void writeFile ( String path, String string, Charset charSet, boolean append ) throws IOException
+	{
+		try ( Writer out = new BufferedWriter ( new FileWriter ( path, charSet, append ), 1 << 20 ) )
+		{
+			out.write ( string );
+		}
+	}
+	
+	/**
+	 * Defaults to UTF8
+	 */
+	public static void writeFile ( String path, String string, boolean append ) throws IOException
+	{
+		writeFile ( path, string, UTF_8, false );
+	}
+	
+	/**
+	 * Defaults to UTF8, append = false
+	 */
+	public static void writeFile ( String path, String string ) throws IOException
+	{
+		writeFile ( path, string, false );
+	}
+	
 	
 	/**
 	 * Reads the input stream and returns an hash for it, based on the algorithm passed as parameter. algorithm 

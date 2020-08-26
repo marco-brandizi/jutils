@@ -13,6 +13,7 @@
   * More exceptions added to `uk.ac.ebi.utils.exceptions`.
   * More variants added to `IOUtils.readFiles()`.
   * `uk.ac.ebi.utils.xml.stax.StaxUtils` added.
+  * (jutils-io) Adding serialization and string/file writing utils.
 
 ## 9.1.1-SNAPSHOT
   * More variants added to `IOUtils.readFiles()`

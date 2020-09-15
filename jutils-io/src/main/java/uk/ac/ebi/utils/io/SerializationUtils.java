@@ -17,7 +17,7 @@ import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.exceptions.UncheckedFileNotFoundException;
 
 /**
- * Simple wrappers for the correspong 
+ * Object serialisation/unserialisation utils that work with IO streams.
  *
  * @author brandizi
  * <dl><dt>Date:</dt><dd>26 Aug 2020</dd></dl>

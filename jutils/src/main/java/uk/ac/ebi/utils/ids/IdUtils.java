@@ -27,15 +27,9 @@ public class IdUtils
 	/**
 	 * This is needed by {@link #createCompactUUID()}, to convert binary UUIDs into BASE64 strings.
 	 */
-	private static ThreadLocal<ByteBuffer> uuidBuffer = new ThreadLocal<ByteBuffer> () 
-	{
-		@Override
-		protected ByteBuffer initialValue ()
-		{
-			return ByteBuffer.allocate ( 2 * Long.SIZE / 8 );
-		}		
-	};
-	
+	private static ThreadLocal<ByteBuffer> uuidBuffer = 
+		ThreadLocal.withInitial ( () -> ByteBuffer.allocate ( 2 * Long.SIZE / 8 ) ); 
+				
 	
 	/**
 	 * @return an UUID-based new unique identifier, which is also turned into a readable and size-optimised string.

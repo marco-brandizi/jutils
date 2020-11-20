@@ -47,6 +47,8 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.UncheckedIOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Optional;
 
 import javax.xml.namespace.QName;
@@ -86,14 +88,38 @@ public class XPathReader
 	}
 
 	public XPathReader ( InputStream xmlStream ) {
-		this ( new InputSource ( xmlStream ) );
+		init ( new InputSource ( xmlStream ) );
 	}
 
 	public XPathReader ( String xmlString ) {
 		this ( new StringReader ( xmlString ) );
 	}
+
+	public XPathReader ( Path xmlPath )
+	{
+		try
+		{
+			init ( Files.newInputStream ( xmlPath ) );
+		}
+		catch ( IOException ex )
+		{
+			ExceptionUtils.throwEx ( 
+				UncheckedIOException.class, ex, "Error while trying to open '%s' : %s", xmlPath.getFileName (), ex.getMessage () 
+			);
+		}
+	}
 	
 	public XPathReader ( InputSource xmlSource )
+	{
+		init ( xmlSource );
+	}
+
+	private void init ( InputStream xmlStream )
+	{
+		init ( new InputSource ( xmlStream ) );
+	}
+	
+	private void init ( InputSource xmlSource )
 	{
 		try
 		{

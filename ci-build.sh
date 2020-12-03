@@ -22,4 +22,4 @@ fi
 git remote set-url origin https://marco-brandizi:$GITHUB_TOKEN@github.com/marco-brandizi/jutils 
 git commit -a -m "Updating auto-generated files from CI $ci_skip_tag"
 #git push origin HEAD:"$TRAVIS_BRANCH"
-git push
+git push --author '[ci job]'

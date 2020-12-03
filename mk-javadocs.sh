@@ -14,7 +14,7 @@ do
 	echo -e "\n\n\tProcessing '$mod'\n"
 	rm -Rf "$JAVADOC_REL_PATH/$mod"
 	cd "$mod"
-	mvn javadoc:javadoc -DreportOutputDirectory="../$JAVADOC_REL_PATH"
+	mvn javadoc:javadoc -DreportOutputDirectory="../$JAVADOC_REL_PATH" --no-transfer-progress --batch-mode
 	cd ..
 done
 

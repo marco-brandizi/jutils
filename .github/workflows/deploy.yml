@@ -31,6 +31,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{github.token}}
         BRANDIZI_REPO_USER: ${{secrets.BRANDIZI_REPO_USER}}
+        BRANDIZI_REPO_PWD: ${{secrets.BRANDIZI_REPO_PWD}}
         CI_BRANCH: ${{github.head_ref}}
         CI_PULL_REQUEST: ${{github.event.number}}
                  

@@ -17,4 +17,3 @@ project is now the jutils/ module/folder, some more specific components were mov
 their own modules (include them in place of jutils, if you need their functionality, the core dependency will be 
 pulled up automatically).  
 
-_test_

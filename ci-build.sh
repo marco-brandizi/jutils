@@ -10,8 +10,6 @@ export GIT_BRANCH=`git branch --show-current`
 
 mvn deploy --settings maven-settings.xml  --no-transfer-progress --batch-mode
 
-#if [[ ! -z "$CI_PULL_REQUEST" ]] || [[ "$GIT_BRANCH" != 'master' ]]; then
-# Should catch PR branches too
 if [[ ! -z "$CI_PULL_REQUEST" ]] || [[ "$GIT_BRANCH" != 'master' ]]; then
 	echo "PR: '$CI_PULL_REQUEST', BRANCH: '$GIT_BRANCH'"
 	echo -e "\nThis isn't main/master, skipping Javadoc\n"

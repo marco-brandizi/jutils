@@ -6,15 +6,20 @@ if [[ `git log -1 --pretty=format:"%s"` =~ "$ci_skip_tag" ]]; then
 	exit
 fi
 
+export GIT_BRANCH=`git branch --show-current`
+
 mvn deploy --settings maven-settings.xml  --no-transfer-progress --batch-mode
 
-if [[ ! -z "$CI_PULL_REQUEST" ]] || [[ "$CI_BRANCH" != 'master' ]]; then
-	echo "PR: '$CI_PULL_REQUEST', BRANCH: '$CI_BRANCH'"
-	echo -e "\nThis isn't main-repo/master, skipping Javadoc\n"
+#if [[ ! -z "$CI_PULL_REQUEST" ]] || [[ "$GIT_BRANCH" != 'master' ]]; then
+# Should catch PR branches too
+if [[ ! -z "$CI_PULL_REQUEST" ]] || [[ "$GIT_BRANCH" != 'master' ]]; then
+	echo "PR: '$CI_PULL_REQUEST', BRANCH: '$GIT_BRANCH'"
+	echo -e "\nThis isn't main/master, skipping Javadoc\n"
 	exit
 fi 
 	
 ./mk-javadocs.sh
 git remote set-url origin https://marco-brandizi:$GITHUB_TOKEN@github.com/marco-brandizi/jutils 
 git commit -a -m "Updating auto-generated files from CI $ci_skip_tag"
-git push origin HEAD:"$TRAVIS_BRANCH"
+#git push origin HEAD:"$TRAVIS_BRANCH"
+git push

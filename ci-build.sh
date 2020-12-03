@@ -22,6 +22,6 @@ fi
 git config --global user.email "marco.brandizi@gmail.com"
 git config --global user.name "mbrandizi"
 git remote set-url origin https://marco-brandizi:$GITHUB_TOKEN@github.com/marco-brandizi/jutils 
-git commit -a -m "Updating auto-generated files from CI $ci_skip_tag"
+git commit -a -m "Updating auto-generated files from CI $ci_skip_tag" --author='[CI job]'
 #git push origin HEAD:"$TRAVIS_BRANCH"
-git push --author='[CI job]'
+git push

@@ -112,7 +112,7 @@ public interface OptionsMap extends Map<String, Object>
 	}
 	
 	/**
-	 * This is based on {@link OptionsMapWrapper}
+	 * This is based on {@link OptionsMapWrapper}.
 	 */
 	public static OptionsMap from ( Map<String, Object> base )
 	{
@@ -124,7 +124,7 @@ public interface OptionsMap extends Map<String, Object>
    */
 	public static OptionsMap from ( Properties base )
 	{
-		return new OptionsMapWrapper ( base );
+		return from ( base );
 	}
 
 	/**

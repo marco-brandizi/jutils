@@ -19,9 +19,8 @@ public class XStopWatch extends StopWatch
 	 */
 	public void resumeOrStart ()
 	{
-		if ( !isStarted () )
-			this.start ();
-		else if ( isStopped () ) {
+		if ( !isStarted () || isStopped () )
+		{
 			this.reset ();
 			this.start ();
 		}
@@ -83,6 +82,10 @@ public class XStopWatch extends StopWatch
 		}
 	}
 
+	/**
+	 * @see #trackNano(Runnable)
+	 * 
+	 */
 	public long track ( Runnable task ) {
 		return TimeUnit.NANOSECONDS.toMillis ( trackNano ( task ) );
 	}

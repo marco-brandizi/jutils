@@ -8,7 +8,7 @@ fi
 
 export GIT_BRANCH=`git branch --show-current`
 
-mvn deploy --settings maven-settings.xml  --no-transfer-progress --batch-mode
+mvn deploy --settings maven-settings.xml --no-transfer-progress --batch-mode
 
 # PRs are checked out in detach mode, so they haven't any branch, so this catches them too
 if [[ "$GIT_BRANCH" != 'master' ]]; then

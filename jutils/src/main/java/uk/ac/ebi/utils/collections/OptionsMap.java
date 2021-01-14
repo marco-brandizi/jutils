@@ -124,7 +124,7 @@ public interface OptionsMap extends Map<String, Object>
    */
 	public static OptionsMap from ( Properties base )
 	{
-		return from ( base );
+		return new OptionsMapWrapper ( base );
 	}
 
 	/**

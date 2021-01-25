@@ -16,6 +16,7 @@
 * `uk.ac.ebi.utils.xml.stax.StaxUtils` added.
 * (jutils-io) Adding serialization and string/file writing utils.
 * More exceptions added to `uk.ac.ebi.utils.exceptions`.
+* `LambdaUtils` added.
 
 
 ## 9.1.1-SNAPSHOT

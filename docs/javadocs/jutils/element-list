@@ -1,6 +1,7 @@
 uk.ac.ebi.utils.collections
 uk.ac.ebi.utils.exceptions
 uk.ac.ebi.utils.ids
+uk.ac.ebi.utils.lambda
 uk.ac.ebi.utils.memory
 uk.ac.ebi.utils.reflection
 uk.ac.ebi.utils.regex

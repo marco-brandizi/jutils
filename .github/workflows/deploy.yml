@@ -8,9 +8,6 @@ on:
   # build.sh uses CI_SCHEDULE_PERIOD to decide if there has been changes recently that actually need
   # a rebuild.
   #
-  #schedule:
-  #  m h d M wd(MON-SUN)
-  #- cron:  '0 7 * * *'
   workflow_dispatch:
     inputs:
       # These can be set when the build is invoked manually, from GH Actions.

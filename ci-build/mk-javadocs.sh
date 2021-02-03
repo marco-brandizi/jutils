@@ -7,7 +7,7 @@ set -e
 set -o pipefail
 
 export JAVADOC_REL_PATH=docs/javadocs
-cd "$(dirname $0)"
+cd "`dirname $0`/.."
 
 for mod in jutils jutils-io jutils-j2ee
 do

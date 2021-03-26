@@ -11,7 +11,7 @@
 * Class-based thread names in `uk.ac.ebi.utils.threading.batchproc.BatchProcessor`.
 * Helpers added to `uk.ac.ebi.utils.memory` to support the migration of the 
   now-deprecated `finalize()` method.
-* `OptionsMap` and its implementation added.  
+* `OptionsMap` and its default implementation added.  
 * More variants added to `IOUtils.readFiles()`.
 * `uk.ac.ebi.utils.xml.stax.StaxUtils` added.
 * (jutils-io) Adding serialization and string/file writing utils.

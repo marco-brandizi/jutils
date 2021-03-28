@@ -44,7 +44,7 @@ public abstract class CollectionBasedBatchProcessor
 	}
 	
 	/**
-	 * A shorthand for #getBatchCollector
+	 * A shorthand for {@link #getBatchCollector()}.{@link CollectionBatchCollector#setMaxBatchSize(long) setMaxBatchSize()}.
 	 */
 	public void setMaxBatchSize ( int maxBatchSize ) {
 		this.getBatchCollector ().setMaxBatchSize ( maxBatchSize );

@@ -1,11 +1,14 @@
 package uk.ac.ebi.utils.threading.batchproc.processors;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import uk.ac.ebi.utils.threading.batchproc.ItemizedBatchProcessor;
 import uk.ac.ebi.utils.threading.batchproc.SizedBatchCollector;
 import uk.ac.ebi.utils.threading.batchproc.collectors.CollectionBatchCollector;
+import uk.ac.ebi.utils.threading.batchproc.collectors.ListBatchCollector;
 
 /**
  * An {@link ItemizedBatchProcessor item-based batch processor} that is based on Java collection batches.
@@ -38,5 +41,12 @@ public abstract class CollectionBasedBatchProcessor
 	 */
 	public CollectionBasedBatchProcessor () {
 		super ();
+	}
+	
+	/**
+	 * A shorthand for #getBatchCollector
+	 */
+	public void setMaxBatchSize ( int maxBatchSize ) {
+		this.getBatchCollector ().setMaxBatchSize ( maxBatchSize );
 	}
 }

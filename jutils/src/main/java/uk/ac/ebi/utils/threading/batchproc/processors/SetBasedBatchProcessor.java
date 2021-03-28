@@ -22,7 +22,7 @@ public class SetBasedBatchProcessor<E, BJ extends Consumer<Set<E>>>
 	public SetBasedBatchProcessor ( int maxBatchSize )
 	{
 		this ();
-		this.getBatchCollector ().setMaxBatchSize ( maxBatchSize );
+		this.setMaxBatchSize ( maxBatchSize );
 	}
 	
 	public SetBasedBatchProcessor () {

@@ -22,7 +22,7 @@ public class ListBasedBatchProcessor<E, BJ extends Consumer<List<E>>>
 	public ListBasedBatchProcessor ( int maxBatchSize )
 	{
 		this ();
-		this.getBatchCollector ().setMaxBatchSize ( maxBatchSize );
+		this.setMaxBatchSize ( maxBatchSize );
 	}
 	
 	public ListBasedBatchProcessor () {

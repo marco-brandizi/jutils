@@ -5,6 +5,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.BiConsumer;
 
+import uk.ac.ebi.utils.threading.fakelocks.FakeReadWriteLock;
 import uk.org.lidalia.slf4jext.Level;
 import uk.org.lidalia.slf4jext.Logger;
 import uk.org.lidalia.slf4jext.LoggerFactory;
@@ -31,7 +32,11 @@ public class ProgressLogger
 		(oldProgress, newProgress) -> log.log ( loggingLevel, logMessageTemplate, newProgress );
 
 	
-	private ReadWriteLock lock = new ReentrantReadWriteLock ();
+	private ReadWriteLock lock;
+	
+	{
+		this.setIsThreadSafe ( false );
+	}
 		
 	public ProgressLogger ( String logMessageTemplate, long progressResolution )
 	{
@@ -168,6 +173,18 @@ public class ProgressLogger
 		return progress;
 	}
 
+	/**
+	 * Tells us that progress updates will be thread-safe, so that we don't have to manage synchronisation and 
+	 * its performance overhead. Default is false, this is typically used in multi-thread applications.
+	 *  
+	 * <b>WARNING</b>: do I need to tell you? 
+	 */
+	public void setIsThreadSafe ( boolean isThreadSafe )
+	{
+		this.lock = isThreadSafe ? new FakeReadWriteLock () : new ReentrantReadWriteLock ();
+	}
+	
+	
 	/**
 	 * <p>This is invoked when the progress reaches a multiple of {@link #getProgressResolution()}, as per
 	 * {@link #update(long)} implementation. The bi-consumer receives the before and after-update progresses so far.</p>

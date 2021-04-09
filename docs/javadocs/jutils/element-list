@@ -13,6 +13,7 @@ uk.ac.ebi.utils.threading
 uk.ac.ebi.utils.threading.batchproc
 uk.ac.ebi.utils.threading.batchproc.collectors
 uk.ac.ebi.utils.threading.batchproc.processors
+uk.ac.ebi.utils.threading.fakelocks
 uk.ac.ebi.utils.time
 uk.ac.ebi.utils.xml
 uk.ac.ebi.utils.xml.exceptions

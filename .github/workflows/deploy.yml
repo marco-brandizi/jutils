@@ -26,7 +26,6 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    environment: default
 
     steps:
     - name: Code checkout

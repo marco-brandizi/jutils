@@ -1,8 +1,3 @@
-if [[ -z "$TEST_SECRET" ]]; then
-	echo "NO TEST SECRET"
-	exit 1
-fi
-
 [[ -z "$SECRETS_GIST_TOKEN" ]] && return
 
 echo -e "\n\n\tDownloading credentials\n"

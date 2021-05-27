@@ -7,11 +7,14 @@ import java.util.concurrent.locks.Lock;
 import uk.ac.ebi.utils.runcontrol.ProgressLogger;
 
 /**
- * A fake lock, which doesn't actually locking anything.
+ * A fake lock, which doesn't actually lock anything.
  * 
- * This can be a quick replacement for code that you're sure you'll be use in a single thread.
- * By doing such a replacement, you'll improve in performance.
+ * This can be a quick/transparent replacement for code where thread safety is optional and the invoker can decide
+ * if it needs it or not.
  * 
+ * By using this fake lock where you are sure you don't need to manage concurrency, you'll improve in performance.
+ * without having to change code that is based on locks.
+ *  
  * @see ProgressLogger
  *
  * @author brandizi

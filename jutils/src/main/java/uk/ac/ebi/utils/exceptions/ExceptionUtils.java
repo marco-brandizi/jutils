@@ -2,6 +2,9 @@ package uk.ac.ebi.utils.exceptions;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Optional;
+
+import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.reflect.ConstructorUtils;
 
@@ -17,12 +20,53 @@ public class ExceptionUtils
 	private ExceptionUtils () {}
 	
 	/**
-	 * Gets the root cause of an exception.
+	 * Gets the root cause of an exception. To do that, it trace back the hierarchy of the exception's 
+	 * {@link Throwable#getCause() causes}, until it finds an exception that has no upper cause.
+	 * 
+	 * Eventually, it returns the first exception that has no cause attached and hence it always returns
+	 * a non-null result.
+	 * 
+	 * @throws NullPointerException if ex is null.
+	 * 
 	 */
 	public static Throwable getRootCause ( Throwable ex )
 	{
+		if ( ex == null ) throw new NullPointerException ( "Cannot compute the root cause of a null exception" );
+				
 		for ( Throwable cause; ; ex = cause )
 			if ( ( cause = ex.getCause () ) == null ) return ex;
+	}
+	
+	/**
+	 * Goes through the {@link Throwable#getCause() exception's hierarchy} until it finds one that has a non null
+	 * {@link Throwable#getMessage() message}.
+	 * 
+	 * This might return the initial exception itself. If none of the exceptions in the exception hierarchy has a 
+	 * non-null message, the method returns null.
+	 * 
+	 * @throws NullPointerException if ex is null.
+	 * 
+	 */
+	public static Throwable getSignificantException ( Throwable ex )
+	{
+		if ( ex == null ) throw new NullPointerException ( "Cannot compute the significant exception for a null exception" );
+
+		for ( ; ex != null; ex = ex.getCause () )
+			if ( ex.getMessage () != null ) return ex;
+		
+		return null;
+	}
+	
+	/**
+	 * Takes the result that {@link #getSignificantException(Throwable)} returns and then
+	 * returns its {@link Throwable#getMessage()}. Returns null if the significant exception is null.
+	 * 
+	 */
+	public static String getSignificantMessage ( Throwable ex )
+	{
+		return Optional.ofNullable ( getSignificantException ( ex ) )
+		.map ( Throwable::getMessage )
+		.orElse ( null );
 	}
 	
 	

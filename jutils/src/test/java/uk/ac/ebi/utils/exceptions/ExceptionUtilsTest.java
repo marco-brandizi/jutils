@@ -2,6 +2,8 @@ package uk.ac.ebi.utils.exceptions;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static uk.ac.ebi.utils.exceptions.ExceptionUtils.getSignificantException;
+import static uk.ac.ebi.utils.exceptions.ExceptionUtils.getSignificantMessage;
 
 import java.io.IOException;
 
@@ -55,7 +57,7 @@ public class ExceptionUtilsTest
 	}
 	
 	@Test
-	public void testExceptionWithoutCause ()
+	public void testBuildExCauselessEx ()
 	{
 		NumberFormatException ex = new NumberFormatException ( "Exception that doesn't accept a cause" );
 		String msgTpl = "Parent Exception. Child message is: %s";
@@ -65,5 +67,20 @@ public class ExceptionUtilsTest
 		
 		assertNull ( "Cause isn't null!", parentEx.getCause () );
 		assertEquals ( "Wrong parent's messsage!", String.format ( msgTpl, ex.getMessage () ), parentEx.getMessage () );
+	}
+	
+	@Test
+	public void testGetSignificantException ()
+	{
+		var msg = "I've a message!";
+		var ex1 = new Exception ( "I've a message!" );
+		var ex2 = new Exception ( null, ex1 );
+		var ex3 = new Exception ( null, ex2 );
+		
+		assertEquals ( "Wrong ex fetched by testGetSignificantException()", ex1, getSignificantException ( ex3 ) );
+		assertEquals ( "Wrong message fetched by testGetSignificantException()", msg, getSignificantMessage ( ex3 ) );
+		
+		var exNull = new Exception ( null, new Exception ( (String) null ) );
+		assertNull ( "getSignificantException() for null didn't work!", getSignificantException ( exNull ) );
 	}
 }

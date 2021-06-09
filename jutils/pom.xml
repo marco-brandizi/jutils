@@ -77,16 +77,21 @@
 			drag too much stuff with them. You need to declare these dependencies in your project in order
 			to use the jutils functions related to them.
 			
-			If a jutils package make use of any optional dependency, it has the prefix 
-			uk.ac.ebi.utils.opt.* 
+			For each optional dependency declared here, jutils packages that requires them are listed. 
+			You typically need the dependency for sub-packages as well.
 			
-			A jutils package lists all the optional dependencies it needs in its package-info.java
-			file. Moreover, usually the artifactId is reused as base name for the jutils package.
+			If a jutils package make use of any optional dependency, it has the prefix 
+			uk.ac.ebi.utils.opt.* Moreover, usually the artifactId is reused as base name for the 
+			jutils package.
 			
 			The above rules should make it easy to match jutils dependencies with optional 3rd-party dependencies
 			they rely upon when used.
 			
 			TODO: Use this approach to turn jutils back to a single package. 
+		-->
+		
+		<!-- Required by:
+			uk.ac.ebi.utils.opt.springweb
 		-->
 		<dependency>
 		  <groupId>org.springframework</groupId>

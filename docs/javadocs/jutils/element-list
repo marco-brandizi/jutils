@@ -3,6 +3,8 @@ uk.ac.ebi.utils.exceptions
 uk.ac.ebi.utils.ids
 uk.ac.ebi.utils.lambda
 uk.ac.ebi.utils.memory
+uk.ac.ebi.utils.opt.springweb
+uk.ac.ebi.utils.opt.springweb.exceptions
 uk.ac.ebi.utils.reflection
 uk.ac.ebi.utils.regex
 uk.ac.ebi.utils.runcontrol

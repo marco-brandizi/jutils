@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.google.common.base.Functions;
@@ -87,4 +88,16 @@ public class OptionsMapTest
 		assertEquals ( "Wrong opt.obj conversion", defaultVal, opts.getOpt ( "opt.foo", defaultVal, Functions.identity () ) );
 	}
 	
+	@Test
+	public void testCreateEmpty ()
+	{
+		var opts = OptionsMap.create ();
+		assertTrue ( "Empty options not empty!", opts.isEmpty () );
+
+		String fooName = "fooOpt", fooValue = "fooValue";
+		
+		opts.put ( fooName, fooValue );
+		assertEquals ( "Entry not added!", 1, opts.size () );
+		assertEquals ( "Wrong option retrieved!", fooValue, opts.get ( fooName ) );
+	}
 }

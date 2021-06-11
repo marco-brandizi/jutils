@@ -1,6 +1,7 @@
 package uk.ac.ebi.utils.collections;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -19,6 +20,14 @@ import java.util.function.Function;
 public class OptionsMapWrapper implements OptionsMap
 {
 	private final Map<String, Object> base;
+
+	/**
+	 * Creates an options map with an empty {@link HashMap} as its base.
+	 */
+	public OptionsMapWrapper ()
+	{
+		this ( new HashMap<> () );
+	}
 
 	public OptionsMapWrapper ( Map<String, Object> base )
 	{

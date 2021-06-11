@@ -126,6 +126,13 @@ public interface OptionsMap extends Map<String, Object>
 	{
 		return new OptionsMapWrapper ( base );
 	}
+	
+	/**
+	 * This is based on {@link OptionsMapWrapper}.
+	 */
+	public static OptionsMap create () {
+		return new OptionsMapWrapper ();
+	}
 
 	/**
 	 * This is simply the chaining of {@link #from(Map)} and {@link Collections#unmodifiableMap(Map)}, ie, returns

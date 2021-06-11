@@ -1,6 +1,7 @@
 package uk.ac.ebi.utils.exceptions;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static uk.ac.ebi.utils.exceptions.ExceptionUtils.getSignificantException;
 import static uk.ac.ebi.utils.exceptions.ExceptionUtils.getSignificantMessage;
@@ -57,15 +58,15 @@ public class ExceptionUtilsTest
 	}
 	
 	@Test
-	public void testBuildExCauselessEx ()
+	public void testBuildExCauseWithoutConstructor ()
 	{
-		NumberFormatException ex = new NumberFormatException ( "Exception that doesn't accept a cause" );
+		NumberFormatException ex = new NumberFormatException ( "Exception that doesn't accept a cause in its constructor" );
 		String msgTpl = "Parent Exception. Child message is: %s";
 		NumberFormatException parentEx = ExceptionUtils.buildEx (
 			ex, msgTpl, ex.getMessage ()
 		);
 		
-		assertNull ( "Cause isn't null!", parentEx.getCause () );
+		assertNotNull ( "Cause is null!", parentEx.getCause () );
 		assertEquals ( "Wrong parent's messsage!", String.format ( msgTpl, ex.getMessage () ), parentEx.getMessage () );
 	}
 	

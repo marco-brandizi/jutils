@@ -4,8 +4,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
 
-import javax.annotation.Nullable;
-
 import org.apache.commons.lang3.reflect.ConstructorUtils;
 
 /**
@@ -79,12 +77,6 @@ public class ExceptionUtils
 	 * 
 	 * The new exception is assigned a cause, if the corresponding parameter is non-null.
 	 * 
-	 * <b>WARNING</b>: if exType hasn't a proper constructor, either accepting a message + cause, or just a message, 
-	 * a constructor with fewer parameters is selected instead (eg, accepting just the message, or without parameters 
-	 * at all). This means that you might see exceptions created by this method that DON'T contain a parent cause.
-	 * In such cases, you should a different wrapping exception (possibly write code to define a new one, eg, as we've 
-	 * done for {@link CausalNumberFormatException}).
-	 * 
 	 */
 	public static <E extends Throwable> E buildEx (
 		Class<E> exType, Throwable cause, String messageTemplate, Object... params
@@ -93,18 +85,17 @@ public class ExceptionUtils
 		try
 		{
 			String msg = String.format ( messageTemplate, params );
-						
-			// Not all exceptions accept an underlining cause
-			if ( cause != null ) {
-				Constructor<E> constructor = ConstructorUtils.getMatchingAccessibleConstructor ( exType, String.class, cause.getClass () );
-				if ( constructor != null ) return constructor.newInstance ( msg, cause ); 
-			}
-			
-			Constructor<E> constructor = ConstructorUtils.getMatchingAccessibleConstructor ( exType, String.class );
-			if ( constructor != null ) return constructor.newInstance ( msg ); 
 
-			// Maybe some don't even accept a message? Unlikely, but just in case. 
-			return ConstructorUtils.invokeConstructor ( exType );
+			Constructor<E> constructor = ConstructorUtils.getMatchingAccessibleConstructor ( exType, String.class );
+			
+			E result = constructor == null 
+				// Maybe some don't even accept a message? Unlikely, but just in case						
+				? ConstructorUtils.invokeConstructor ( exType )
+				: constructor.newInstance ( msg );
+			
+			if ( cause != null ) result.initCause ( cause );
+			
+			return result;
 		}
 		catch ( NoSuchMethodException | SecurityException | InstantiationException 
 						| IllegalAccessException | IllegalArgumentException | InvocationTargetException ex )

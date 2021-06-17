@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import uk.ac.ebi.utils.time.XStopWatch;
 
 /**
- * An executor logs statistics on the executions it receive to run.
+ * An executor that logs statistics on the executions it receives to run.
  *
  * @author brandizi
  * <dl><dt>Date:</dt><dd>5 Oct 2015</dd></dl>

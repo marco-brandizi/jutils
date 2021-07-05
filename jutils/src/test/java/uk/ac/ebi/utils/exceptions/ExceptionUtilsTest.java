@@ -7,6 +7,7 @@ import static uk.ac.ebi.utils.exceptions.ExceptionUtils.getSignificantException;
 import static uk.ac.ebi.utils.exceptions.ExceptionUtils.getSignificantMessage;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -43,6 +44,23 @@ public class ExceptionUtilsTest
 		Assert.assertTrue ( "Unexpected cause!", ex.getCause () instanceof IOException );
 	}
 
+	@Test
+	public void testBuildExCauseUncheckedEx ()
+	{
+		var originalEx = new IOException ( "Original I/O error" );
+		UncheckedIOException ex = ExceptionUtils.buildEx ( 
+			UncheckedIOException.class, originalEx, 
+			"A wrapped I/O exception: %s",
+			originalEx.getMessage ()
+		);
+		
+		Assert.assertTrue ( "Unexpected message (wrapper)!", ex.getMessage ().contains ( "A wrapped I/O exception" ) );
+		Assert.assertTrue ( "Unexpected message (original)!", ex.getMessage ().contains ( originalEx.getMessage () ) );
+		Assert.assertEquals ( "Unexpected cause!", originalEx, ex.getCause () );
+	}
+	
+	
+	
 	@Test ( expected = Exception.class )
 	public void testThrowEx () throws Exception
 	{

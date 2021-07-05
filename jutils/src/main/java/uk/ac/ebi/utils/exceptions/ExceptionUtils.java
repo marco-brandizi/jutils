@@ -82,20 +82,44 @@ public class ExceptionUtils
 		Class<E> exType, Throwable cause, String messageTemplate, Object... params
 	)
 	{		
+		String msg = "<null>"; 
+		
 		try
 		{
-			String msg = String.format ( messageTemplate, params );
-
+			msg = String.format ( messageTemplate, params );
+			
+			if ( cause != null )
+			{
+				// Some exception wrappers like UncheckedIOException have constructors with mandatory cause
+				Constructor<E> constructor = ConstructorUtils.getMatchingAccessibleConstructor ( exType, String.class, cause.getClass () );
+				if ( constructor != null ) return constructor.newInstance ( msg, cause );
+				
+				constructor = ConstructorUtils.getMatchingAccessibleConstructor ( exType, String.class );
+				if ( constructor != null )
+				{
+					E result = constructor.newInstance ( msg );
+					if ( result.getCause () == null ) result.initCause ( cause );
+					return result;
+				}
+					
+				// Maybe some don't even accept a message? Unlikely, but just in case
+				constructor = ConstructorUtils.getMatchingAccessibleConstructor ( exType, cause.getClass () );
+				if ( constructor != null )return constructor.newInstance ( cause );
+				
+				// Neither a message, nor a cause?! Hope it will never happen
+				E result = ConstructorUtils.invokeConstructor ( exType );
+				if ( result.getCause () == null ) result.initCause ( cause );
+				return result;
+			}
+			
+			// Now, all the cases without a cause
+			//
+			
 			Constructor<E> constructor = ConstructorUtils.getMatchingAccessibleConstructor ( exType, String.class );
+			if ( constructor != null ) return constructor.newInstance ( msg );
 			
-			E result = constructor == null 
-				// Maybe some don't even accept a message? Unlikely, but just in case						
-				? ConstructorUtils.invokeConstructor ( exType )
-				: constructor.newInstance ( msg );
-			
-			if ( cause != null ) result.initCause ( cause );
-			
-			return result;
+			// Again, the unlikely case where it doesn't accept a message					
+			return ConstructorUtils.invokeConstructor ( exType );
 		}
 		catch ( NoSuchMethodException | SecurityException | InstantiationException 
 						| IllegalAccessException | IllegalArgumentException | InvocationTargetException ex )
@@ -104,7 +128,7 @@ public class ExceptionUtils
 				IllegalArgumentException.class,
 				ex,
 				"Error while throwing exception for the message \"%s\": %s",
-				messageTemplate,
+				msg,
 				ex.getMessage ()
 			);
 		}

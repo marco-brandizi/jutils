@@ -3,11 +3,10 @@ package uk.ac.ebi.utils.runcontrol;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import junit.framework.Assert;
 
 /**
  * @author brandizi

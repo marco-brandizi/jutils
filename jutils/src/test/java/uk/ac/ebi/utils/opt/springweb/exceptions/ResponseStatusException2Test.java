@@ -3,14 +3,11 @@ package uk.ac.ebi.utils.opt.springweb.exceptions;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 
 /**
- * TODO: comment me!
  *
  * @author brandizi
  * <dl><dt>Date:</dt><dd>9 Jun 2021</dd></dl>

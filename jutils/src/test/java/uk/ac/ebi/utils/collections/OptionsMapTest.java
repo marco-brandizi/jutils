@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.function.Function;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.google.common.base.Functions;

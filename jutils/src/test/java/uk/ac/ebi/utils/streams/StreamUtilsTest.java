@@ -8,7 +8,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import junit.framework.AssertionFailedError;
 
 /**
@@ -103,7 +103,7 @@ public class StreamUtilsTest
 	/**
 	 * Tests parallel result with uneven inputs.
 	 * 
-	 * This cannot work, because the split of arrays happen at e cut points and the tuple spliterator cannot 
+	 * This cannot work, because the split of arrays happen at the cut points and the tuple spliterator cannot 
 	 * split correctly from uneven underlining splittings.
 	 * 
 	 */

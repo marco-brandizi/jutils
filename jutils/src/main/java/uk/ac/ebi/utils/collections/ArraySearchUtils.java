@@ -2,6 +2,9 @@ package uk.ac.ebi.utils.collections;
 
 import java.util.Comparator;
 
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.ObjectUtils;
+
 /**
  * Utilities about searches over arrays.
  *
@@ -24,7 +27,8 @@ public class ArraySearchUtils
 	 * @param testValues the values that the target parameter has to be compared to
 	 * 
 	 */
-	public static <T> boolean isOneOf ( T value, Comparator<T> comparator, T... testValues )
+	@SafeVarargs
+	public static <T extends Comparable<? super T>> boolean isOneOf ( T value, Comparator<T> comparator, T... testValues )
 	{
 		if ( testValues == null ) return false;
 		for ( T testValue: testValues ) 
@@ -36,16 +40,10 @@ public class ArraySearchUtils
 	 * A variant of {@link #isOneOf(Object, Comparator, Object...)} that uses the natural comparison as comparator (i.e.
 	 * T.equals().
 	 */
-	public static <T> boolean isOneOf ( T value, T... testValues )
+	@SafeVarargs
+	public static <T extends Comparable<? super T>> boolean isOneOf ( T value, T... testValues )
 	{
-		return isOneOf ( value, new Comparator<T> () 
-			{
-				public int compare ( T o1, T o2 ) {
-					return o1 == null ? ( o2 == null ? 0 : -1 ) : o1.equals ( o2 ) ? 0 : -1;  
-				}
-			}, 
-			testValues 
-		);
+		return isOneOf ( value, (T o1, T o2) -> ObjectUtils.compare ( o1, o2 ), testValues );
 	}
 
 	/**
@@ -53,14 +51,11 @@ public class ArraySearchUtils
 	 * the '==' operator).
 	 * 
 	 */
-	public static <T> boolean isOneOfByIdentity ( T value, T... testValues )
+	public static <T extends Comparable<? super T>> boolean isOneOfByIdentity ( T value, T... testValues )
 	{
-		return isOneOf ( value, new Comparator<T> () 
-			{
-				public int compare ( T o1, T o2 ) {
-					return o1 == o2 ? 0 : -1;  
-				}
-			}, 
+		return isOneOf ( 
+			value, 
+			(o1, o2) -> o1 == o2 ? 0 : ObjectUtils.compare ( o1, o2 ),
 			testValues 
 		);
 	}

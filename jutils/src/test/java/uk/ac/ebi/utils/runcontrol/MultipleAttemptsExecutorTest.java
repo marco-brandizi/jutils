@@ -2,9 +2,8 @@ package uk.ac.ebi.utils.runcontrol;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Rule;
+import org.junit.Assert;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,9 +17,6 @@ import org.slf4j.LoggerFactory;
 public class MultipleAttemptsExecutorTest
 {
 	Logger log = LoggerFactory.getLogger ( this.getClass () );
-
-	@Rule
- 	public ExpectedException thrown = ExpectedException.none();
 	
 	int runCt = 0;
 	
@@ -79,14 +75,17 @@ public class MultipleAttemptsExecutorTest
 			2, 0, 1000, RuntimeException.class 
 		);
 
-		thrown.expect ( IllegalStateException.class );
-		executor.execute ( new Runnable() 
-		{
-			@Override
-			public void run () {
-				throw new IllegalStateException ( "On-purpose exception #" + (++runCt) );
-			}
-		});
+		Assert.assertThrows ( 
+			"Expected exception not thrown!",
+			IllegalStateException.class,
+			() -> executor.execute ( new Runnable() 
+			{
+				@Override
+				public void run () {
+					throw new IllegalStateException ( "On-purpose exception #" + (++runCt) );
+				}
+			})
+		);
 	}
 
 }

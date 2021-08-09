@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.junit.Assert;
-import junit.framework.AssertionFailedError;
 
 /**
  * Tests for {@link StreamUtils}.
@@ -107,7 +106,7 @@ public class StreamUtilsTest
 	 * split correctly from uneven underlining splittings.
 	 * 
 	 */
-	@Test ( expected = AssertionFailedError.class )
+	@Test ( expected = AssertionError.class )
 	@SuppressWarnings ( "unchecked" )
 	public void testTupleStreamParallelUnven ()
 	{		

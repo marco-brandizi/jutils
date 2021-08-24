@@ -83,7 +83,7 @@ public class XStopWatch extends StopWatch
 	}
 
 	/**
-	 * @see #trackNano(Runnable)
+	 * @see A wrapper of #trackNano(Runnable), which just converts the result to ms.
 	 * 
 	 */
 	public long track ( Runnable task ) {

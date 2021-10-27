@@ -5,4 +5,5 @@
 # These are downloaded by the CI
 /ci-build/build.sh
 /ci-build/install.sh
-/settings.xml # set by GH Actions
+# set by GH Actions
+/settings.xml

@@ -14,7 +14,7 @@
 	<parent>
 	  <groupId>uk.ac.ebi</groupId>
 	  <artifactId>jutils-pom</artifactId>
-  	<version>10.0RC</version>
+  	<version>10.0.1-SNAPSHOT</version>
 	</parent>
 
 	<dependencies>

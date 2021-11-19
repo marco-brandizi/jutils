@@ -25,6 +25,9 @@ public class DynamicRateExecutorTest
 	
 	private class TestExecutor extends DynamicRateExecutor
 	{
+		/**
+		 * Dummy criterion: regular rate until {@link #testTime}/2, then half of it until testTime
+		 */
 		@Override
 		protected double setNewRate () {
 			return 1d * timer.getTime () / testTime <= 0.5d ? rate : rate / 2;

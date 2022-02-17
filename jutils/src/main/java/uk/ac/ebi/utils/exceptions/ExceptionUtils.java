@@ -72,8 +72,8 @@ public class ExceptionUtils
 	 * Helper to ease the building of an exception and its message.
 	 *  
 	 * Builds an exception instance of exType, with the given message template instantiated with
-	 * the given paramenters. The message template is passed to {@link String#format(String, Object...)}, 
-	 * so you have to use the printf-style rules.
+	 * the given parameters. The message template is passed to {@link String#format(String, Object...)}, 
+	 * so you have to use the printf-style rules (eg, '%s' for a string parameter).
 	 * 
 	 * The new exception is assigned a cause, if the corresponding parameter is non-null.
 	 * 
@@ -104,7 +104,7 @@ public class ExceptionUtils
 					
 				// Maybe some don't even accept a message? Unlikely, but just in case
 				constructor = ConstructorUtils.getMatchingAccessibleConstructor ( exType, cause.getClass () );
-				if ( constructor != null )return constructor.newInstance ( cause );
+				if ( constructor != null ) return constructor.newInstance ( cause );
 				
 				// Neither a message, nor a cause?! Hope it will never happen
 				E result = ConstructorUtils.invokeConstructor ( exType );
@@ -162,8 +162,11 @@ public class ExceptionUtils
 	 * Note that Java will consider this method as throwing checked/unchecked exception code, depending on
 	 * the type of E.
 	 * 
-	 * Note that you cannot always use this to wrap the body of a function, since, if you do for a checked exception,
-	 * Java will think that you are not returning any value after the catch clause. 
+	 * Note that you cannot always use this to wrap the body of a function, since, in this case 
+	 * Java will not know that you're certainly throwing an exception and hence it will think 
+	 * that you are not returning any value after the catch clause that uses this method. If you are in this 
+	 * situation, use {@code throw buildEx (...)} instead.
+	 *  
 	 */
 	public static <E extends Throwable> void throwEx (
 		Class<E> exType, Throwable cause, String messageTemplate, Object... params

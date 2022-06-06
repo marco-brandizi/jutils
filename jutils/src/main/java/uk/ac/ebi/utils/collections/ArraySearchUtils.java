@@ -2,7 +2,6 @@ package uk.ac.ebi.utils.collections;
 
 import java.util.Comparator;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 
 /**

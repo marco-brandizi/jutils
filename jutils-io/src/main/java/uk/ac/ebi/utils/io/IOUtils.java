@@ -63,6 +63,8 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -87,24 +89,29 @@ public class IOUtils
 		
 	/**
 	 * @see #readFile(String, Charset)
-	 * @deprecated use {@link StandardCharsets}
+	 * @deprecated use {@link Files#readString(Path, Charset)} and {@link Charset#forName(String)}
 	 */
+	@Deprecated
 	public static String readFile ( String path, String charSet ) throws IOException {
 		return readFile ( path, Charset.forName ( charSet ) );
 	}
 
 	/**
-	 * A wrapper of {@link org.apache.commons.io.IOUtils#toString(InputStream, Charset)}, 
-	 * which opens an input stream from a file path.
-	 */	
+	 *
+	 * Opens an input stream from a file path.
+	 * @deprecated use {@link Files#readString(Path, Charset)}
+	 */
+	@Deprecated
 	public static String readFile ( String path, Charset charSet ) throws IOException {
-		return org.apache.commons.io.IOUtils.toString ( new FileInputStream ( path ), charSet );
+		return Files.readString ( Path.of ( path ), charSet );
 	}
 
 	
 	/**
 	 * Defaults to UTF-8
+	 * @deprecated use {@link Files#readString(Path)}
 	 */
+	@Deprecated
 	public static String readFile ( String path ) throws IOException { 
 		return readFile ( path, UTF_8 );
 	}
@@ -130,7 +137,7 @@ public class IOUtils
 		
 		String[] result = new String [ files.length ];
 		for ( int i = 0; i < files.length; i++ )
-			result [ i ] = readFile ( files [ i ].getAbsolutePath (), charSet );
+			result [ i ] = Files.readString ( files [ i ].toPath ().toAbsolutePath (), charSet );
 		return result;
 	}
 	

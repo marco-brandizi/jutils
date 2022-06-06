@@ -49,13 +49,6 @@
 	    <artifactId>junit</artifactId>
 	  </dependency>
 	  		
-		<dependency>
-		  <groupId>org.apache.httpcomponents</groupId>
-		  <artifactId>httpcomponents-core</artifactId>
-		  <type>pom</type>
-		  <version>4.4.4</version>
-		</dependency>
-
 		<!-- Little nice utility that improves exception handling --> 
 		<dependency>
 		  <groupId>com.machinezoo.noexception</groupId>
@@ -73,7 +66,7 @@
 		
 		
 		<!-- 
-			OPTIONAL dependencies. These are not so general, so we don't force jutils's client to
+			OPTIONAL dependencies. These are not so general, so we don't force jutils's clients to
 			drag too much stuff with them. You need to declare these dependencies in your project in order
 			to use the jutils functions related to them.
 			
@@ -99,6 +92,16 @@
 		  <version>5.3.18</version>
 		  <optional>true</optional>
 		</dependency>
+
+		<!-- Required by
+			uk.ac.ebi.utils.opt.net.exceptions
+		-->		
+		<dependency>
+		  <groupId>org.apache.httpcomponents</groupId>
+		  <artifactId>httpcore</artifactId>
+		  <version>4.4.15</version>
+		  <optional>true</optional>
+		</dependency>		
 
 	</dependencies>
 	    

@@ -3,7 +3,7 @@
 *If not otherwise specified, items refer to the base module (`jutils`)*. 
 
 ## 10.0.1-SNAPSHOT
-* Current snapshot.
+* More exceptions added to `uk.ac.ebi.utils.opt.net.exceptions`
 
 ## 10.0
 * **FROM NOW ON, JDK < 11 IS NO LONGER SUPPORTED**. jutils will possibly work with 1.8 for a

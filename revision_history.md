@@ -4,6 +4,7 @@
 
 ## 10.0.1-SNAPSHOT
 * More exceptions added to `uk.ac.ebi.utils.opt.net.exceptions`
+* `ExceptionUtils`, methods like `<buiild|throw>Ex()` are able to accept `$cause` in the message template.
 
 ## 10.0
 * **FROM NOW ON, JDK < 11 IS NO LONGER SUPPORTED**. jutils will possibly work with 1.8 for a

@@ -3,6 +3,7 @@ package uk.ac.ebi.utils.exceptions;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static uk.ac.ebi.utils.exceptions.ExceptionUtils.getSignificantException;
 import static uk.ac.ebi.utils.exceptions.ExceptionUtils.getSignificantMessage;
 
@@ -101,5 +102,17 @@ public class ExceptionUtilsTest
 		
 		var exNull = new Exception ( null, new Exception ( (String) null ) );
 		assertNull ( "getSignificantException() for null didn't work!", getSignificantException ( exNull ) );
+	}
+	
+	@Test
+	public void testCauseMessageInjection ()
+	{
+		var cause = new Exception ( "some weird error" );
+	
+		var ex = ExceptionUtils.buildEx ( RuntimeException.class, cause, "Something happened down here: $cause." );
+		assertTrue ( "$cause not replaced!", ex.getMessage ().contains ( "here: " + cause.getMessage () + "." ) );
+
+		ex = ExceptionUtils.buildEx ( RuntimeException.class, cause, "Something happened down here: ${cause}" );
+		assertTrue ( "${cause} not replaced!", ex.getMessage ().endsWith ( "here: " + cause.getMessage () ) );
 	}
 }

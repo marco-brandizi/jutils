@@ -72,8 +72,13 @@ public class ExceptionUtils
 	 * Helper to ease the building of an exception and its message.
 	 *  
 	 * Builds an exception instance of exType, with the given message template instantiated with
-	 * the given parameters. The message template is passed to {@link String#format(String, Object...)}, 
+	 * the given parameters.
+	 * 
+	 * The message template is passed to {@link String#format(String, Object...)}, 
 	 * so you have to use the printf-style rules (eg, '%s' for a string parameter).
+	 * 
+	 * Additionally, you can use {@code $cause} or <tt>${cause}</tt> to have the 
+	 * {@link Throwable#getMessage() cause's message} reported.  
 	 * 
 	 * The new exception is assigned a cause, if the corresponding parameter is non-null.
 	 * 
@@ -90,6 +95,8 @@ public class ExceptionUtils
 			
 			if ( cause != null )
 			{
+				msg = msg.replaceAll ( "(\\$cause|\\$\\{cause\\})", cause.getMessage () );
+				
 				// Some exception wrappers like UncheckedIOException have constructors with mandatory cause
 				Constructor<E> constructor = ConstructorUtils.getMatchingAccessibleConstructor ( exType, String.class, cause.getClass () );
 				if ( constructor != null ) return constructor.newInstance ( msg, cause );

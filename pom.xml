@@ -193,7 +193,9 @@
 			<optional>true</optional>			
 		</dependency>
 		
-		
+		<!-- Required by
+			uk.ac.ebi.utils.opt.orm.test.TestEntityMgrProvider
+		-->
 		<dependency>
 		  <groupId>org.hibernate.javax.persistence</groupId>
 		  <artifactId>hibernate-jpa-2.1-api</artifactId>

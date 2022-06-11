@@ -1,4 +1,4 @@
-package uk.ac.ebi.utils.opt.orm;
+package uk.ac.ebi.utils.orm;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

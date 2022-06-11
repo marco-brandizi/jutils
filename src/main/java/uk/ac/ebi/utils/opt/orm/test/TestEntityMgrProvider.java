@@ -1,4 +1,4 @@
-package uk.ac.ebi.utils.orm.test;
+package uk.ac.ebi.utils.opt.orm.test;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;

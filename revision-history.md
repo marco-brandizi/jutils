@@ -6,7 +6,7 @@
 * **Big refactoring**: previous split into multiple jutils-xxx modules removed, 
   now there is only one with optional Maven dependencies (see the POM).
 * More exceptions added to `uk.ac.ebi.utils.opt.net.exceptions`
-* `ExceptionUtils`, methods like `<buiild|throw>Ex()` are able to accept `$cause` in the message template.
+* `ExceptionUtils`, methods like `<build|throw>Ex()` are able to accept `$cause` in the message template.
 
 ## 10.0
 * **FROM NOW ON, JDK < 11 IS NO LONGER SUPPORTED**. jutils will possibly work with 1.8 for a

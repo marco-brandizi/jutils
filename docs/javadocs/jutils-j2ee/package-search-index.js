@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"uk.ac.ebi.utils.orm"},{"l":"uk.ac.ebi.utils.sql"},{"l":"uk.ac.ebi.utils.test.junit"}]

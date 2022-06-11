@@ -1,12 +1,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	
   <modelVersion>4.0.0</modelVersion>
-  
+
   <groupId>uk.ac.ebi</groupId>
-  <artifactId>jutils-pom</artifactId>
-  <version>10.0.1-SNAPSHOT</version>
-  <packaging>pom</packaging>
-    
+  <artifactId>jutils</artifactId>
+  <version>11.0-SNAPSHOT</version>
+  
+  
   <name>JUtils - Miscellanea of Java Utils</name>
   <description>
   	General utility code for several purposes.
@@ -37,117 +37,172 @@
   <scm>
   	<developerConnection>scm:git:https://github.com/marco-brandizi/jutils.git</developerConnection>
     <tag>HEAD</tag>
+    
   </scm>   
-
-
-	<dependencyManagement>
-		<dependencies>
+  
+	<dependencies>
+	
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
 		
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-api</artifactId>
-				<version>${slf4j.version}</version>
-			</dependency>
+		<!-- The policy is to use these bridges where needed, due to transitive deps -->			
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+		
+		<!-- An SLF4J extension, which allows for log levels (http://projects.lidalia.org.uk/lidalia-slf4j-ext/) -->
+		<dependency>
+		  <groupId>uk.org.lidalia</groupId>
+		  <artifactId>lidalia-slf4j-ext</artifactId>
+		  <version>1.0.0</version>
+		  <exclusions>
+		  	<exclusion>
+		  		<groupId>com.google.guava</groupId>
+		  		<artifactId>guava</artifactId>
+		  	</exclusion>
+		  </exclusions>
+		</dependency>
 
-			<!-- The policy is to use these bridges where needed, due to transitive deps -->			
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>jcl-over-slf4j</artifactId>
-				<version>${slf4j.version}</version>
-			</dependency>
-			
-			<!-- An SLF4J extension, which allows for log levels (http://projects.lidalia.org.uk/lidalia-slf4j-ext/) -->
-			<dependency>
-			  <groupId>uk.org.lidalia</groupId>
-			  <artifactId>lidalia-slf4j-ext</artifactId>
-			  <version>1.0.0</version>
-			  <exclusions>
-			  	<exclusion>
-			  		<groupId>com.google.guava</groupId>
-			  		<artifactId>guava</artifactId>
-			  	</exclusion>
-			  </exclusions>
-			</dependency>
-	
-			<dependency>
-				<groupId>org.apache.commons</groupId>
-				<artifactId>commons-lang3</artifactId>
-				<version>3.9</version>
-			</dependency>
-	
-			<dependency>
-				<groupId>org.apache.commons</groupId>
-				<artifactId>commons-text</artifactId>
-				<version>1.8</version>
-			</dependency>	
-	
-			<dependency>
-				<groupId>commons-io</groupId>
-				<artifactId>commons-io</artifactId>
-				<version>2.8.0</version>
-			</dependency>
-	
-		  <dependency>
-		    <groupId>junit</groupId>
-		    <artifactId>junit</artifactId>
-		    <version>4.13.1</version>
-		  </dependency>
-		  
-		  <!-- It seems that currently there is no official Oracle release of JPA 2.0, so we need to rely on some implementor  -->
-			<dependency>
-				<groupId>org.hibernate.javax.persistence</groupId>
-				<artifactId>hibernate-jpa-2.1-api</artifactId>
-				<version>1.0.0.Final</version>
-			</dependency>
-			
-			<dependency>
-			  <groupId>com.google.guava</groupId>
-			  <artifactId>guava</artifactId>
-				<version>30.1.1-jre</version>
-			</dependency>		
+		<!-- Lidalia uses this, but an older version.  -->
+		<dependency>
+		  <groupId>com.google.guava</groupId>
+		  <artifactId>guava</artifactId>
+			<version>30.1.1-jre</version>
+		</dependency>		
 
-			<dependency>
-				<groupId>org.apache.httpcomponents</groupId>
-				<artifactId>httpclient</artifactId>
-				<version>4.5.13</version>
-				<exclusions>
-					<exclusion>
-						<groupId>commons-logging</groupId>
-						<artifactId>commons-logging</artifactId>
-					</exclusion>
-				</exclusions>
-			</dependency>
-	
-			<dependency>
-				<groupId>org.json</groupId>
-				<artifactId>json</artifactId>
-				<version>20180130</version>
-			</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.9</version>
+		</dependency>
+		
+		<dependency>
+		  <groupId>org.apache.commons</groupId>
+		  <artifactId>commons-text</artifactId>
+		  <version>1.8</version>
+		</dependency>		
 
-			<dependency>
-			  <groupId>com.machinezoo.noexception</groupId>
-			  <artifactId>noexception</artifactId>
-			  <version>1.3.2</version>
-			</dependency>
-	
-			<dependency>
-				<groupId>one.util</groupId>
-				<artifactId>streamex</artifactId>
-				<version>0.7.2</version>
-			</dependency>	
+	  <dependency>
+	    <groupId>junit</groupId>
+	    <artifactId>junit</artifactId>
+	    <version>4.13.1</version>
+	  </dependency>
+	  		
+		<!-- Little nice utility that improves exception handling --> 
+		<dependency>
+		  <groupId>com.machinezoo.noexception</groupId>
+		  <artifactId>noexception</artifactId>
+		  <version>1.3.2</version>
+		</dependency>
+
+		
+		<!-- TEST -->
+
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.2.3</version>
+			<scope>test</scope>
+		</dependency>
+		
+		
+		<!-- 
+			OPTIONAL dependencies. These are not so general, so we don't force jutils's clients to
+			drag too much stuff with them. You need to declare these dependencies in your project in order
+			to use the jutils functions related to them.
 			
-			<!-- TEST -->
-	
-			<dependency>
-				<groupId>ch.qos.logback</groupId>
-				<artifactId>logback-classic</artifactId>
-				<version>1.2.3</version>
-		    <scope>test</scope>
-			</dependency>
-	
-		</dependencies>
-	</dependencyManagement>
-	
+			For each optional dependency declared here, jutils packages that requires them are listed. 
+			You typically need the dependency for sub-packages as well.
+			
+			If a jutils package make use of any optional dependency, it has the prefix 
+			uk.ac.ebi.utils.opt.* Moreover, usually the artifactId is reused as base name for the 
+			jutils package.
+			
+			The above rules should make it easy to match jutils dependencies with optional 3rd-party dependencies
+			they rely upon when used.
+			
+			TODO: Use this approach to turn jutils back to a single package. 
+		-->
+		
+		<!-- Required by:
+			uk.ac.ebi.utils.opt.springweb
+		-->
+		<dependency>
+		  <groupId>org.springframework</groupId>
+		  <artifactId>spring-web</artifactId>
+		  <version>5.3.18</version>
+		  <optional>true</optional>
+		</dependency>
+
+		<!-- Required by
+			uk.ac.ebi.utils.opt.net.exceptions
+		-->		
+		<dependency>
+		  <groupId>org.apache.httpcomponents</groupId>
+		  <artifactId>httpcore</artifactId>
+		  <version>4.4.15</version>
+		  <optional>true</optional>
+		</dependency>		
+
+		<!-- Required by
+			uk.ac.ebi.utils.opt.io
+		-->		
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.11.0</version>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- Required by
+			uk.ac.ebi.utils.opt.io.Unix4jUtils
+			uk.ac.ebi.utils.opt.xml.XmlFilterUtils			
+		-->		
+		<dependency>
+			<groupId>org.unix4j</groupId>
+			<artifactId>unix4j-command</artifactId>
+			<version>0.6</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.jsignature.io-tools</groupId>
+			<artifactId>easystream</artifactId>
+			<version>1.2.15</version>
+			<optional>true</optional>
+		</dependency>
+		
+
+		<!-- Required by
+		  uk.ac.ebi.utils.opt.net.SSLUtils
+		-->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.5.13</version>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+			</exclusions>
+			<optional>true</optional>			
+		</dependency>
+		
+		
+		<dependency>
+		  <groupId>org.hibernate.javax.persistence</groupId>
+		  <artifactId>hibernate-jpa-2.1-api</artifactId>
+		  <version>1.0.2.Final</version>
+			<optional>true</optional>		  
+		</dependency>
+
+	</dependencies>
+
 	<build>
 
 		<plugins>
@@ -239,11 +294,5 @@
     </repository>	
     
 	</distributionManagement>  
-  
-	<modules>
-		<module>jutils</module>
-		<module>jutils-io</module>
-		<module>jutils-j2ee</module>
-	</modules>
 	    
 </project>

@@ -9,13 +9,7 @@ set -o pipefail
 export JAVADOC_REL_PATH=docs/javadocs
 cd "`dirname $0`/.."
 
-for mod in jutils jutils-io jutils-j2ee
-do
-	echo -e "\n\n\tProcessing '$mod'\n"
-	rm -Rf "$JAVADOC_REL_PATH/$mod"
-	cd "$mod"
-	mvn javadoc:javadoc -DreportOutputDirectory="../$JAVADOC_REL_PATH" --no-transfer-progress --batch-mode
-	cd ..
-done
+rm -Rf "$JAVADOC_REL_PATH/jutils"
+mvn javadoc:javadoc -DreportOutputDirectory="$JAVADOC_REL_PATH" --no-transfer-progress --batch-mode
 
 echo -e "\n\n\tThe End\n"

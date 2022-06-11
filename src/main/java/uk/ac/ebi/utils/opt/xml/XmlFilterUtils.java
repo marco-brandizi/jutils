@@ -52,6 +52,6 @@ public class XmlFilterUtils
 
 		// Chain and return it as a filter
 		Unix4jCommandBuilder sedCmd = Unix4j.from ( xmlin ).sed ( sedOpen ).sed ( sedClose );
-		return Unix4jUtils.unixFilter ( sedCmd, xmlin );
+		return Unix4jUtils.unixFilter ( sedCmd );
 	}
 }

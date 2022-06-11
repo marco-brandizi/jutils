@@ -36,9 +36,9 @@ public class Unix4jUtils
 	 * library</p>
 	 *  
 	 */
-	public static InputStream unixFilter ( final To command, final InputStream inStream )
+	public static InputStream unixFilter ( final To command )
 	{
-		InputStreamFromOutputStream<Void> pipeIn = new InputStreamFromOutputStream<Void> () 
+		InputStreamFromOutputStream<Void> pipeIn = new InputStreamFromOutputStream<> () 
 		{
 			@Override
 			protected Void produce ( OutputStream sink ) throws Exception
@@ -56,7 +56,7 @@ public class Unix4jUtils
 	 * {@link Unix4jCommandBuilder#sed(String) sed command}.  
 	 */
 	public static InputStream sedFilter ( final InputStream inStream, String sedScript ) {
-		return unixFilter (  Unix4j.from ( inStream ).sed ( sedScript ), inStream );
+		return unixFilter (  Unix4j.from ( inStream ).sed ( sedScript ) );
 	}
 	
 	/**
@@ -67,6 +67,6 @@ public class Unix4jUtils
 	 * invoked dynamically while, the stream is read.
 	 */
 	public static InputStream sedFilter ( final InputStream inStream, String regex, String repl ) {
-		return unixFilter (  Unix4j.from ( inStream ).sed ( regex, repl ), inStream );
+		return unixFilter (  Unix4j.from ( inStream ).sed ( regex, repl ) );
 	}
 }

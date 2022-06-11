@@ -125,17 +125,17 @@
 * AlphaNumComparator now has an option for case-sensivity.
 
 
-## 1.6
+## 1.6
 * IOUtils.getMD5() generalised into getHash().
 * XPathReader, exception handling changed.
 
 
-## 1.5
+## 1.5
 * TestEntityMgrProvider added.
 * Very minor changes in comments.
 
 
-## 1.4
+## 1.4
 * Minor changes made. Version upgraded to reflect the policy of increasing the second revision number upon whole 
   classes.
 * Minor methods additions and changes to existing code.

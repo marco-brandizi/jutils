@@ -15,7 +15,7 @@
 * **Repository moved to a [new place](https://github.com/marco-brandizi/jutils)**.
 * Class-based thread names in `uk.ac.ebi.utils.threading.batchproc.BatchProcessor`.
 * Helpers added to `uk.ac.ebi.utils.memory` to support the migration of the 
-  now-deprecated `finalize()` method.
+  now-deprecated `finalize()` method.
 * `OptionsMap` and its default implementation added.  
 * More variants added to `IOUtils.readFiles()`.
 * `uk.ac.ebi.utils.xml.stax.StaxUtils` added.
@@ -75,17 +75,17 @@
   (http://io-tools.sourceforge.net/easystream/index.html).
 
 
-## 5.0
+## 5.0
 * uk.ac.ebi.utils.runcontrol added.
 * MapCollection added.
 
 
-## 4.5
+## 4.5
 * Moving deployment to BioSD/GitHub repository.
 * Some improvements in BatchService.
 
 
-## 4.4
+## 4.4
 * Experimental migration of deployment to EBI/Nexus Maven repository.
 * XStopWatch fixed against new checkings in StopWatch (start() cannot be called twice, without reset()).
 * XStopWatch.restart() added.
@@ -96,11 +96,11 @@
 * ReflectionUtils.invoke () added.
 
 
-## 4.2
+## 4.2
 * HqlUtils added.
 
 
-## 4.1
+## 4.1
 * ThreadedPipedWriter added.
 * XStopWatch added.
 * Minor changes.

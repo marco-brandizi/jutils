@@ -7,10 +7,10 @@ uk.ac.ebi.utils.memory
 uk.ac.ebi.utils.opt.io
 uk.ac.ebi.utils.opt.net
 uk.ac.ebi.utils.opt.net.exceptions
-uk.ac.ebi.utils.opt.orm
+uk.ac.ebi.utils.opt.orm.test
 uk.ac.ebi.utils.opt.springweb.exceptions
 uk.ac.ebi.utils.opt.xml
-uk.ac.ebi.utils.orm.test
+uk.ac.ebi.utils.orm
 uk.ac.ebi.utils.reflection
 uk.ac.ebi.utils.regex
 uk.ac.ebi.utils.runcontrol

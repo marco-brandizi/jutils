@@ -1,4 +1,4 @@
-package uk.ac.ebi.utils.opt.io;
+package uk.ac.ebi.utils.io;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;

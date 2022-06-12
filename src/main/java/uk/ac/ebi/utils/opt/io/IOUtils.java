@@ -399,7 +399,7 @@ public class IOUtils
 	
 	
 	/**
-	 * Creates a URI and intercepts of URISyntaxException, throwing IllegalArgumentException if such an exception
+	 * Creates a URI and intercepts URISyntaxException, throwing IllegalArgumentException if such an exception
 	 * occurs. I've created this method because it's often very annoying to have a checked exception here.
 	 */
 	public static URI uri ( String uriStr ) 

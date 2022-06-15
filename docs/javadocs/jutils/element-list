@@ -4,6 +4,7 @@ uk.ac.ebi.utils.ids
 uk.ac.ebi.utils.io
 uk.ac.ebi.utils.lambda
 uk.ac.ebi.utils.memory
+uk.ac.ebi.utils.opt.config
 uk.ac.ebi.utils.opt.io
 uk.ac.ebi.utils.opt.net
 uk.ac.ebi.utils.opt.net.exceptions

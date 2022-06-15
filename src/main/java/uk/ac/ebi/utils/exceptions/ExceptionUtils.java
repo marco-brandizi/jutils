@@ -4,6 +4,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.ConstructorUtils;
 
 /**
@@ -95,7 +96,7 @@ public class ExceptionUtils
 			
 			if ( cause != null )
 			{
-				msg = msg.replaceAll ( "(\\$cause|\\$\\{cause\\})", cause.getMessage () );
+				msg = msg.replaceAll ( "(\\$cause|\\$\\{cause\\})", StringUtils.trimToEmpty ( getSignificantMessage ( cause ) ) );
 				
 				// Some exception wrappers like UncheckedIOException have constructors with mandatory cause
 				Constructor<E> constructor = ConstructorUtils.getMatchingAccessibleConstructor ( exType, String.class, cause.getClass () );

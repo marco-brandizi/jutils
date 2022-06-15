@@ -1,0 +1,9 @@
+name: "Jon"
+surname: "Doe"
+addresses:
+- street: "10, High Street"
+  town: "Somewhereland"
+  country: "World"
+- street: "1, Market Square"
+  town: "New Earth"
+  country: "Mars"

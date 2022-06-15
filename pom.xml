@@ -32,6 +32,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <slf4j.version>1.7.5</slf4j.version>
+    <com.fasterxml.jackson.version>2.13.3</com.fasterxml.jackson.version>
   </properties>
 
   <scm>
@@ -151,6 +152,7 @@
 
 		<!-- Required by
 			uk.ac.ebi.utils.opt.io
+			uk.ac.ebi.utils.opt.config
 		-->		
 		<dependency>
 			<groupId>commons-io</groupId>
@@ -202,7 +204,16 @@
 		  <version>1.0.2.Final</version>
 			<optional>true</optional>		  
 		</dependency>
-
+		
+		<!-- Required by 
+		  uk.ac.ebi.utils.opt.config
+		-->
+		<dependency>
+			<groupId>com.fasterxml.jackson.dataformat</groupId>
+			<artifactId>jackson-dataformat-yaml</artifactId>
+			<version>${com.fasterxml.jackson.version}</version>
+		</dependency>
+		
 	</dependencies>
 
 	<build>

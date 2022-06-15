@@ -43,6 +43,7 @@
 package uk.ac.ebi.utils.opt.io;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static uk.ac.ebi.utils.exceptions.ExceptionUtils.buildEx;
 import static uk.ac.ebi.utils.exceptions.ExceptionUtils.throwEx;
 
 import java.io.BufferedWriter;
@@ -56,6 +57,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
+import java.io.UncheckedIOException;
 import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -73,9 +75,14 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.io.Resources;
 
+import uk.ac.ebi.utils.exceptions.UncheckedFileNotFoundException;
+
+
 
 /**
- * Miscellanea of small IO utilities 
+ * Miscellanea of small IO utilities.
+ * 
+ * TODO: complete the migration to unchecked exceptions.
  * 
  * <dl><dt>date</dt><dd>July 29, 2007, 1:03 PM</dd></dl>
  * @author brandizi
@@ -89,30 +96,32 @@ public class IOUtils
 		
 	/**
 	 * @see #readFile(String, Charset)
-	 * @deprecated use {@link Files#readString(Path, Charset)} and {@link Charset#forName(String)}
 	 */
-	@Deprecated
-	public static String readFile ( String path, String charSet ) throws IOException {
+	public static String readFile ( String path, String charSet ) throws UncheckedIOException {
 		return readFile ( path, Charset.forName ( charSet ) );
 	}
 
 	/**
-	 *
 	 * Opens an input stream from a file path.
-	 * @deprecated use {@link Files#readString(Path, Charset)}
 	 */
-	@Deprecated
-	public static String readFile ( String path, Charset charSet ) throws IOException {
-		return Files.readString ( Path.of ( path ), charSet );
+	public static String readFile ( String path, Charset charSet ) throws UncheckedIOException
+	{
+		try {
+			return Files.readString ( Path.of ( path ), charSet );
+		}
+		catch ( IOException ex )
+		{
+			throw buildEx ( UncheckedIOException.class, ex, 
+				"Error while reading from \"%s\": $cause", path 
+			);
+		}
 	}
 
 	
 	/**
 	 * Defaults to UTF-8
-	 * @deprecated use {@link Files#readString(Path)}
 	 */
-	@Deprecated
-	public static String readFile ( String path ) throws IOException { 
+	public static String readFile ( String path ) throws UncheckedIOException { 
 		return readFile ( path, UTF_8 );
 	}
 
@@ -120,7 +129,8 @@ public class IOUtils
 	 * Invokes {@link #readFile(String, Charset)} upon all the files in a directory and return an array of
 	 * file contents. 
 	 */
-	public static String[] readFiles ( String dirPath, FilenameFilter filter, boolean ignoreMissingDir, Charset charSet ) throws IOException 
+	public static String[] readFiles ( String dirPath, FilenameFilter filter, boolean ignoreMissingDir, Charset charSet )
+	  throws UncheckedFileNotFoundException, UncheckedIOException
 	{
 		File dir = new File ( dirPath );
 		if ( !dir.isDirectory () ) 
@@ -129,7 +139,7 @@ public class IOUtils
 				log.warn ( "readFiles(), ignoring missing directory '{}'", dirPath );
 				return new String [ 0 ]; 
 			}
-			throwEx ( FileNotFoundException.class, "Directory '%s' not found", dirPath );
+			throwEx ( UncheckedFileNotFoundException.class, "Directory '%s' not found", dirPath );
 		}
 		
 		File[] files = filter == null ? dir.listFiles () : dir.listFiles ( filter );
@@ -137,14 +147,25 @@ public class IOUtils
 		
 		String[] result = new String [ files.length ];
 		for ( int i = 0; i < files.length; i++ )
-			result [ i ] = Files.readString ( files [ i ].toPath ().toAbsolutePath (), charSet );
+		{
+			Path path = files [ i ].toPath ().toAbsolutePath ();
+			try {
+				result [ i ] = Files.readString ( path, charSet );
+			}
+			catch ( IOException ex )
+			{
+				throwEx ( UncheckedIOException.class, ex, 
+					"Error while reading file \"%s\": $cause", path.toString ()
+				);
+			}
+		}
 		return result;
 	}
 	
 	/**
 	 * Defaults to missingDir = false
 	 */
-	public static String[] readFiles ( String dirPath, FilenameFilter filter, Charset charSet ) throws IOException 
+	public static String[] readFiles ( String dirPath, FilenameFilter filter, Charset charSet ) throws UncheckedIOException 
 	{
 		return readFiles ( dirPath, filter, false, charSet );
 	}
@@ -152,42 +173,42 @@ public class IOUtils
 	/**
 	 * Defaults to `UTF-8`.
 	 */
-	public static String[] readFiles ( String dirPath, FilenameFilter filter, boolean ignoreMissingDir ) throws IOException {
+	public static String[] readFiles ( String dirPath, FilenameFilter filter, boolean ignoreMissingDir ) throws UncheckedIOException {
 		return readFiles ( dirPath, filter, ignoreMissingDir, UTF_8 );
 	}
 
 	/**
 	 * Defaults to missingDir = false, `UTF-8`.
 	 */
-	public static String[] readFiles ( String dirPath, FilenameFilter filter ) throws IOException {
+	public static String[] readFiles ( String dirPath, FilenameFilter filter ) throws UncheckedIOException {
 		return readFiles ( dirPath, filter, false, UTF_8 );
 	}
 
 	/**
 	 * Defaults to any file
 	 */
-	public static String[] readFiles ( String dirPath, boolean ignoreMissingDir, Charset charSet ) throws IOException {
+	public static String[] readFiles ( String dirPath, boolean ignoreMissingDir, Charset charSet ) throws UncheckedIOException {
 		return readFiles ( dirPath, null, ignoreMissingDir, charSet );
 	}
 
 	/**
 	 * Defaults to any file, UTF-8
 	 */
-	public static String[] readFiles ( String dirPath, boolean ignoreMissingDir ) throws IOException {
+	public static String[] readFiles ( String dirPath, boolean ignoreMissingDir ) throws UncheckedIOException {
 		return readFiles ( dirPath, null, ignoreMissingDir, UTF_8 );
 	}
 
 	/**
 	 * Defaults to any file, ignoreMissingDir = false 
 	 */
-	public static String[] readFiles ( String dirPath, Charset charSet ) throws IOException {
+	public static String[] readFiles ( String dirPath, Charset charSet ) throws UncheckedIOException {
 		return readFiles ( dirPath, null, false, charSet );
 	}
 	
 	/**
 	 * Defaults to any file, ignoreMissingDir = false, UTF-8
 	 */
-	public static String[] readFiles ( String dirPath ) throws IOException {
+	public static String[] readFiles ( String dirPath ) throws UncheckedIOException {
 		return readFiles ( dirPath, null, false, UTF_8 );
 	}
 
@@ -408,7 +429,9 @@ public class IOUtils
 			return new URI ( uriStr );
 		}
 		catch ( URISyntaxException ex ) {
-			throw new IllegalArgumentException ( "Internal error with URI '" + uriStr + "'", ex );
+			throw buildEx ( IllegalArgumentException.class, ex, 
+				"Internal error with URI \"%s\": $cause", uriStr
+			);
 		}
 	}
 
@@ -421,7 +444,9 @@ public class IOUtils
 			return new URL ( urlStr );
 		}
 		catch ( MalformedURLException ex ) {
-			throw new IllegalArgumentException ( "Internal error with URI '" + urlStr + "'", ex );
+			throw buildEx ( IllegalArgumentException.class, ex, 
+				"Internal error with URL \"%s\": $cause", urlStr
+			);
 		}
 	}
 }

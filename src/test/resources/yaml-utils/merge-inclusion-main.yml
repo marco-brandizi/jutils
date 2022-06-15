@@ -1,0 +1,8 @@
+name: "The Super Cool App"
+description: "A neural network that learns how to print Hello, World"
+version: 2.5
+options:
+- default options 
+"@includes":
+- merge-inclusion-1.yml
+- merge-inclusion-2.yml

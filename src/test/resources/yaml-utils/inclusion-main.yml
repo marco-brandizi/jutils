@@ -1,0 +1,6 @@
+app name: "The Super Cool App"
+app description: "A neural network that learns how to print Hello, World"
+options: default options 
+"@includes":
+- inclusion-1.yml
+- inclusion-2.yml

@@ -124,7 +124,12 @@ public class YAMLUtils
 		);
 				
 		// Deal with relative paths
-		String basePath = Path.of ( filePath ).toAbsolutePath ().getParent ().toString ();
+		// Null is a rare event here (filePath should be a file), but SpotBugs recommended to check it
+		String basePath = Optional.ofNullable ( Path.of ( filePath ).toAbsolutePath ().getParent () )
+			.map ( Object::toString )
+			.orElseThrow ( () -> ExceptionUtils.buildEx ( 
+				IllegalArgumentException.class, "Invalid file path: %s", filePath )
+		);
 
 		for ( String include: (Collection<String>) includesObj )
 		{

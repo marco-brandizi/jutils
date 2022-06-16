@@ -62,12 +62,14 @@ public class YAMLUtils
 		return rawLoadingFromString ( IOUtils.readFile ( configFilePath ), resultJso, configFilePath );
 	}
 	
+	@SuppressWarnings ( "unchecked" )
 	private static Map<String, Object> rawLoadingFromString ( 
 		String yamlStr, Map<String, Object> resultJso, String filePath 
 	)
 		throws UncheckedIOException
 	{
-		// Interpolate ${SpEL.expressions}
+		// Interpolate ${variable}, can contain system properties or environment properties
+		// TODO: SpEL
 		yamlStr = SPRING_INTERPOLATOR.resolvePlaceholders ( yamlStr );
 		
 		var mapper = new ObjectMapper ( new YAMLFactory () );

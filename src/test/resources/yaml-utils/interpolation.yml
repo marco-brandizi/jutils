@@ -1,0 +1,7 @@
+# This is an environment/OS variable, the rest are Java (-D) properties
+name: "The ${yamlUtils.testName} App"
+description: "A neural network that learns how to print Hello, World"
+version: 2.5
+"@includes":
+- ${testPrefix}-1.yml
+- ${testPrefix}-2.yml

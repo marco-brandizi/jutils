@@ -253,6 +253,9 @@
 		          <value>uk.ac.ebi.utils.test.junit.TestOutputDecorator</value>
 		        </property>
 		       </properties>
+					<environmentVariables>
+						<yamlUtils.testName>Dude</yamlUtils.testName>
+					</environmentVariables>  
 		    </configuration>
 		  </plugin>
 		  

@@ -1,17 +1,23 @@
 package uk.ac.ebi.utils.opt.yaml;
 
+import static java.lang.String.format;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import uk.ac.ebi.utils.opt.config.YAMLUtils;
 
@@ -103,6 +109,7 @@ public class YAMLUtilsTest
 	}
 	
 	@Test
+	@SuppressWarnings ( "unchecked" )
 	public void testInclusion ()
 	{
 		Map<String, Object> jso = YAMLUtils.loadYAMLFromFile ( TEST_DATA_DIR + "inclusion-main.yml", HashMap.class );
@@ -113,6 +120,7 @@ public class YAMLUtilsTest
 	}
 
 	@Test
+	@SuppressWarnings ( "unchecked" )	
 	public void testInclusionMerge ()
 	{
 		Map<String, Object> jso = YAMLUtils.loadYAMLFromFile ( TEST_DATA_DIR + "merge-inclusion-main.yml", HashMap.class );
@@ -120,7 +128,7 @@ public class YAMLUtilsTest
 		
 		assertEquals ( "app name is wrong!", "The Super Cool App", jso.get ( "name" ) );
 		
-		Set<String> opts = new HashSet ( (List<Object> ) jso.get ( "options" ) );
+		Set<String> opts = new HashSet<> ( (Collection<String> ) jso.get ( "options" ) );
 		var expectedOpts = Set.of ( "default options", "advanced options", "looking-for-trouble options" );
 		assertEquals ( "'options' is wrong!", expectedOpts, opts );		
 	}
@@ -138,6 +146,40 @@ public class YAMLUtilsTest
 		
 		var expectedOpts = Set.of ( "default options", "advanced options", "looking-for-trouble options" );
 		assertEquals ( "'options' is wrong!", expectedOpts, cfg.getOptions () );		
-		
 	}
+	
+	/**
+	 * {@link ObjectMapper} throws errors if a YAML field can't be mapped to the target POJO.
+	 * TODO: should we more liberal, via {@link DeserializationFeature#FAIL_ON_UNKNOWN_PROPERTIES}?
+	 */
+	@Test ( expected = IllegalArgumentException.class )
+	public void testMappingWithUnusedFields ()
+	{
+		// We expect it to work, despite the file has a non-mapped field.
+		// So, if there is no exception is thrown, we're done.
+		YAMLUtils.loadYAMLFromFile ( TEST_DATA_DIR + "mapping-unused-fields.yml", TestTarget.class );
+	}
+	
+	@Test
+	public void testInterpolation ()
+	{
+		// Properties can come from either the Java properties (-D) or the environment.
+		var testName = System.getenv ( "yamlUtils.testName" );
+		var sysp = System.getProperties ();
+		var optionsName = "options";
+		
+		sysp.setProperty ( "testPrefix", "interpolation" );
+		sysp.setProperty ( "optionsName", optionsName );
+
+		TestTarget cfg = YAMLUtils.loadYAMLFromFile ( TEST_DATA_DIR + "interpolation.yml", TestTarget.class );
+
+		log.info ( "Result: {}", cfg );
+		
+		assertEquals ( "app name is wrong!", format ( "The %s App", testName ), cfg.getName () );
+		assertEquals ( "app name is wrong!", (Double) 2.5, cfg.getVersion () );
+		
+		var expectedOpts = Set.of ( "default " + optionsName, "advanced " + optionsName );
+		assertEquals ( "'options' is wrong!", expectedOpts, cfg.getOptions () );			 
+	}
+
 }

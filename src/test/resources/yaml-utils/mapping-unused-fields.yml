@@ -1,0 +1,5 @@
+name: "The Super Cool App"
+description: "A neural network that learns how to print Hello, World"
+version: 2.5
+# This should be ignored
+message: "Hello, World!"

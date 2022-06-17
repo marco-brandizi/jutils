@@ -168,6 +168,7 @@ public class YAMLUtils
 	 * 
 	 * Note that includes are managed separately from this.
 	 */
+	@SuppressWarnings ( "unchecked" )
 	private static void mergeJsObjects ( Map<String, Object> parentJso, Map<String, Object> jso )
 	{
 		for ( String key: jso.keySet () )

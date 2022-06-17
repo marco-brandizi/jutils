@@ -14,6 +14,7 @@ import java.util.Set;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.env.StandardEnvironment;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,7 +22,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import uk.ac.ebi.utils.opt.config.YAMLUtils;
 
 /**
- * TODO: comment me!
+ * Several examples of use here, see also the test files in src/test/resources/yaml-utils
  *
  * @author brandizi
  * <dl><dt>Date:</dt><dd>15 Jun 2022</dd></dl>
@@ -33,12 +34,20 @@ public class YAMLUtilsTest
 
 	private static final String TEST_DATA_DIR = "target/test-classes/yaml-utils/";
 	
+	/**
+	 * Example of POIO onto which we map some of the test files.
+	 * 
+	 * @see {@link YAMLUtilsTest#testMapping()}
+	 *
+	 */
 	@SuppressWarnings ( "unused" )
 	private static class TestTarget
 	{
 		private String name, description;
 		private Double version;
 		private Set<String> options;
+		
+		private TestTarget child;
 		
 		public String getName ()
 		{
@@ -72,12 +81,22 @@ public class YAMLUtilsTest
 		{
 			this.options = options;
 		}
+		public TestTarget getChild ()
+		{
+			return child;
+		}
+		public void setChild ( TestTarget child )
+		{
+			this.child = child;
+		}
+		
+		
 		@Override
 		public String toString ()
 		{
 			return String.format ( 
-				"TestTarget{name: %s, description: %s, version: %s, options: %s}", 
-				name, description, version, options 
+				"TestTarget{name: %s, description: %s, version: %s, options: %s, child: %s}", 
+				name, description, version, options, child 
 			);
 		}
 		
@@ -107,6 +126,12 @@ public class YAMLUtilsTest
 		assertNotNull ( "Probe address not found!", street );
 	}
 	
+	/**
+	 * Shows how to use {@link YAMLUtils#INCLUDES_PROP} to include a file from another.
+	 * 
+	 * The result is a merge of properties. If properties are repeated downstream, they override the parent's
+	 * values, unless {@link YAMLUtils#MERGE_SUFFIX the merge directive} is used (see {@link #testInclusionMerge()}). 
+	 */
 	@Test
 	@SuppressWarnings ( "unchecked" )
 	public void testInclusion ()
@@ -118,6 +143,10 @@ public class YAMLUtilsTest
 		assertEquals ( "'yet more options' is wrong!", "WTH you want", jso.get ( "yet more options" ) );		
 	}
 
+	/**
+	 * Tests the use of the {@link YAMLUtils#MERGE_SUFFIX merge directive} to merge parent fields and fields in the included files.
+	 * The merge behaviour for a field is enabled by appending this suffix to its name.
+	 */
 	@Test
 	@SuppressWarnings ( "unchecked" )	
 	public void testInclusionMerge ()
@@ -127,12 +156,15 @@ public class YAMLUtilsTest
 		
 		assertEquals ( "app name is wrong!", "The Super Cool App", jso.get ( "name" ) );
 		
+		// A mix of 'options' and 'options @merge' is used in the files
 		Set<String> opts = new HashSet<> ( (Collection<String> ) jso.get ( "options" ) );
 		var expectedOpts = Set.of ( "default options", "advanced options", "looking-for-trouble options" );
 		assertEquals ( "'options' is wrong!", expectedOpts, opts );		
 	}
 
-	
+	/**
+	 * Mapping to POJO. This is one of the main usage. Note that the mapping happens after inclusions, merges and interpolations.
+	 */
 	@Test
 	public void testMapping ()
 	{
@@ -159,6 +191,10 @@ public class YAMLUtilsTest
 		YAMLUtils.loadYAMLFromFile ( TEST_DATA_DIR + "mapping-unused-fields.yml", TestTarget.class );
 	}
 	
+	/**
+	 * You can leverage {@link StandardEnvironment Spring interpolation} to solve expressions like 
+	 * <tt>${propName}</tt>. The names are resolved from Java properties or enviornment variables. 
+	 */
 	@Test
 	public void testInterpolation ()
 	{
@@ -181,4 +217,16 @@ public class YAMLUtilsTest
 		assertEquals ( "'options' is wrong!", expectedOpts, cfg.getOptions () );			 
 	}
 
+	/**
+	 * This is an example of {@link YAMLUtils#MERGE_SUFFIX merge option} applied to nested objects and 
+	 * also applied to nested array fields.
+	 * 
+	 * See the test files nested-mapping.yml.
+	 */
+	@Test
+	public void testNestedMapping ()
+	{
+		TestTarget cfg = YAMLUtils.loadYAMLFromFile ( TEST_DATA_DIR + "nested-mapping.yml", TestTarget.class );
+		log.info ( "Result: {}", cfg );		
+	}
 }

@@ -1,0 +1,9 @@
+child @merge:
+  # The child object is completed thanks to the @merge directive.
+  # Without it, the parent's fields would be lost
+  description: "An application used by the main app"
+  version: 5.0
+  options @merge:
+  # Merges can be used recursively, as long as the parent is compatible
+  # (ie, it's empty, both parent and child are a list or a Map, both of the same type)
+  - advanced child options 

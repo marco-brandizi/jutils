@@ -1,5 +1,8 @@
+# Fields that aren't in the mapped POJO raise an error. We don't know if to adopt a more
+# liberal behaviour, see the test case in YAMLUtilsTest
+# 
 name: "The Super Cool App"
 description: "A neural network that learns how to print Hello, World"
 version: 2.5
-# This should be ignored
+# This raises an error, cause it's not in the mapping target.
 message: "Hello, World!"

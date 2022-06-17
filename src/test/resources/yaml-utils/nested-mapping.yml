@@ -1,0 +1,14 @@
+# An example of @merge applied recursively, see the test case in YAMLUtilsTest
+#
+name: "The Super Cool App"
+description: "A neural network that learns how to print Hello, World"
+version: 2.5
+options:
+- default options
+child:
+  # Further fields from the included file are merged into this 
+  name: The Child App
+  options:
+  - default child options 
+"@includes":
+- nested-mapping-1.yml

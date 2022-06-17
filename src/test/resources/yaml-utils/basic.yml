@@ -1,3 +1,4 @@
+# Basic loading, without any POJO mapping, see the test cases in YAMLUtilsTest
 name: "Jon"
 surname: "Doe"
 addresses:

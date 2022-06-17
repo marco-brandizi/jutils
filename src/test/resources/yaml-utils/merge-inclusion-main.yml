@@ -1,3 +1,5 @@
+# Mapping and merge options, see see the test cases in YAMLUtilsTest
+# 
 name: "The Super Cool App"
 description: "A neural network that learns how to print Hello, World"
 version: 2.5

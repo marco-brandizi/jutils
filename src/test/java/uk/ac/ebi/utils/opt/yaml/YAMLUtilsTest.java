@@ -199,7 +199,7 @@ public class YAMLUtilsTest
 	public void testInterpolation ()
 	{
 		// Properties can come from either the Java properties (-D) or the environment.
-		var testName = System.getenv ( "yamlUtils.testName" );
+		var testName = System.getenv ( "yamlUtils_testName" );
 		var sysp = System.getProperties ();
 		var optionsName = "options";
 		

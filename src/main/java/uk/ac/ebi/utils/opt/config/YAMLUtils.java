@@ -215,8 +215,8 @@ public class YAMLUtils
 				else
 					// Merge asked, but it's not a mergeable type, meh!
 					ExceptionUtils.throwEx ( IllegalArgumentException.class,
-							"YAML error: %s directive used for the field %s, but the parent has a single plain value (must be object or array)", 
-							MERGE_SUFFIX, actualKey
+						"YAML error: %s directive used for the field %s, but the parent has a single plain value (must be object or array)", 
+						MERGE_SUFFIX, actualKey
 				);
 			}
 			else

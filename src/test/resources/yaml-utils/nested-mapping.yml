@@ -5,10 +5,12 @@ description: "A neural network that learns how to print Hello, World"
 version: 2.5
 options:
 - default options
-child:
+child @merge:
   # Further fields from the included file are merged into this 
   name: The Child App
-  options:
-  - default child options 
+  # The child file defines this and we override it here, remember the rule: the top-most level wins
+  version: 6.0
+  options @merge:
+  - advanced child options 
 "@includes":
 - nested-mapping-1.yml

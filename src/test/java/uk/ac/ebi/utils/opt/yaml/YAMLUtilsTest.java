@@ -111,7 +111,7 @@ public class YAMLUtilsTest
 	}
 	
 	/**
-	 * Shows how to use {@link YAMLUtils#INCLUDES_PROP} to include a file from another.
+	 * Shows how to use {@link YAMLUtils#INCLUDES_FIELD} to include a file from another.
 	 * 
 	 * The result is a merge of properties. If properties are repeated downstream, they override the parent's
 	 * values, unless {@link YAMLUtils#MERGE_SUFFIX the merge directive} is used (see {@link #testInclusionMerge()}). 
@@ -124,7 +124,8 @@ public class YAMLUtilsTest
 		assertEquals ( "app name is wrong!", "The Super Cool App", jso.get ( "app name" ) );
 		assertEquals ( "options is wrong!", "default options", jso.get ( "options" ) );		
 		assertEquals ( "'more options' is wrong!", "advanced options", jso.get ( "more options" ) );		
-		assertEquals ( "'yet more options' is wrong!", "WTH you want", jso.get ( "yet more options" ) );		
+		assertEquals ( "'yet more options' is wrong!", "WTH you want", jso.get ( "yet more options" ) );
+		assertEquals ( "Overridden version is wrong!", 3.0d, (double) jso.get ( "version" ), 0d );
 	}
 
 	/**
@@ -211,6 +212,15 @@ public class YAMLUtilsTest
 	public void testNestedMapping ()
 	{
 		TestTarget cfg = YAMLUtils.loadYAMLFromFile ( TEST_DATA_DIR + "nested-mapping.yml", TestTarget.class );
-		log.info ( "Result: {}", cfg );		
+		log.info ( "Result: {}", cfg );
+		assertEquals ( "Wrong name!", "The Super Cool App", cfg.getName () );
+		assertEquals ( "Wrong version!", 2.5d, cfg.getVersion (), 0d );
+		
+		TestTarget child = cfg.getChild ();
+		assertEquals ( "Wrong child.name!", "The Child App", child.getName () );
+		assertEquals ( "Wrong child.version!", 6.0, child.getVersion (), 0d );
+	
+		var expectedOpts = Set.of ( "default child options", "advanced child options" );
+		assertEquals ( "Wrong child.options!", expectedOpts, child.getOptions () );			 
 	}
 }

@@ -6,4 +6,4 @@ child @merge:
   options @merge:
   # Merges can be used recursively, as long as the parent is compatible
   # (ie, it's empty, both parent and child are a list or a Map, both of the same type)
-  - advanced child options 
+  - default child options 

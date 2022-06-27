@@ -3,8 +3,13 @@
 name: "The Super Cool App"
 description: "A neural network that learns how to print Hello, World"
 version: 2.5
-options:
-- default options 
+# This will be merged as last, into the values coming from the 2 included files
+options @merge:
+- advanced options 
 "@includes":
+# this has 'options @merge' too, despite it's not needed for the inner-most included file, 
+# which is listed first. Because such rule is tricky, it's safe to just say @merge everywhere for 
+# the cases where the final result you expect is the union of all values, no matter where they come from
+#
 - merge-inclusion-1.yml
 - merge-inclusion-2.yml

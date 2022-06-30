@@ -1,0 +1,18 @@
+# Custom variables are local to each file, the variables that a file
+# sees are the one coming from the parents plus those defined here.
+# The root file gets environment and Java properties
+"@properties":
+  # The local defs see environment/property variables.
+  appName: "The ${yamlUtils_testName} App"
+  descr: "A neural network that learns how to print Hello, World"
+  appVersion: 2.5
+  optPostfix: "options"
+  # Local defs can be composed with other just-defined variables, things
+  # come in the file order
+  opts: "default ${optPostfix}"
+
+name: ${appName}
+description: ${descr}
+version: ${appVersion}
+options:
+  - ${opts}

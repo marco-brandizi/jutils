@@ -9,7 +9,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import org.springframework.core.env.PropertyResolver;
+import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.core.env.MapPropertySource;
+import org.springframework.core.env.MutablePropertySources;
 import org.springframework.core.env.StandardEnvironment;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -52,10 +54,21 @@ import uk.ac.ebi.utils.opt.io.IOUtils;
  */
 public class YAMLUtils
 {
-	private static final StandardEnvironment SPRING_INTERPOLATOR = new StandardEnvironment ();
+	// TODO: remove
+	// private static final StandardEnvironment SPRING_INTERPOLATOR = new StandardEnvironment ();
 	public static final String INCLUDES_FIELD = "@includes";
 	public static final String MERGE_SUFFIX = "@merge";
 	public static final String PROPDEF_FIELD = "@properties";
+	
+	/**
+	 * A property with this name is always available and contains the absolute YAML file path
+	 */
+	public static final String MY_PATH_PROP = "me";
+	
+	/**
+	 * A property with this name is always available and contains the dir in which the YAML file is
+	 */	
+	public static final String MY_DIR_PROP = "mydir";
 	
 	/**
 	 * @See {@link #loadYAMLFromString(String, Class)}.
@@ -87,7 +100,7 @@ public class YAMLUtils
 	private static <T> T loadYAMLFromString ( String yamlStr, Class<T> targetClass, String filePath ) 
 		throws UncheckedIOException
 	{
-		Map<String, Object> yamlo = rawLoadingFromString ( yamlStr, new LinkedHashMap<> (), filePath );
+		Map<String, Object> yamlo = rawLoadingFromString ( yamlStr, new LinkedHashMap<> (), filePath, new StandardEnvironment () );
 		var mapper = new ObjectMapper ();
 		var result = mapper.convertValue ( yamlo, targetClass );
 		
@@ -95,36 +108,47 @@ public class YAMLUtils
 	}
 	
 	
-	private static Map<String, Object> rawLoadingFromFile ( String filePath, Map<String, Object> resultJso )
-		throws UncheckedIOException
+	private static Map<String, Object> rawLoadingFromFile ( 
+		String filePath, Map<String, Object> resultJso, ConfigurableEnvironment interpolator 
+	) throws UncheckedIOException
 	{
-		return rawLoadingFromString ( IOUtils.readFile ( filePath ), resultJso, filePath );
+		return rawLoadingFromString ( IOUtils.readFile ( filePath ), resultJso, filePath, interpolator );
 	}
 	
 	/**
-	 * Process the YAML recursively. That is, {@link #mergeJsObjects(Map, Map) merges reccursively} the current YAML to 
+	 * Process the YAML recursively. That is, {@link #mergeJsObjects(Map, Map) merges recursively} the current YAML to 
 	 * resultJso, and then calls itself (indirectly, via {@link #rawLoadingFromFile(String, Map)}) for each 
 	 * {@link #INCLUDES_FIELD includes}.
 	 *   
 	 */
 	@SuppressWarnings ( "unchecked" )
 	private static Map<String, Object> rawLoadingFromString ( 
-		String yamlStr, Map<String, Object> resultJso, String filePath ) throws UncheckedIOException
+		String yamlStr, Map<String, Object> resultJso, String filePath, ConfigurableEnvironment interpolator 
+	) throws UncheckedIOException
 	{
 		// Interpolate ${variable}, can contain system properties or environment properties
 		// TODO: SpEL
-		yamlStr = SPRING_INTERPOLATOR.resolvePlaceholders ( yamlStr );
+		//
+		// First, add local properties, by creating a new locally-scoped interpolator, which inherits
+		// the parent. Note that this is reentrant, the parent calls will see the original interpolator
+		// ie, local property defs apply downwards only and can't change a parent file
+		//
+		var localInterpolator = collectProperties ( interpolator, yamlStr, filePath );
 		
-		var mapper = new ObjectMapper ( new YAMLFactory () );
-		Map<String, Object> jsoTmp;
-		try {
-			jsoTmp = mapper.readValue ( yamlStr, LinkedHashMap.class );
-		}
-		catch ( JsonProcessingException ex ) {
-			throw ExceptionUtils.buildEx ( UncheckedIOException.class, ex, 
-				"Error while processing the YAML file: \"%s\": $cause", Optional.ofNullable ( filePath ).orElse ( "<N.A.>" )
-			);
-		}
+		// Then do the job
+		yamlStr = localInterpolator.resolvePlaceholders ( yamlStr );
+
+		// Now, re-parse YAML with interpolated values
+		Map<String, Object> jsoTmp = parseYAML ( yamlStr, filePath );
+		
+		
+		// OK, now we can process it against our rules
+		//
+		//
+		
+		// This has to be consumed and removed from the following processing.
+		jsoTmp.remove ( PROPDEF_FIELD );
+		
 		
 		// First, process all includes, so the inner-most inclusions can merge the ancestors
 		// 
@@ -134,26 +158,20 @@ public class YAMLUtils
 			if ( ! ( includesObj instanceof Collection ) ) ExceptionUtils.throwEx (
 				IllegalArgumentException.class,
 				"Error while loading YAML file \"%s\": %s directive must contain an array",
-				Optional.ofNullable ( filePath ).orElse ( "<N.A.>" ),
+				fileLabel ( filePath ),
 				INCLUDES_FIELD
 			);
 				
 			// Deal with relative paths
 			// null is a rare event here (filePath should be a file), but SpotBugs recommended to check it
 			//
-			String basePath = filePath == null 
-				? null 
-				: Optional.ofNullable ( Path.of ( filePath ).toAbsolutePath ().getParent () )
-					.map ( Object::toString )
-					.orElseThrow ( () -> ExceptionUtils.buildEx ( 
-						IllegalArgumentException.class, "Invalid file path: %s", filePath )
-			);
+			String basePath = getBasePath ( filePath );
 
 			for ( String include: (Collection<String>) includesObj )
 			{
 				if ( !( basePath == null || include.startsWith ( "/" ) ) )
 					include = basePath + "/" + include;
-				rawLoadingFromFile ( include, resultJso );
+				rawLoadingFromFile ( include, resultJso, localInterpolator );
 			}
 		} // if includesObj
 		
@@ -224,5 +242,96 @@ public class YAMLUtils
 				targetJso.put ( key, val );
 		} // for key
 	}
+	
+	
+	private static ConfigurableEnvironment collectProperties ( ConfigurableEnvironment parentEnv, String yamlStr, String filePath )
+	{
+		Map<String, Object> localProps = new HashMap<> ();
 		
+		// First the constant always-available vars
+		//
+		String myPath = getAbsolutePath ( filePath );
+		if ( myPath != null ) localProps.put ( MY_PATH_PROP, myPath );
+		
+		String basePath = getBasePath ( filePath );
+		if ( basePath != null ) localProps.put ( MY_DIR_PROP, basePath );
+		
+		// Next, any declared property
+		// TODO: exclude constants above
+		//
+		Map<String, Object> jso = parseYAML ( yamlStr, filePath );
+		Object declaredPropsObj = jso.get ( PROPDEF_FIELD );
+		if ( declaredPropsObj != null ) 
+		{
+			if ( ! ( declaredPropsObj instanceof Map ) )
+				ExceptionUtils.throwEx ( IllegalArgumentException.class, 
+					"%s directive in %s doesn't contain property definitions", 
+					PROPDEF_FIELD,
+					fileLabel ( filePath )
+			);
+	
+			@SuppressWarnings ( "unchecked" )
+			Map<String, Object> declaredProps = (Map<String, Object>) declaredPropsObj;
+			localProps.putAll ( declaredProps );
+		}
+		
+		// A new local environment, with the parent plus the local variables
+		//
+		ConfigurableEnvironment newEnv = new StandardEnvironment ();
+		MutablePropertySources propSrc = newEnv.getPropertySources ();
+		propSrc.addFirst ( new MapPropertySource (  filePath, localProps ) );		
+		newEnv.merge ( parentEnv );		
+		
+		return newEnv;
+	}
+	
+	@SuppressWarnings ( "unchecked" )
+	private static Map<String, Object> parseYAML ( String yamlStr, String filePath )
+	{
+		var mapper = new ObjectMapper ( new YAMLFactory () );
+		try {
+			return mapper.readValue ( yamlStr, LinkedHashMap.class );
+		}
+		catch ( JsonProcessingException ex ) {
+			throw ExceptionUtils.buildEx ( UncheckedIOException.class, ex, 
+				"Error while processing the YAML file: %s: $cause", fileLabel ( filePath )
+			);
+		}	
+	}
+	
+	private static String fileLabel ( String filePath )
+	{
+		return Optional.ofNullable ( filePath )
+			.map ( f -> '"' + f + '"' )
+			.orElse ( "<N.A.>" );
+	}
+	
+	/** TODO: move to its own utility class?! */
+	
+	private static String getAbsolutePath ( String filePath )
+	{
+		String absPath = filePath == null 
+			? null 
+			: Optional.ofNullable ( Path.of ( filePath ).toAbsolutePath () )
+				.map ( Object::toString )
+				.orElseThrow ( () -> ExceptionUtils.buildEx ( 
+					IllegalArgumentException.class, "Invalid file path: %s", filePath )
+		);
+		
+		return absPath;
+	}
+	
+	/** TODO: move to its own utility class?! */	
+	private static String getBasePath ( String filePath )
+	{
+		String basePath = filePath == null 
+			? null 
+			: Optional.ofNullable ( Path.of ( filePath ).toAbsolutePath ().getParent () )
+				.map ( Object::toString )
+				.orElseThrow ( () -> ExceptionUtils.buildEx ( 
+					IllegalArgumentException.class, "Invalid file path: %s", filePath )
+		);
+		
+		return basePath;
+	}
 }

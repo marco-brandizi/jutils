@@ -1,0 +1,15 @@
+# Custom variables are local to each file, the variables that a file
+# sees are the one coming from the parents plus those defined here.
+# The root file gets environment and Java properties
+"@properties":
+  appName: "The Nice App"
+  descr: "A top-level description"
+  appVersion: 2.0
+
+name: ${appName} ${localVar}
+version: ${appVersion}
+
+"@includes":
+- custom-props-inclusions-1.yml
+
+  

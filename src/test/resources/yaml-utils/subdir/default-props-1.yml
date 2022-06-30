@@ -1,0 +1,4 @@
+# Default properties about file and dir
+options @merge:
+- "Included file is ${me}"
+- "Included dir is ${mydir}"

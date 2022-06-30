@@ -4,6 +4,7 @@ import static java.lang.String.format;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -40,7 +41,6 @@ public class YAMLUtilsTest
 	 * @see {@link YAMLUtilsTest#testMapping()}
 	 *
 	 */
-	@SuppressWarnings ( "unused" )
 	private static class TestTarget
 	{
 		private String name, description;
@@ -139,7 +139,7 @@ public class YAMLUtilsTest
 		Map<String, Object> jso = YAMLUtils.loadYAMLFromFile ( TEST_DATA_DIR + "merge-inclusion-main.yml", HashMap.class );
 		log.debug ( "Result: {}", jso );
 		
-		assertEquals ( "app name is wrong!", "The Super Cool App", jso.get ( "name" ) );
+		assertEquals ( "name is wrong!", "The Super Cool App", jso.get ( "name" ) );
 		
 		// A mix of 'options' and 'options @merge' is used in the files
 		Set<String> opts = new HashSet<> ( (Collection<String> ) jso.get ( "options" ) );
@@ -157,8 +157,8 @@ public class YAMLUtilsTest
 
 		log.info ( "Result: {}", cfg );
 		
-		assertEquals ( "app name is wrong!", "The Super Cool App", cfg.getName () );
-		assertEquals ( "app name is wrong!", (Double) 2.5, cfg.getVersion () );
+		assertEquals ( "name is wrong!", "The Super Cool App", cfg.getName () );
+		assertEquals ( "version is wrong!", (Double) 2.5, cfg.getVersion () );
 		
 		var expectedOpts = Set.of ( "default options", "advanced options", "looking-for-trouble options" );
 		assertEquals ( "'options' is wrong!", expectedOpts, cfg.getOptions () );		
@@ -195,8 +195,8 @@ public class YAMLUtilsTest
 
 		log.info ( "Result: {}", cfg );
 		
-		assertEquals ( "app name is wrong!", format ( "The %s App", testName ), cfg.getName () );
-		assertEquals ( "app name is wrong!", (Double) 2.5, cfg.getVersion () );
+		assertEquals ( "name is wrong!", format ( "The %s App", testName ), cfg.getName () );
+		assertEquals ( "version is wrong!", 2.5d, (double) cfg.getVersion (), 0d );
 		
 		var expectedOpts = Set.of ( "default " + optionsName, "advanced " + optionsName );
 		assertEquals ( "'options' is wrong!", expectedOpts, cfg.getOptions () );			 
@@ -223,4 +223,65 @@ public class YAMLUtilsTest
 		var expectedOpts = Set.of ( "default child options", "advanced child options" );
 		assertEquals ( "Wrong child.options!", expectedOpts, child.getOptions () );			 
 	}
+	/**
+	 * You can use the {@link YAMLUtils#PROPDEF_FIELD} field to define variables. See the custom-prop.yml
+	 * example.
+	 */
+	@Test
+	public void testCustomProperties ()
+	{
+		// Properties can come from either the Java properties (-D) or the environment.
+		var testName = System.getenv ( "yamlUtils_testName" );
+		
+		TestTarget cfg = YAMLUtils.loadYAMLFromFile ( TEST_DATA_DIR + "custom-props.yml", TestTarget.class );
+
+		log.info ( "Result: {}", cfg );
+		
+		assertEquals ( "name is wrong!", format ( "The %s App", testName ), cfg.getName () );
+		assertEquals ( "version is wrong!", 2.5d, (double) cfg.getVersion (), 0d );
+		
+		var expectedOpts = Set.of ( "default options" );
+		assertEquals ( "'options' is wrong!", expectedOpts, cfg.getOptions () );			 
+	}
+
+	/**
+	 * Variables are inherited by included files, but not vice versa, see the example.
+	 */
+	@Test
+	public void testCustomPropertiesInclusions ()
+	{		
+		TestTarget cfg = YAMLUtils.loadYAMLFromFile ( TEST_DATA_DIR + "custom-props-inclusions.yml", TestTarget.class );
+
+		log.info ( "Result: {}", cfg );
+		
+		// The localVar placeholder are left unchanged, cause it's defined in the included file only
+		assertEquals ( "name is wrong!", "The Nice App ${localVar}", cfg.getName () );
+		
+		// This is re-defined in the included file, but the upper level wins
+		assertEquals ( "version is wrong!", 2.0d, (double) cfg.getVersion (), 0d );
+		
+		// This is composed by an upper-level var and a local var
+		assertEquals ( "description is wrong!", "The Nice App: Description from the included file", cfg.getDescription () );
+	}
+	
+	/**
+	 * You can use certain default properties for interpolation, see {@link YAMLUtils}.
+	 */
+	@Test
+	public void testDefaultProps ()
+	{
+		var cfgName = "default-props.yml";
+		var includedName = "default-props-1.yml";
+		
+		TestTarget cfg = YAMLUtils.loadYAMLFromFile ( TEST_DATA_DIR + cfgName, TestTarget.class );
+		
+		var expectedOpts = Set.of (
+			"Top file is " + Path.of ( TEST_DATA_DIR, cfgName ).toAbsolutePath ().toString (),
+			"Top dir is " + Path.of ( TEST_DATA_DIR ).toAbsolutePath ().toString (),
+			"Included file is " + Path.of ( TEST_DATA_DIR, "subdir", includedName ).toAbsolutePath ().toString (),
+			"Included dir is " + Path.of ( TEST_DATA_DIR, "subdir" ).toAbsolutePath ().toString ()
+		);
+		assertEquals ( "'options' is wrong!", expectedOpts, cfg.getOptions () );			 
+	}
+	
 }

@@ -1,0 +1,10 @@
+# Custom variables are local to each file, the variables that a file
+# sees are the one coming from the parents plus those defined here.
+# The root file gets environment and Java properties
+"@properties":
+  # The local defs see environment/property variables.
+  descr: "Description from the included file"
+  appVersion: 1.0
+  localVar: "Local value"
+
+description: "${appName}: ${descr}"

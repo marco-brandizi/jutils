@@ -1,0 +1,10 @@
+# Some variables are auto-defined
+name: Default props
+
+options @merge:
+- "Top file is ${me}"
+- "Top dir is ${mydir}"
+"@includes":
+- subdir/default-props-1.yml
+
+  

@@ -151,7 +151,8 @@ public class YAMLUtils
 		
 		
 		// First, process all includes, so the inner-most inclusions can merge the ancestors
-		// 
+		// TODO: convert single value to array
+		//
 		Object includesObj = jsoTmp.get ( INCLUDES_FIELD );
 		if ( includesObj != null )
 		{

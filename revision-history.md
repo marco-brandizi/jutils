@@ -3,9 +3,10 @@
 *This file was last revised on 2022-05-30*
 
 ## 11.0-SNAPSHOT
-* `YAMLUtils` added, to manage configurations. 
 * **Big refactoring**: previous split into multiple jutils-xxx modules removed, 
   now there is only one Maven project, with optional dependencies (see the [POM](pom.xml)).
+* `YAMLUtils` added, to manage configurations. 
+* `ConfigBootstrapWebListener` added.
 * More exceptions added to `uk.ac.ebi.utils.opt.net.exceptions`
 * `ExceptionUtils`, methods like `<build|throw>Ex()` are able to accept `$cause` in the message template.
 

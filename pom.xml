@@ -150,6 +150,14 @@
 		  <optional>true</optional>
 		</dependency>		
 
+		<!-- Required by uk.ac.ebi.utils.opt.net.ConfigBootstrapWebListener -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>4.0.1</version>
+			<optional>true</optional>
+		</dependency>
+
 		<!-- Required by
 			uk.ac.ebi.utils.opt.io
 			uk.ac.ebi.utils.opt.config

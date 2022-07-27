@@ -2,7 +2,7 @@
 app name: "The Super Cool App"
 app description: "A neural network that learns how to print Hello, World"
 # For overridden fields (those not using @merge) the logics is that a default is loaded from the an
-# included YML, and then it might be overridden by the parent 3.0
+# included YML, and then it might be overridden by the parent. So, here, 3.0 is the value that wins.
 version: 3.0
 options: default options 
 "@includes":

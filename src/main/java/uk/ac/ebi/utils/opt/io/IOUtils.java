@@ -49,7 +49,6 @@ import static uk.ac.ebi.utils.exceptions.ExceptionUtils.throwEx;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;

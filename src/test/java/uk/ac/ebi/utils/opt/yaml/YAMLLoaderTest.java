@@ -223,6 +223,7 @@ public class YAMLLoaderTest
 		var expectedOpts = Set.of ( "default child options", "advanced child options" );
 		assertEquals ( "Wrong child.options!", expectedOpts, child.getOptions () );			 
 	}
+	
 	/**
 	 * You can use the {@link YAMLLoader#PROPDEF_FIELD} field to define variables. See the custom-prop.yml
 	 * example.
@@ -282,6 +283,31 @@ public class YAMLLoaderTest
 			"Included dir is " + Path.of ( TEST_DATA_DIR, "subdir" ).toAbsolutePath ().toString ()
 		);
 		assertEquals ( "'options' is wrong!", expectedOpts, cfg.getOptions () );			 
+	}
+	
+	/**
+	 * the {@link YAMLLoader#INCLUDES_OPTIONAL_FIELD} can be used to have optional inclusions, ie, included files which are
+	 * actually loaded if they exists.
+	 * 
+	 * In particular, this can be useful to define files that contain an optional inclusion like
+	 * config-local.yml. A file like this can be auto-updated without loosing the specific user-provided
+	 * configuration for an app.
+	 * 
+	 */
+	@Test
+	public void testOptionalInclusion ()
+	{
+		TestTarget cfg = YAMLLoader.loadYAMLFromFile ( TEST_DATA_DIR + "optional-inclusion.yml", TestTarget.class );
+		log.info ( "Result: {}", cfg );
+		assertEquals ( "Wrong name!", "The Super Cool App", cfg.getName () );
+		assertEquals ( "Wrong version!", 2.5d, cfg.getVersion (), 0d );
+		
+		TestTarget child = cfg.getChild ();
+		assertEquals ( "Wrong child.name!", "The Child App", child.getName () );
+		assertEquals ( "Wrong child.version!", 6.0, child.getVersion (), 0d );
+	
+		var expectedOpts = Set.of ( "default child options", "advanced child options" );
+		assertEquals ( "Wrong child.options!", expectedOpts, child.getOptions () );			 
 	}
 	
 }

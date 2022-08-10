@@ -9,6 +9,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.MutablePropertySources;
@@ -30,7 +32,7 @@ import uk.ac.ebi.utils.opt.io.IOUtils;
  * 
  * <ul>
  *   <li>It allows for inclusions, using the {@link #INCLUDES_FIELD} at the YAML document/file root level (ie, not 
- *   in a nested level</li>
+ *   in a nested level. Optional inclusions are also supported, via {@link #INCLUDES_OPTIONAL_FIELD}.</li>
  *   <li>When including a file from a parent, you can extend (instead of override) fields that the parent defined 
  *   as arrays. Append {@link #MERGE_SUFFIX} to the field and it's values will be added to the field with the same
  *   name (minus the postfis). For instance, if a parent file has: {@code options: [default]} and an included file has
@@ -54,9 +56,9 @@ import uk.ac.ebi.utils.opt.io.IOUtils;
  */
 public class YAMLLoader
 {
-	// TODO: remove
-	// private static final StandardEnvironment SPRING_INTERPOLATOR = new StandardEnvironment ();
 	public static final String INCLUDES_FIELD = "@includes";
+	public static final String INCLUDES_OPTIONAL_FIELD = "@includes-optional";
+
 	public static final String MERGE_SUFFIX = "@merge";
 	public static final String PROPDEF_FIELD = "@properties";
 	
@@ -69,6 +71,9 @@ public class YAMLLoader
 	 * A property with this name is always available and contains the dir in which the YAML file is
 	 */	
 	public static final String MY_DIR_PROP = "mydir";
+	
+	private static Logger slog = LoggerFactory.getLogger ( YAMLLoader.class );
+
 	
 	/**
 	 * @See {@link #loadYAMLFromString(String, Class)}.
@@ -93,8 +98,9 @@ public class YAMLLoader
 	 * target. This is wrapped by similar public methods, we don't think it's useful to expose
 	 * filePath here.
 	 *  
-	 * @param filePath is used for the relative paths mentioned by the {@link #INCLUDES_FIELD includes directive}.
-	 * It can be null if such directive isn't used, or it's used with absolute paths only. 
+	 * @param filePath is used for the relative paths mentioned by the {@link #INCLUDES_FIELD includes} or
+	 * {@link #INCLUDES_OPTIONAL_FIELD optional includes} directives. It can be null if such directives aren't used, 
+	 * or are used with absolute paths only. 
 	 * 
 	 */
 	private static <T> T loadYAMLFromString ( String yamlStr, Class<T> targetClass, String filePath ) 
@@ -118,10 +124,9 @@ public class YAMLLoader
 	/**
 	 * Process the YAML recursively. That is, {@link #mergeJsObjects(Map, Map) merges recursively} the current YAML to 
 	 * resultJso, and then calls itself (indirectly, via {@link #rawLoadingFromFile(String, Map)}) for each 
-	 * {@link #INCLUDES_FIELD includes}.
+	 * {@link #INCLUDES_FIELD include} or {@link #INCLUDES_OPTIONAL_FIELD optional include}.
 	 *   
 	 */
-	@SuppressWarnings ( "unchecked" )
 	private static Map<String, Object> rawLoadingFromString ( 
 		String yamlStr, Map<String, Object> resultJso, String filePath, ConfigurableEnvironment interpolator 
 	) throws UncheckedIOException
@@ -151,30 +156,10 @@ public class YAMLLoader
 		
 		
 		// First, process all includes, so the inner-most inclusions can merge the ancestors
-		// TODO: convert single value to array
+		// TODO: convert single value to array?
 		//
-		Object includesObj = jsoTmp.get ( INCLUDES_FIELD );
-		if ( includesObj != null )
-		{
-			if ( ! ( includesObj instanceof Collection ) ) ExceptionUtils.throwEx (
-				IllegalArgumentException.class,
-				"Error while loading YAML file \"%s\": %s directive must contain an array",
-				fileLabel ( filePath ),
-				INCLUDES_FIELD
-			);
-				
-			// Deal with relative paths
-			// null is a rare event here (filePath should be a file), but SpotBugs recommended to check it
-			//
-			String basePath = getBasePath ( filePath );
-
-			for ( String include: (Collection<String>) includesObj )
-			{
-				if ( !( basePath == null || include.startsWith ( "/" ) ) )
-					include = basePath + "/" + include;
-				rawLoadingFromFile ( include, resultJso, localInterpolator );
-			}
-		} // if includesObj
+		processIncludes ( jsoTmp, resultJso, localInterpolator, filePath, false );
+		processIncludes ( jsoTmp, resultJso, localInterpolator, filePath, true );
 		
 		// Now resultJso is the merge of all the descendant inclusions, let's merge our own content
 		mergeJsObjects ( jsoTmp, resultJso );	
@@ -196,7 +181,7 @@ public class YAMLLoader
 			Object val = jso.get ( key );
 			
 			// Not my duty
-			if ( INCLUDES_FIELD.equals ( key ) ) continue;
+			if ( INCLUDES_FIELD.equals ( key ) || INCLUDES_OPTIONAL_FIELD.equals ( key ) ) continue;
 			else if ( key.matches ( ".+" + MERGE_SUFFIX + "\\s*$" ) )
 			{
 				// Merges lists into lists, or structured objects into structured objects
@@ -334,5 +319,62 @@ public class YAMLLoader
 		);
 		
 		return basePath;
+	}
+	
+	/**
+	 * Processes {@link #INCLUDES_FIELD} or {@link #INCLUDES_OPTIONAL_FIELD}.
+	 * 
+	 * This is used by {@link #rawLoadingFromString(String, Map, String, ConfigurableEnvironment)}, to recursively
+	 * load the files linked by these directives.
+	 * 
+	 * @param jso the JSON configuration being processes 
+	 * @param targetJso the JSON configuration where jso and the results from includes directive are merged
+	 * @param interpolator the property interpolator being currently used 
+	 * @param yamlPath the file path being loaded (for log/error messages)
+	 * @param isOptional if you want to process the optional includes or the mandatory ones.
+	 */
+	@SuppressWarnings ( "unchecked" )
+	private static void processIncludes (
+		Map<String, Object> jso, Map<String, Object> targetJso, ConfigurableEnvironment interpolator, 
+		String yamlPath, boolean isOptional
+	)
+	{
+		String fieldName = isOptional ? INCLUDES_OPTIONAL_FIELD : INCLUDES_FIELD;
+		
+		Object includesObj = jso.get ( fieldName );
+		if ( includesObj == null ) return;
+
+		if ( ! ( includesObj instanceof Collection ) ) ExceptionUtils.throwEx (
+			IllegalArgumentException.class,
+			"Error while loading YAML file \"%s\": %s directive must contain an array",
+			fileLabel ( yamlPath ),
+			fieldName
+		);
+			
+		// Deal with relative paths
+		// null is a rare event here (filePath should be a file), but SpotBugs recommended to check it
+		//
+		String basePath = getBasePath ( yamlPath );
+
+		for ( String includePath: (Collection<String>) includesObj )
+		{
+			if ( !( basePath == null || includePath.startsWith ( "/" ) ) )
+				includePath = basePath + "/" + includePath;
+			
+			if ( !Path.of ( includePath ).toFile ().exists () )
+			{
+				if ( !isOptional ) ExceptionUtils.throwEx (
+					IllegalArgumentException.class,
+					"Error while loading YAML file \"%s\": include \"%s\" doesn't exist, use %s for optional includes",
+					fileLabel ( yamlPath ),
+					includePath,
+					fieldName
+				);
+
+				slog.info ( "Ignoring non-existent otpional include \"{}\"", includePath );
+				continue;
+			}
+			rawLoadingFromFile ( includePath, targetJso, interpolator );
+		}
 	}
 }

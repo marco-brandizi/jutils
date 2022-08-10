@@ -34,14 +34,15 @@ import uk.ac.ebi.utils.opt.io.IOUtils;
  *   <li>It allows for inclusions, using the {@link #INCLUDES_FIELD} at the YAML document/file root level (ie, not 
  *   in a nested level. Optional inclusions are also supported, via {@link #INCLUDES_OPTIONAL_FIELD}.</li>
  *   <li>When including a file from a parent, you can extend (instead of override) fields that the parent defined 
- *   as arrays. Append {@link #MERGE_SUFFIX} to the field and it's values will be added to the field with the same
- *   name (minus the postfis). For instance, if a parent file has: {@code options: [default]} and an included file has
+ *   as arrays or objects. Append {@link #MERGE_SUFFIX} to the field and it's values will be added to the field with the same
+ *   name (minus the postfix). For instance, if a parent file has: {@code options: [default]} and an included file has
  *   {@code options @merge: [advanced]}, the result for options will be [default, advanced]. When mapping to JavaBean
  *   properties of type collection, the collection is populated with the merge result (and properties like order or
- *   repeatitions depdend on the exact collection type used for the JavaBean).</li>
+ *   repetitions depend on the exact collection type used for the JavaBean).</li>
  *   <li>Property interpolation: When using <tt>${propName}</tt> in YAML values (not field names), the referred
- *   property replaced with values in the {@link System#getProperties() JVM properties} or
- *   {@link System#getenv() environment variables}. This is based on {@link StandardEnvironment Spring}</li>
+ *   property replaced with values in the {@link System#getProperties() JVM properties}, or
+ *   {@link System#getenv() environment variables}, or even properties defined via {@link #PROPDEF_FIELD}.
+ *   This is based on {@link StandardEnvironment Spring}</li>
  * </ul>
  * 
  * See the unit tests for examples of use.<br/><br/>

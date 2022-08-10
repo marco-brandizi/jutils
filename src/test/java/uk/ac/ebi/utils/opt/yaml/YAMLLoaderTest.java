@@ -20,7 +20,7 @@ import org.springframework.core.env.StandardEnvironment;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import uk.ac.ebi.utils.opt.config.YAMLUtils;
+import uk.ac.ebi.utils.opt.config.YAMLLoader;
 
 /**
  * Several examples of use here, see also the test files in src/test/resources/yaml-utils
@@ -29,7 +29,7 @@ import uk.ac.ebi.utils.opt.config.YAMLUtils;
  * <dl><dt>Date:</dt><dd>15 Jun 2022</dd></dl>
  *
  */
-public class YAMLUtilsTest
+public class YAMLLoaderTest
 {
 	private Logger log = LoggerFactory.getLogger ( this.getClass () );
 
@@ -38,7 +38,7 @@ public class YAMLUtilsTest
 	/**
 	 * Example of POIO onto which we map some of the test files.
 	 * 
-	 * @see {@link YAMLUtilsTest#testMapping()}
+	 * @see {@link YAMLLoaderTest#testMapping()}
 	 *
 	 */
 	private static class TestTarget
@@ -92,7 +92,7 @@ public class YAMLUtilsTest
 	@SuppressWarnings ( "unchecked" )
 	public void testBasicMapping ()
 	{
-		Map<String, Object> jso = YAMLUtils.loadYAMLFromFile ( TEST_DATA_DIR + "basic.yml", HashMap.class );
+		Map<String, Object> jso = YAMLLoader.loadYAMLFromFile ( TEST_DATA_DIR + "basic.yml", HashMap.class );
 
 		assertEquals ( "name is wrong!", "Jon", jso.get ( "name" ) );
 		assertEquals ( "surname is wrong!", "Doe", jso.get ( "surname" ) );
@@ -111,16 +111,16 @@ public class YAMLUtilsTest
 	}
 	
 	/**
-	 * Shows how to use {@link YAMLUtils#INCLUDES_FIELD} to include a file from another.
+	 * Shows how to use {@link YAMLLoader#INCLUDES_FIELD} to include a file from another.
 	 * 
 	 * The result is a merge of properties. If properties are repeated downstream, they override the parent's
-	 * values, unless {@link YAMLUtils#MERGE_SUFFIX the merge directive} is used (see {@link #testInclusionMerge()}). 
+	 * values, unless {@link YAMLLoader#MERGE_SUFFIX the merge directive} is used (see {@link #testInclusionMerge()}). 
 	 */
 	@Test
 	@SuppressWarnings ( "unchecked" )
 	public void testInclusion ()
 	{
-		Map<String, Object> jso = YAMLUtils.loadYAMLFromFile ( TEST_DATA_DIR + "inclusion-main.yml", HashMap.class );
+		Map<String, Object> jso = YAMLLoader.loadYAMLFromFile ( TEST_DATA_DIR + "inclusion-main.yml", HashMap.class );
 		assertEquals ( "app name is wrong!", "The Super Cool App", jso.get ( "app name" ) );
 		assertEquals ( "options is wrong!", "default options", jso.get ( "options" ) );		
 		assertEquals ( "'more options' is wrong!", "advanced options", jso.get ( "more options" ) );		
@@ -129,14 +129,14 @@ public class YAMLUtilsTest
 	}
 
 	/**
-	 * Tests the use of the {@link YAMLUtils#MERGE_SUFFIX merge directive} to merge parent fields and fields in the included files.
+	 * Tests the use of the {@link YAMLLoader#MERGE_SUFFIX merge directive} to merge parent fields and fields in the included files.
 	 * The merge behaviour for a field is enabled by appending this suffix to its name.
 	 */
 	@Test
 	@SuppressWarnings ( "unchecked" )	
 	public void testInclusionMerge ()
 	{
-		Map<String, Object> jso = YAMLUtils.loadYAMLFromFile ( TEST_DATA_DIR + "merge-inclusion-main.yml", HashMap.class );
+		Map<String, Object> jso = YAMLLoader.loadYAMLFromFile ( TEST_DATA_DIR + "merge-inclusion-main.yml", HashMap.class );
 		log.debug ( "Result: {}", jso );
 		
 		assertEquals ( "name is wrong!", "The Super Cool App", jso.get ( "name" ) );
@@ -153,7 +153,7 @@ public class YAMLUtilsTest
 	@Test
 	public void testMapping ()
 	{
-		TestTarget cfg = YAMLUtils.loadYAMLFromFile ( TEST_DATA_DIR + "merge-inclusion-main.yml", TestTarget.class );
+		TestTarget cfg = YAMLLoader.loadYAMLFromFile ( TEST_DATA_DIR + "merge-inclusion-main.yml", TestTarget.class );
 
 		log.info ( "Result: {}", cfg );
 		
@@ -173,7 +173,7 @@ public class YAMLUtilsTest
 	{
 		// We expect it to work, despite the file has a non-mapped field.
 		// So, if there is no exception is thrown, we're done.
-		YAMLUtils.loadYAMLFromFile ( TEST_DATA_DIR + "mapping-unused-fields.yml", TestTarget.class );
+		YAMLLoader.loadYAMLFromFile ( TEST_DATA_DIR + "mapping-unused-fields.yml", TestTarget.class );
 	}
 	
 	/**
@@ -191,7 +191,7 @@ public class YAMLUtilsTest
 		sysp.setProperty ( "testPrefix", "interpolation" );
 		sysp.setProperty ( "optionsName", optionsName );
 
-		TestTarget cfg = YAMLUtils.loadYAMLFromFile ( TEST_DATA_DIR + "interpolation.yml", TestTarget.class );
+		TestTarget cfg = YAMLLoader.loadYAMLFromFile ( TEST_DATA_DIR + "interpolation.yml", TestTarget.class );
 
 		log.info ( "Result: {}", cfg );
 		
@@ -203,7 +203,7 @@ public class YAMLUtilsTest
 	}
 
 	/**
-	 * This is an example of {@link YAMLUtils#MERGE_SUFFIX merge option} applied to nested objects and 
+	 * This is an example of {@link YAMLLoader#MERGE_SUFFIX merge option} applied to nested objects and 
 	 * also applied to nested array fields.
 	 * 
 	 * See the test files nested-mapping.yml.
@@ -211,7 +211,7 @@ public class YAMLUtilsTest
 	@Test
 	public void testNestedMapping ()
 	{
-		TestTarget cfg = YAMLUtils.loadYAMLFromFile ( TEST_DATA_DIR + "nested-mapping.yml", TestTarget.class );
+		TestTarget cfg = YAMLLoader.loadYAMLFromFile ( TEST_DATA_DIR + "nested-mapping.yml", TestTarget.class );
 		log.info ( "Result: {}", cfg );
 		assertEquals ( "Wrong name!", "The Super Cool App", cfg.getName () );
 		assertEquals ( "Wrong version!", 2.5d, cfg.getVersion (), 0d );
@@ -224,7 +224,7 @@ public class YAMLUtilsTest
 		assertEquals ( "Wrong child.options!", expectedOpts, child.getOptions () );			 
 	}
 	/**
-	 * You can use the {@link YAMLUtils#PROPDEF_FIELD} field to define variables. See the custom-prop.yml
+	 * You can use the {@link YAMLLoader#PROPDEF_FIELD} field to define variables. See the custom-prop.yml
 	 * example.
 	 */
 	@Test
@@ -233,7 +233,7 @@ public class YAMLUtilsTest
 		// Properties can come from either the Java properties (-D) or the environment.
 		var testName = System.getenv ( "yamlUtils_testName" );
 		
-		TestTarget cfg = YAMLUtils.loadYAMLFromFile ( TEST_DATA_DIR + "custom-props.yml", TestTarget.class );
+		TestTarget cfg = YAMLLoader.loadYAMLFromFile ( TEST_DATA_DIR + "custom-props.yml", TestTarget.class );
 
 		log.info ( "Result: {}", cfg );
 		
@@ -250,7 +250,7 @@ public class YAMLUtilsTest
 	@Test
 	public void testCustomPropertiesInclusions ()
 	{		
-		TestTarget cfg = YAMLUtils.loadYAMLFromFile ( TEST_DATA_DIR + "custom-props-inclusions.yml", TestTarget.class );
+		TestTarget cfg = YAMLLoader.loadYAMLFromFile ( TEST_DATA_DIR + "custom-props-inclusions.yml", TestTarget.class );
 
 		log.info ( "Result: {}", cfg );
 		
@@ -265,7 +265,7 @@ public class YAMLUtilsTest
 	}
 	
 	/**
-	 * You can use certain default properties for interpolation, see {@link YAMLUtils}.
+	 * You can use certain default properties for interpolation, see {@link YAMLLoader}.
 	 */
 	@Test
 	public void testDefaultProps ()
@@ -273,7 +273,7 @@ public class YAMLUtilsTest
 		var cfgName = "default-props.yml";
 		var includedName = "default-props-1.yml";
 		
-		TestTarget cfg = YAMLUtils.loadYAMLFromFile ( TEST_DATA_DIR + cfgName, TestTarget.class );
+		TestTarget cfg = YAMLLoader.loadYAMLFromFile ( TEST_DATA_DIR + cfgName, TestTarget.class );
 		
 		var expectedOpts = Set.of (
 			"Top file is " + Path.of ( TEST_DATA_DIR, cfgName ).toAbsolutePath ().toString (),

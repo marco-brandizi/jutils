@@ -52,7 +52,7 @@ import uk.ac.ebi.utils.opt.io.IOUtils;
  * <dl><dt>Date:</dt><dd>14 Jun 2022</dd></dl>
  *
  */
-public class YAMLUtils
+public class YAMLLoader
 {
 	// TODO: remove
 	// private static final StandardEnvironment SPRING_INTERPOLATOR = new StandardEnvironment ();

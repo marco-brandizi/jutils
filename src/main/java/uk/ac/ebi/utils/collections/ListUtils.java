@@ -44,6 +44,8 @@
 package uk.ac.ebi.utils.collections;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Miscellanea utilities about lists. 
@@ -106,4 +108,14 @@ public class ListUtils
 			set ( list, i, v );
 	} 
 
+	/**
+	 * The union of all the parameters (the list elements) in a single list
+	 */
+	@SuppressWarnings ( "unchecked" )
+	public static <T> List<T> union ( List<? extends T> ...lists)
+	{
+		return Stream.of ( (List<T>[]) lists )
+		.flatMap ( List::stream )
+		.collect ( Collectors.toList () );
+	}
 }

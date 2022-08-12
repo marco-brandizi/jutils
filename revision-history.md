@@ -9,6 +9,7 @@
 * `ConfigBootstrapWebListener` added.
 * More exceptions added to `uk.ac.ebi.utils.opt.net.exceptions`
 * `ExceptionUtils`, methods like `<build|throw>Ex()` are able to accept `$cause` in the message template.
+* `ListUtils.union()` added.
 
 
 *If not otherwise specified, items refer to the base module (`jutils`)*.

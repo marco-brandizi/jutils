@@ -2,7 +2,6 @@
 # See https://github.com/Rothamsted/knetminer-common for details. 
 #
 if [[ "$GIT_BRANCH" == 'master' ]]; then
-	echo -e "\n\n\tGenerating Javadocs\n"
 	bash ./ci-build/mk-javadocs.sh
 	
 	echo -e "\n  Committing Javadocs\n"

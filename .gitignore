@@ -7,3 +7,4 @@
 /ci-build/install.sh
 # set by GH Actions
 /settings.xml
+.DS_Store

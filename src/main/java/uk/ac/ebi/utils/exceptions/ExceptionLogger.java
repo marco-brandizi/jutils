@@ -56,20 +56,28 @@ public class ExceptionLogger
 		return getLogger ( (Logger) null );
 	}
 	
+	public void logEx ( String baseMessage,Throwable ex, Object... msgParams) 
+	{
+		logEx ( baseMessage, ". Error {}", ". Details {}", ex, msgParams );
+	}
+	
 	public void logEx ( String baseMessage, String errorMsgTail, String debugMsgTail, Throwable ex,
 		Object... msgParams) 
 	{
 		Object [] out = new Object [ msgParams.length + 1 ];
-		System.arraycopy ( msgParams, 0, out, 0, msgParams.length );
+		
 		
 		if ( log.isDebugEnabled() )
 		{
+		   System.arraycopy ( msgParams, 0, out, 0, msgParams.length );
 		   out [ msgParams.length ] = ex;
 		   log.debug ( baseMessage + debugMsgTail, out );
-		}
-		if ( log.isErrorEnabled() ) {
+		   if ( !log.isErrorEnabled() ) {
+			   return;
+		   }
 		   out [ msgParams.length ] = ex.getMessage ();
 		   log.error ( baseMessage + errorMsgTail, out );
 		}
+		
 	}
 }

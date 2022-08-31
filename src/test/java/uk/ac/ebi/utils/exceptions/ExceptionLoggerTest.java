@@ -1,10 +1,9 @@
 package uk.ac.ebi.utils.exceptions;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.contrib.java.lang.system.SystemOutRule;
 
 /**
  *
@@ -14,70 +13,48 @@ import org.junit.Test;
  */
 public class ExceptionLoggerTest
 {
-	
+	@Rule
+	public final SystemOutRule systemOutRule = new SystemOutRule().enableLog();
+
 	
 	@Test
-	public void testLogExWithDebug ()
+	public void testBasics ()
 	{
-		RuntimeException ex = ExceptionUtils.buildEx ( 
-			RuntimeException.class, "A test exception with param having value: %.1f param", 10.5 
-		);
 		
-		Object [] param= {10.5};
-		Object[] init = initConsole ();
+		RuntimeException ex = new RuntimeException ( "A runtime test exception with defaults" );
 		
-		setLoggingLevel(ch.qos.logback.classic.Level.DEBUG);
+		ExceptionLogger.getLogger ( getClass () ).logEx ( "Testing the Runtime Exception Logger", ex, 10.5 );
 		
-		ExceptionLogger.getLogger ( getClass () ).logEx ( "Testing the Runtime exception", " error {}", " details {}", ex,
-				param );
-		String cons = readFromConsole ( init );
-		Assert.assertTrue ( cons.contains ( "[DEBUG]: Testing the Runtime exception details 10.5" ) );
+		Assert.assertTrue ( systemOutRule.getLog().contains ( "[DEBUG]: Testing the Runtime Exception Logger. Details 10.5" ) );
+		Assert.assertTrue ( systemOutRule.getLog().contains ( "java.lang.RuntimeException: A runtime test exception with defaults" ) );
 		
-		Assert.assertTrue ( cons.contains ( "java.lang.RuntimeException: A test exception with param having value: 10.5 param" ) );
+		Assert.assertTrue ( systemOutRule.getLog().contains ( "[ERROR]: Testing the Runtime Exception Logger. Error 10.5" ) );
+
 	}
 	
 	@Test
-	public void testLogExWithError ()
+	public void testLogEx ()
 	{
-		RuntimeException ex = ExceptionUtils.buildEx ( 
-			RuntimeException.class, "A test exception with param having value: %.1f param", 10.5 
-		);
+		RuntimeException ex = new RuntimeException ( "A runtime test exception with Error and Details message" );
 		
-		Object [] param = { };
-		Object [] init = initConsole ();
+		ExceptionLogger.getLogger ( getClass () ).logEx ( "Testing the Runtime exception", " Error without param", " Details without param", ex);
 		
-		setLoggingLevel ( ch.qos.logback.classic.Level.ERROR );
+		Assert.assertTrue ( systemOutRule.getLog().contains ( "[DEBUG]: Testing the Runtime exception Details without param" ) );
+		Assert.assertTrue ( systemOutRule.getLog().contains ( "java.lang.RuntimeException: A runtime test exception with Error and Details message" ) );
 		
-		ExceptionLogger.getLogger ( getClass () ).logEx ( "Testing the Runtime exception", " error {}", " details {}", ex,
-				param );
-		String cons = readFromConsole ( init );
-		Assert.assertTrue ( cons.contains ( "[ERROR]: Testing the Runtime exception error A test exception with param having value: 10.5 param" ) );
+		Assert.assertTrue ( systemOutRule.getLog().contains ( "[ERROR]: Testing the Runtime exception Error without param" ) );
 	}
 	
-	Object [] initConsole () 
+	@Test
+	public void testLogExParams ()
 	{
-		ByteArrayOutputStream baos = new ByteArrayOutputStream ();
-		PrintStream ps = new PrintStream ( baos );
-		PrintStream old = System.out;
-		System.setOut ( ps );
-		Object [] out = { baos,old };
-		return out;
+		RuntimeException ex = new RuntimeException ( "A runtime test exception with Error and Details message" );
+		
+		ExceptionLogger.getLogger ( getClass () ).logEx ( "Testing the Runtime exception", ". Error param {}", ". Details param {}", ex, "ERROR",100);
+		
+		Assert.assertTrue ( systemOutRule.getLog().contains ( "[DEBUG]: Testing the Runtime exception. Details param ERROR" ) );
+		Assert.assertTrue ( systemOutRule.getLog().contains ( "java.lang.RuntimeException: A runtime test exception with Error and Details message" ) );
+		
+		Assert.assertTrue ( systemOutRule.getLog().contains ( "ERROR]: Testing the Runtime exception. Error param ERROR" ) );
 	}
-	
-	String readFromConsole ( Object [] obj )
-	{
-		System.out.flush ();
-		System.setOut ( ( PrintStream ) obj [1] );
-		return obj [0].toString ();
-	}
-	
-	
-	public static void setLoggingLevel ( ch.qos.logback.classic.Level level ) 
-	{
-		ch.qos.logback.classic.Logger root = ( ch.qos.logback.classic.Logger ) org.slf4j.LoggerFactory
-				.getLogger ( ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME );
-		root.setLevel ( level );
-	}
-	
-	
 }

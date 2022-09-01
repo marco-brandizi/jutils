@@ -14,7 +14,7 @@ import org.junit.contrib.java.lang.system.SystemOutRule;
 public class ExceptionLoggerTest
 {
 	@Rule
-	private final SystemOutRule systemOutRule = new SystemOutRule().enableLog();
+	public final SystemOutRule systemOutRule = new SystemOutRule().enableLog();
 
 	/** This shows the typical way you're going to use it **/
 	private final ExceptionLogger exlog = ExceptionLogger.getLogger ( getClass () );
@@ -26,35 +26,25 @@ public class ExceptionLoggerTest
 	@Test
 	public void testBasics ()
 	{
-		exlog.logEx ( "Testing the Runtime Exception Logger param: {}", testEx, 10.5 );
 		
-		Assert.assertTrue ( systemOutRule.getLog().contains ( "[DEBUG]: Testing the Runtime Exception Logger. Details 10.5" ) );
-		Assert.assertTrue ( systemOutRule.getLog().contains ( "java.lang.RuntimeException: A runtime test exception with defaults" ) );
+		exlog.logEx ( "Testing the Runtime Exception Logger",testEx );
 		
-		Assert.assertTrue ( systemOutRule.getLog().contains ( "[ERROR]: Testing the Runtime Exception Logger. Error 10.5" ) );
+		Assert.assertTrue ( systemOutRule.getLog().contains ( "[ERROR]: Testing the Runtime Exception Logger. Error: raised on purpose for testing" ) );
+		
+		Assert.assertTrue ( systemOutRule.getLog().contains ( "[DEBUG]: Testing the Runtime Exception Logger. Details:\n"
+				+ "java.lang.RuntimeException: raised on purpose for testing" ) );
 
 	}
 	
 	@Test
 	public void testLogEx ()
 	{
-		exlog.logEx ( "Testing the Runtime exception", " Error without param", " Details without param", testEx);
+		exlog.logEx ( "Testing the Runtime exception", ": Custom Error :: {}", ": Custom Details ::", testEx);
 		
-		Assert.assertTrue ( systemOutRule.getLog().contains ( "[DEBUG]: Testing the Runtime exception Details without param" ) );
-		Assert.assertTrue ( systemOutRule.getLog().contains ( "java.lang.RuntimeException: A runtime test exception with Error and Details message" ) );
+		Assert.assertTrue ( systemOutRule.getLog().contains ( "[DEBUG]: Testing the Runtime exception: Custom Details ::\n"
+				+ "java.lang.RuntimeException: raised on purpose for testing" ) );
 		
-		Assert.assertTrue ( systemOutRule.getLog().contains ( "[ERROR]: Testing the Runtime exception Error without param" ) );
-	}
-	
-	@Test
-	public void testLogExParams ()
-	{
-		exlog.logEx ( "Testing the Runtime exception", ". Error param {}", ". Details param {}", testEx, "ERROR",100);
-		
-		Assert.assertTrue ( systemOutRule.getLog().contains ( "[DEBUG]: Testing the Runtime exception. Details param ERROR" ) );
-		Assert.assertTrue ( systemOutRule.getLog().contains ( "java.lang.RuntimeException: A runtime test exception with Error and Details message" ) );
-		
-		Assert.assertTrue ( systemOutRule.getLog().contains ( "ERROR]: Testing the Runtime exception. Error param ERROR" ) );
+		Assert.assertTrue ( systemOutRule.getLog().contains ( "[ERROR]: Testing the Runtime exception: Custom Error :: raised on purpose for testing" ) );
 	}
 	
 }

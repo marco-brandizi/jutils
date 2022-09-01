@@ -25,13 +25,11 @@ public class ExceptionLogger
 	
 	private ExceptionLogger ( String name )
 	{
-		// Reuse extended versions when possible!
 		this ( LoggerFactory.getLogger( name ) );		
 	}
 	
 	private ExceptionLogger ( Class<?> cls )
 	{
-		// Reuse extended versions when possible!
 		this ( LoggerFactory.getLogger( cls ) );
 	}
 	
@@ -52,7 +50,6 @@ public class ExceptionLogger
 	
 	public static ExceptionLogger getLogger ()
 	{
-		// Reuse extended versions when possible!
 		return getLogger ( (Logger) null );
 	}
 	

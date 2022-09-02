@@ -45,12 +45,14 @@ package uk.ac.ebi.utils.regex;
 import static java.lang.System.out;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class RegExTest
@@ -86,6 +88,27 @@ public class RegExTest
 				Pattern.compile ( "foo" ), 
 				Pattern.compile ( "^.*TEST.*$", Pattern.CASE_INSENSITIVE ) )
 		);
+	}
+	
+	@Test
+	public void testCache ()
+	{
+		String reStr = "Hello.*";
+		var re = RegEx.of ( reStr );
+		var reCi = RegEx.of ( reStr, Pattern.CASE_INSENSITIVE );
+		
+		assertEquals ( "Simple RE hasn't been cached!", RegEx.of ( reStr ), re );
+		assertEquals ( "CI RE hasn't been cached!", 
+			RegEx.of ( reStr, Pattern.CASE_INSENSITIVE ), reCi
+		);
+
+		assertNotEquals ( "Simple and CI REs are equals!", reCi, re );
+
+		assertTrue ( "RE doesn't match!", re.matches ( "Hello, World" ) );
+		assertFalse ( "RE shouldn't match!", re.matches ( "hello, world" ) );
+
+		assertTrue ( "CI RE doesn't match!", reCi.matches ( "Hello, World" ) );
+		assertTrue ( "CI RE doesn't match CI string!", reCi.matches ( "hello, world" ) );
 	}
 	
 }

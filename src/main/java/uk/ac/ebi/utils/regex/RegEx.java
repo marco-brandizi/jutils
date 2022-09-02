@@ -43,8 +43,15 @@
 
 package uk.ac.ebi.utils.regex;
 
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.commons.lang3.tuple.Pair;
+
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 
 /**
  * An helper class for the regex library. Easier calls to the RE functions, plus 
@@ -56,7 +63,18 @@ import java.util.regex.Pattern;
 public class RegEx 
 {
   private Pattern pattern;
-	
+
+  private static final LoadingCache<Pair<String, Integer>, RegEx> regExCache = CacheBuilder.newBuilder()
+  	.build ( new CacheLoader<Pair<String, Integer>, RegEx> () {
+			@Override
+			public RegEx load ( Pair<String, Integer> key ) throws Exception
+			{
+				return new RegEx ( key.getLeft (), key.getRight () );
+			}
+  	});  
+  
+  
+  
 	/** Creates and store a new Pattern, calling {@link Pattern#compile(String)} */
 	public RegEx ( String pattern ) {
 	  this.pattern = Pattern.compile ( pattern ); 
@@ -114,4 +132,21 @@ public class RegEx
 		return getPattern ();
 	}
 	
+	/**
+	 * This returns a RegEx that is cached, together with its compiled pattern.
+	 * 
+	 * Caching is a very good idea when you need to reuse the same pattern many times, since compiling
+	 * RE patterns is rather time-consuming.
+	 *  
+	 */
+	public static RegEx of ( String pattern, int flags )
+	{
+		return regExCache.getUnchecked ( Pair.of ( pattern, flags ) );
+	}
+
+	public static RegEx of ( String pattern )
+	{
+		return of ( pattern, 0 );
+	}
+
 }

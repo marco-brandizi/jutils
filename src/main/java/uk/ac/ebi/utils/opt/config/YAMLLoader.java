@@ -286,6 +286,9 @@ public class YAMLLoader
 		}	
 	}
 	
+	/**
+	 * Simple utility for user messages, returns the filePath or, if null or empty, something, like "<NA>". 
+	 */
 	private static String fileLabel ( String filePath )
 	{
 		return Optional.ofNullable ( filePath )
@@ -369,7 +372,7 @@ public class YAMLLoader
 					"Error while loading YAML file \"%s\": include \"%s\" doesn't exist, use %s for optional includes",
 					fileLabel ( yamlPath ),
 					includePath,
-					fieldName
+					INCLUDES_OPTIONAL_FIELD
 				);
 
 				slog.info ( "Ignoring non-existent otpional include \"{}\"", includePath );

@@ -29,22 +29,22 @@ public class ExceptionLoggerTest
 		
 		exlog.logEx ( "Testing the Runtime Exception Logger",testEx );
 		
-		Assert.assertTrue ( systemOutRule.getLog().contains ( "[ERROR]: Testing the Runtime Exception Logger. Error: raised on purpose for testing" ) );
+		Assert.assertTrue ( systemOutRule.getLog ().contains ( "[ERROR]: Testing the Runtime Exception Logger. Error: raised on purpose for testing" ) );
 		
-		Assert.assertTrue ( systemOutRule.getLog().contains ( "[DEBUG]: Testing the Runtime Exception Logger. Details:\n"
-				+ "java.lang.RuntimeException: raised on purpose for testing" ) );
+		Assert.assertTrue ( systemOutRule.getLog ().contains ( "[DEBUG]: Testing the Runtime Exception Logger. Details:" ) &&
+				systemOutRule.getLog ().contains ( "java.lang.RuntimeException: raised on purpose for testing" ) );
 
 	}
 	
 	@Test
 	public void testLogEx ()
 	{
-		exlog.logEx ( "Testing the Runtime exception", ": Custom Error :: {}", ": Custom Details ::", testEx);
+		exlog.logEx ( "Testing the Runtime exception", ": Custom Error :: {}", ": Custom Details ::", testEx );
 		
-		Assert.assertTrue ( systemOutRule.getLog().contains ( "[DEBUG]: Testing the Runtime exception: Custom Details ::\n"
-				+ "java.lang.RuntimeException: raised on purpose for testing" ) );
+		Assert.assertTrue ( systemOutRule.getLog ().contains ( "[DEBUG]: Testing the Runtime exception: Custom Details ::" ) &&
+				systemOutRule.getLog ().contains ( "java.lang.RuntimeException: raised on purpose for testing" ) );
 		
-		Assert.assertTrue ( systemOutRule.getLog().contains ( "[ERROR]: Testing the Runtime exception: Custom Error :: raised on purpose for testing" ) );
+		Assert.assertTrue ( systemOutRule.getLog ().contains ( "[ERROR]: Testing the Runtime exception: Custom Error :: raised on purpose for testing" ) );
 	}
 	
 }

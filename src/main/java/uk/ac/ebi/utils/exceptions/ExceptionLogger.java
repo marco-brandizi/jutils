@@ -3,7 +3,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * TODO: comment me!
+ * An helper to log exceptions with double level log events, error and debug.
+ * 
+ * <p>This is a simple utility to log an exception by producing one log event at 'error' level that only
+ * shows a user-provided message and reports the {@link Throwable#getMessage() exception's message}, followed
+ * by a debug event that shows the same user message plus the exception's 
+ * {@link Throwable#getStackTrace() stack trace}. As you can imagine this is useful when you have log targets 
+ * with different granularity reporting, eg, a console log at 'warning' level, plus a 'detailed.log' file at
+ * debug level.</p>
+ * 
+ * <p>{@code getLogger()} methods are provided, so that you can use this class the same way common logging
+ * libraries are used, eg, define a field like {@code exlog = ExceptionLogger.getLogger(...)} and then use
+ * it in the class code.</p>
+ * 
  *
  * @author brandizi
  * <dl><dt>Date:</dt><dd>22 Aug 2022</dd></dl>
@@ -12,7 +24,7 @@ import org.slf4j.LoggerFactory;
 public class ExceptionLogger
 {
 	private final Logger log;
-	private static final ExceptionLogger defaultExLog = new ExceptionLogger ();
+	private static final ExceptionLogger DEFAULT_EX_LOG = new ExceptionLogger ();
 	
 	private ExceptionLogger () {
 		this.log = LoggerFactory.getLogger ( this.getClass () ); 
@@ -33,9 +45,13 @@ public class ExceptionLogger
 		this ( LoggerFactory.getLogger( cls ) );
 	}
 	
+	/**
+	 * If null, uses a default that is based on {@link ExceptionLogger#getClass()}.
+	 * @see LoggerFactory
+	 */
 	public static ExceptionLogger getLogger ( Logger logger ) 
 	{
-		return logger == null ? defaultExLog : new ExceptionLogger ( logger );
+		return logger == null ? DEFAULT_EX_LOG : new ExceptionLogger ( logger );
 	}
 	
 	public static ExceptionLogger getLogger ( String name )
@@ -48,24 +64,14 @@ public class ExceptionLogger
 		return new ExceptionLogger ( cls );
 	}
 	
+	/**
+	 * The default logger, see {@link #getLogger()}.
+	 */
 	public static ExceptionLogger getLogger ()
 	{
 		return getLogger ( (Logger) null );
 	}
-	
-	/**
-	 * Defaults to reporting your message (instantiated with your params), plus sensible tails like
-	 * ". Error: {}" for the error level entry and ". Details:" for the debug entry. As explained, 
-	 * we don't need a placeholder for the exception stacktrace. since SLF4J reports it anyway. 
-	 * 
-	 * @see #logEx(String, String, String, Throwable, Object...)
-	 * 
-	 */
-	public void logEx ( String baseMessage,Throwable ex, Object... msgParams) 
-	{
-		logEx ( baseMessage, ". Error: {}", ". Details:", ex, msgParams );
-	}
-	
+		
 	/**
 	 * Does the exception logging, as explained above.
 	 *  
@@ -92,7 +98,7 @@ public class ExceptionLogger
 		String baseMessage, String errorMsgTail, String debugMsgTail, Throwable ex, Object... msgParams 
 	) 
 	{
-		// If debug isn't active, then error isn't either, so let's save a few CPU cycles by nesting.
+		// If debug isn't active, then error level isn't either, so let's save a few CPU cycles by nesting.
 		
 		if ( log.isDebugEnabled () )
 		{
@@ -132,5 +138,18 @@ public class ExceptionLogger
 		
 		} // if isDebug
 	} // logEx()
+	
+	/**
+	 * Defaults to reporting your message (instantiated with your params), plus sensible tails like
+	 * ". Error: {}" for the error level entry and ". Details:" for the debug entry. As explained, 
+	 * we don't need a placeholder for the exception stacktrace. since SLF4J reports it anyway. 
+	 * 
+	 * @see #logEx(String, String, String, Throwable, Object...)
+	 * 
+	 */
+	public void logEx ( String baseMessage, Throwable ex, Object... msgParams) 
+	{
+		logEx ( baseMessage, ". Error: {}", ". Details:", ex, msgParams );
+	}
 	
 }

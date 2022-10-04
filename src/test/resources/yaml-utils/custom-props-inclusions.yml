@@ -6,7 +6,11 @@
   descr: "A top-level description"
   appVersion: 2.0
 
+# localVar is defined in the included file, so it's not resolved here cause properties are 
+# local
 name: ${appName} ${localVar}
+# This resolves to 2.0, the included file overrides appVersion with 1.0, and sees this value locally, but
+# the top-level overrides wins here 
 version: ${appVersion}
 
 "@includes":

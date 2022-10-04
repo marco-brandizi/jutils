@@ -2,9 +2,17 @@
 # sees are the one coming from the parents plus those defined here.
 # The root file gets environment and Java properties
 "@properties":
-  # The local defs see environment/property variables.
+  # These have local scope only
   descr: "Description from the included file"
+  # This is the value that is seen hereby when used, top-level has defined it with 2.0 and 
+  # that is the value used on that level
   appVersion: 1.0
+  # This has local scope too. Top level is using localVar, but it can't see this local value
   localVar: "Local value"
 
-description: "${appName}: ${descr}"
+# This resolves to "The Nice App: Description from the included file. Default version: 1.0"
+# That's because
+#  1) the @properties scopes spans top-down, while 'descr' has a local definition
+#  2) the 2.0 value for appVersion that comes from the top gets the local-scope value of 1.0. 
+#  3) this field belong to the top-level JSON object and that is merged into the including file's top-level object.
+description: "${appName}: ${descr}. Default version: ${appVersion}"

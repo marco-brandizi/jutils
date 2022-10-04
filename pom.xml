@@ -267,11 +267,11 @@
 		        	<!-- Prints out spaces and test name before/after every test method and automatically -->
 		          <name>listener</name>
 		          <value>uk.ac.ebi.utils.test.junit.TestOutputDecorator</value>
-		        </property>
+		      	</property>
 		      </properties>
 					<environmentVariables>
 						<yamlUtils_testName>Dude</yamlUtils_testName>
-					</environmentVariables>  
+					</environmentVariables>
 		    	<forkCount>0.5C</forkCount>
 		    </configuration>
 		  </plugin>

@@ -261,8 +261,13 @@ public class YAMLLoaderTest
 		// This is re-defined in the included file, but the upper level wins
 		assertEquals ( "version is wrong!", 2.0d, (double) cfg.getVersion (), 0d );
 		
-		// This is composed by an upper-level var and a local var
-		assertEquals ( "description is wrong!", "The Nice App: Description from the included file", cfg.getDescription () );
+		// This is composed by a mix of upper-level and local variables/values. The value is added to the
+		// top-level object, since the including file doesn't mention it.
+		assertEquals ( 
+			"description is wrong!",
+			"The Nice App: Description from the included file. Default version: 1.0",
+			cfg.getDescription ()
+		);
 	}
 	
 	/**

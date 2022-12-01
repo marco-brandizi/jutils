@@ -48,11 +48,11 @@ public class TupleSpliterator<T> implements Spliterator<T[]>
 
 		// The result has these characteristics if all its components have
 		for ( int checkCharateristic: new int[] { ORDERED, SIZED, SUBSIZED } )
-		if ( IntStream.range ( 0, this.spliterators.length )
-				 .mapToObj ( i -> this.spliterators [ i ] )
-				 .filter ( splitr -> splitr != null )
-				 .allMatch ( splitr -> ( splitr.characteristics () & checkCharateristic ) != 0 ) )
-			this.characteristics |= checkCharateristic;
+			if ( IntStream.range ( 0, this.spliterators.length )
+										.mapToObj ( i -> this.spliterators [ i ] )
+										.filter ( splitr -> splitr != null )
+										.allMatch ( splitr -> ( splitr.characteristics () & checkCharateristic ) != 0 ) )
+				this.characteristics |= checkCharateristic;
 		
 		this.size = IntStream.range ( 0, this.spliterators.length )
 			.mapToObj ( i -> this.spliterators [ i ] )
@@ -62,7 +62,7 @@ public class TupleSpliterator<T> implements Spliterator<T[]>
 	}
 
 	/**
-	 * Just a facility to avoid too much genetics fiddling.
+	 * Just a facility to avoid too much generics fiddling.
 	 */
 	@SafeVarargs
 	public static <TT> TupleSpliterator<TT> of ( Spliterator<? extends TT> ...spliterators ) {
@@ -98,8 +98,8 @@ public class TupleSpliterator<T> implements Spliterator<T[]>
 
 	
 	/**
-	 * A splits succeeds when all the base spliterators return a prefix of the same length. If that is the case the new 
-	 * split result will be a new {@link TupleIterator} based on the prefixes returned by the #trySplit() operation 
+	 * A splits succeeds when all the base spliterators return a prefix of the same length. If that is the case, the new 
+	 * split result will be a new {@link TupleSpliterator} based on the prefixes returned by the #trySplit() operation 
 	 * invoked upon the base spliterators. This iterator is left with the base iterators it already has, so with its 
 	 * tails. Due to the behaviour of {@link #tryAdvance(Consumer)}, such tails can have different sizes, they'll determine
 	 * a tuple iterator sized like the shortest tail.
@@ -173,7 +173,7 @@ public class TupleSpliterator<T> implements Spliterator<T[]>
 	 *   <li>DISTINCT, this is set, we return arrays and they're all technically distinct (as per the default 
 	 *   {@link #equals(Object)})</li>
 	 *   <li>CONCURRENT, is not set, we're IMMUTABLE</li>
-	 *   <li>IMMUTABLE, this is set, we expect base spliterator to be immutable too (or that you know what you're doing)</li>
+	 *   <li>IMMUTABLE, this is set, we expect base spliterators to be immutable too (or that you know what you're doing)</li>
 	 *   <li>SIZED, SUBSIZED, ORDERED, are set for the result if all the base spliterators have these flags</li>
 	 *   <li>NONNULL is always set for the result, for its items are non-null tuples, which of elements might be null</li>
 	 * </ul>

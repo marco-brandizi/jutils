@@ -50,7 +50,7 @@ public class TupleIterator<T> implements Iterator<T[]>
 	
 	@SuppressWarnings ( "unchecked" )
 	public static <TT> TupleIterator<TT> of ( Iterator<? extends TT> ...iterators ) {
-		return new TupleIterator<TT> ( iterators );
+		return new TupleIterator<> ( iterators );
 	}
 
 }

@@ -92,7 +92,7 @@ public class StreamUtilsTest
 		};
 		
 		verifyStreamOfStringArrays ( 
-			StreamUtils.tupleStream ( 0, true, streams ),
+			StreamUtils.tupleStream ( true, streams ),
 			expResults
 		);
 	}
@@ -123,7 +123,7 @@ public class StreamUtilsTest
 		};
 		
 		verifyStreamOfStringArrays ( 
-			StreamUtils.tupleStream ( 0, true, streams ),
+			StreamUtils.tupleStream ( true, streams ),
 			expResults
 		);
 	}

@@ -62,49 +62,4 @@ public class StreamUtils
 		return tupleStream ( false, streams );
 	}
 	
-//  TODO: remove, doens't work
-//
-//	@SuppressWarnings ( "unchecked" )
-//	public static <S,B> StreamEx<B> sliceStream ( Stream<S> sources, long batchSize, Collector<S, ?, B> batchBuilder )
-//	{
-//		
-//		Map<S, Long> index = Collections.synchronizedMap ( new HashMap<> () );
-//
-//		Stream<Pair<S, Long>> batchIndexedStrm = sources.map ( s -> 
-//		{
-//			Long idxValue;
-//			synchronized ( index ) {
-//				idxValue = index.computeIfAbsent ( s, ks -> Long.valueOf ( index.size () ) );
-//			}
-//			System.out.format ( "%s: %d\n", s, idxValue );
-//			return Pair.of ( s, idxValue );
-//		});
-//
-//				
-//		BiConsumer<Object, S> baseAccumulator = (BiConsumer<Object, S>) batchBuilder.accumulator ();
-//
-//		BiConsumer<Object, Pair<S, Long>> pairAccumulator = 
-//			(a, pair) -> baseAccumulator.accept ( a, ( (Pair<S, Long>) pair ).getKey () );
-//		
-//		Set<Characteristics> baseCharacteristics = batchBuilder.characteristics ();
-//									
-//		Collector<Pair<S, Long>, Object, B> pairCollector = Collector.of ( 
-//			(Supplier<Object>) batchBuilder.supplier (), 
-//			pairAccumulator, 
-//			(BinaryOperator<Object>) batchBuilder.combiner (),
-//			(Function<Object, B>) batchBuilder.finisher (),
-//			baseCharacteristics.toArray ( new Characteristics [ baseCharacteristics.size () ] )
-//		);
-//					
-//		return StreamEx.of ( batchIndexedStrm ).collapse ( 
-//			(p1, p2) -> {
-//				long cluster1 = p1.getValue () / batchSize;
-//				long cluster2 = p2.getValue () / batchSize;
-//				
-//				System.out.format ( "CMP: %s:%d, %s:%d\n", p1.getKey (), cluster1, p2.getKey (), cluster2 );
-//				return cluster1 == cluster2; 
-//			}, 
-//			pairCollector
-//		);
-//	}	
 }

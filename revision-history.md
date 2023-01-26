@@ -3,7 +3,7 @@
 *This file was last revised on 2023-01-26*
 
 ## 11.0.1-SNAPSHOT
-* Next version started
+* Various dependencies upgraded
 
 ## 11.0
 * **Big refactoring**: previous split into multiple jutils-xxx modules removed, 

@@ -43,7 +43,7 @@ public class XmlFilterUtils
 		String repl = "\\<$1$2\\>\\<\\!\\[CDATA\\[";
 		String sedOpen = "s/" + re + "/" + repl + "/g";
 		
-		// Second substitution: all the closing tags (</Tag>)
+		// Second substitution: all the closing tags like </Tag>) are replaced by ]]></Tag>
 		//
 		// \<\/(ArticleTitle|AbstractText)\> => \]\]\>\<\/\1\>		
 		re = "\\<\\/(" + tagStr + ")\\>";

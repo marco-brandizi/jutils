@@ -1,8 +1,11 @@
-# REVISION HISTORY
+# Revision History
 
-*This file was last revised on 2022-05-30*
+*This file was last revised on 2023-01-26*
 
-## 11.0-SNAPSHOT
+## 11.0.1-SNAPSHOT
+* Next version started
+
+## 11.0
 * **Big refactoring**: previous split into multiple jutils-xxx modules removed, 
   now there is only one Maven project, with optional dependencies (see the [POM](pom.xml)).
 * `YAMLLoader` added, to manage configurations. 

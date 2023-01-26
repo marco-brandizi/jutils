@@ -32,14 +32,15 @@ public class XmlFilterUtils
 	 */
 	public static InputStream cdataWrapper ( InputStream xmlin, String... tags )
 	{
-		// First substitution: <Tag> (but not <Tag/>) is replaced by <Tag><![CDATA[
+		// First substitution: <Tag> (but not <Tag/>, nor <Tag1>) is replaced by <Tag><![CDATA[
 		// This also should work for <Tag attr = '...' >(and the self-closing version), but 
-		// might have problems with '/' inside the attribute value
+		// might have problems with '/' inside the attribute value.
 		// 
-		// <(ArticleTitle|AbstractText)([^\>]*)(?<!\/)\>\> => \<\1\2\>\<\!\[CDATA\[
+		// \<(ArticleTitle|AbstractText)(\s[^\>]+|)(?<!\/)\> => \<\1\2\>\<\!\[CDATA\[
 		// <TAG...>, only if '>' is not preceded by '/'
 		String tagStr = String.join ( "|", tags );
-		String re = "\\<(" + tagStr + ")([^\\>]*)(?<!\\/)\\>";
+		String re = "\\<(" + tagStr + ")(\\s[^\\>]+|)(?<!\\/)\\>";
+		// $1 is the tag, $2 is anything after <Tag The expression used for it excludes <TagXyz> 
 		String repl = "\\<$1$2\\>\\<\\!\\[CDATA\\[";
 		String sedOpen = "s/" + re + "/" + repl + "/g";
 		

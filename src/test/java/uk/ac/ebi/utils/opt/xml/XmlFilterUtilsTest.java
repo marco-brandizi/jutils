@@ -1,5 +1,6 @@
 package uk.ac.ebi.utils.opt.xml;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -58,4 +59,51 @@ public class XmlFilterUtilsTest
 			outs.contains ( "<Abstract foo = '/4' />\n" ) 
 		);
 	}
+	
+	/**
+	 * Must wrap {@code <Citation>}, not {@code <CitationSet>}
+	 * @throws IOException
+	 */
+	@Test
+	public void testCdataWrapperSamePrefixTags () throws IOException
+	{
+		String xml = 
+			"<CitationSet>\n" + 
+			"  <Citation>test2</Citation>\n" +
+			"</CitationSet>\n";
+		
+		ReaderInputStream xmlin = new ReaderInputStream ( new StringReader ( xml ), "UTF-8" );
+		
+		InputStream xmlw = XmlFilterUtils.cdataWrapper ( xmlin, "Citation" );
+		String outs = IOUtils.toString ( xmlw, "UTF-8" );
+		log.info ( "Resulting XML fragment:\n{}", outs );
+		
+		assertTrue (
+			"Wrong result for <Citation> inner tag!", 
+			outs.contains ( "<Citation><![CDATA[test2]]></Citation>\n" )
+		);
+
+		assertFalse ( "<CitationSet> was wrapped!", outs.contains ( "<CitationSet><![CDATA[" ) );
+		assertFalse ( "<CitationSet> was wrapped!", outs.contains ( "]]></CitationSet>" ) );
+
+		xml = 
+			"<CitationSet n = '1'>\n" + 
+			"  <Citation  i=\"true\"></Citation>\n" +
+			"</CitationSet>\n";
+		
+		xmlin = new ReaderInputStream ( new StringReader ( xml ), "UTF-8" );
+		xmlw = XmlFilterUtils.cdataWrapper ( xmlin, "Citation" );
+		outs = IOUtils.toString ( xmlw, "UTF-8" );
+		log.info ( "Another XML fragment:\n{}", outs );
+		
+		assertTrue (
+			"Wrong result for <Citation> inner tag with attributes!", 
+			outs.contains ( "<Citation  i=\"true\"><![CDATA[]]></Citation>\n" )
+		);
+
+		assertFalse ( 
+			"<CitationSet> with attribute was wrapped!",
+			outs.contains ( "<CitationSet n = '1'><![CDATA[" )
+		);
+	}	
 }

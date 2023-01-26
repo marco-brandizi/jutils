@@ -6,6 +6,7 @@ import org.apache.commons.lang3.RandomUtils;
 
 import com.machinezoo.noexception.throwing.ThrowingRunnable;
 
+import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.exceptions.UncheckedInterruptedException;
 import uk.org.lidalia.slf4jext.Level;
 import uk.org.lidalia.slf4jext.Logger;
@@ -92,7 +93,7 @@ public class MultipleAttemptsExecutor implements Executor
 					action.run ();
 					break;
 				}
-				catch ( RuntimeException ex ) 
+				catch ( Exception ex ) 
 				{
 					boolean mustReattempt = false;
 					lastInterceptedEx = ex;
@@ -117,6 +118,11 @@ public class MultipleAttemptsExecutor implements Executor
 						Thread.sleep ( RandomUtils.nextLong ( this.minPauseTime, this.maxPauseTime + 1 ) );
 					
 				} // catch attempt
+				catch ( Throwable ex ) {
+					ExceptionUtils.throwEx ( Exception.class, ex, 
+						"Unexpected Throwable raised by multiple attempts operation: $cause" 
+					);
+				}
 			} // attempts
 			
 			if ( attempts == 0 && lastInterceptedEx != null ) {
@@ -165,7 +171,7 @@ public class MultipleAttemptsExecutor implements Executor
 	}
 
 	/**
-	 * @see #getMinPauseTime(). Default is 3000.
+	 * @see #getMinPauseTime() Default is 3000.
 	 */
 	public long getMaxPauseTime ()
 	{

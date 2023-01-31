@@ -2,8 +2,17 @@
 
 *This file was last revised on 2023-01-26*
 
-## 11.0.1-SNAPSHOT
+## 11.0.2-SNAPSHOT
+* Version for the next snapshot
+
+## 11.0.1
+
 * Various dependencies upgraded
+
+### Bugfixes: 
+  * `XmlFilterUtils.cdataWrapper()`, case with [tags having the same prefix][10].
+
+[10]: https://github.com/marco-brandizi/jutils/commit/e4a7ac
 
 ## 11.0
 * **Big refactoring**: previous split into multiple jutils-xxx modules removed, 

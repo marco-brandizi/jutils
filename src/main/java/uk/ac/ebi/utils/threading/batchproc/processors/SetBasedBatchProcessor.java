@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 
 import uk.ac.ebi.utils.threading.batchproc.collectors.SetBatchCollector;
 
-public class SetBasedBatchProcessor<E, BJ extends Consumer<Set<E>>>
+public abstract class SetBasedBatchProcessor<E, BJ extends Consumer<Set<E>>>
 	extends CollectionBasedBatchProcessor<E, Set<E>, SetBatchCollector<E>, BJ>
 {
 	public SetBasedBatchProcessor ( BJ batchJob, Supplier<Set<E>> batchFactory, int maxBatchSize ) {

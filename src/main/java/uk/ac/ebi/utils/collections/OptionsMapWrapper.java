@@ -164,5 +164,12 @@ public class OptionsMapWrapper implements OptionsMap
 	public Object merge ( String key, Object value, BiFunction<? super Object, ? super Object, ? extends Object> remappingFunction )
 	{
 		return base.merge ( key, value, remappingFunction );
-	}	
+	}
+
+	@Override
+	public String toString ()
+	{
+		return this.getClass ().getSimpleName () + base.toString ();
+	}
+	
 }

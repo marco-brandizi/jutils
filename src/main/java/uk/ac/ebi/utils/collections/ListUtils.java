@@ -44,6 +44,8 @@
 package uk.ac.ebi.utils.collections;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -118,4 +120,37 @@ public class ListUtils
 		.flatMap ( List::stream )
 		.collect ( Collectors.toList () );
 	}
+	
+	/**
+	 * A little helper, which turns a row (typically from a table) into a dictionary, where 
+	 * the keys are the column headers.
+	 * 
+	 * In other words, the result is such that:<br/>
+	 * {@code result [ headers[j] ] == row [j], for j in [0..min-len (headers, row) )}
+	 * 
+	 * @throws IllegalArgumentException if headers is null or empty, to prevent serious misses
+	 * from a table. If the row is null or empty, it returns an empty dictionary, since this
+	 * often happens for inputs like CSV.
+	 * 
+	 */
+	public static OptionsMap getRow ( String[] headers, Object[] row )
+	{
+		if ( headers == null || headers.length == 0 ) throw new IllegalArgumentException (
+			"Can't extract a row from a table with null headers"
+		);
+		var result = OptionsMap.create ();
+		if ( row == null || row.length == 0 ) return result;
+		
+		int ncols = Math.min ( headers.length, row.length );
+		
+		for ( int j = 0; j < ncols; j++ )
+		{
+			Object v = row [ j ];
+			if ( v != null )
+			result.put ( headers [ j ], v );
+		}
+		
+		return result;
+	}
+	
 }

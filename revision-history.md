@@ -1,9 +1,10 @@
 # Revision History
 
-*This file was last revised on 2023-03-01*. **Please keep this note updated**.
+*This file was last revised on 2023-04-05*. **Please keep this note updated**.
 
 ## 11.0.2-SNAPSHOT
 * Minor fix in the batch processors (more processors made abstract, #3e97258). 
+* `ListUtils.getRow()` added.
 
 ## 11.0.1
 

@@ -5,6 +5,7 @@
 ## 11.0.2-SNAPSHOT
 * Minor fix in the batch processors (more processors made abstract, #3e97258). 
 * `ListUtils.getRow()` added.
+* `ServletUtils` added.
 
 ## 11.0.1
 

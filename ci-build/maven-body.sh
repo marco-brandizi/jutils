@@ -1,0 +1,1 @@
+mvn $MAVEN_GOAL

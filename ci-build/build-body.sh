@@ -1,3 +1,1 @@
-set -x
-mvn $MAVEN_GOAL -DskipTests
-set +x
+mvn $MAVEN_GOAL -DskipTests --update-snapshots --no-transfer-progress $MAVEN_ARGS

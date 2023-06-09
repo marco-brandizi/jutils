@@ -335,12 +335,12 @@
     
     <snapshotRepository>
     	<id>github</id>
-			<url>https://maven.pkg.github.com/marco-brandizi/maven</url>
+			<url>https://maven.pkg.github.com/marco-brandizi/jutils</url>
     </snapshotRepository>
 
     <repository>
     	<id>github</id>
-			<url>https://maven.pkg.github.com/marco-brandizi/maven</url>
+			<url>https://maven.pkg.github.com/marco-brandizi/jutils</url>
     </repository>
     
   </distributionManagement>	  

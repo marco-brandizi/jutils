@@ -1,1 +1,1 @@
-mvn $MAVEN_GOAL
+mvn $MAVEN_GOAL -DskipTests

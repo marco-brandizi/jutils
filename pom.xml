@@ -315,7 +315,6 @@
 
 	</build>
 	  
-	<!-- TODO: remove  
 	<distributionManagement>
 	
     <snapshotRepository>
@@ -328,21 +327,6 @@
 			<url>https://mbrandizi.jfrog.io/artifactory/maven</url>
     </repository>	
     
-	</distributionManagement>
-	-->  
-	   
-	<distributionManagement>
-    
-    <snapshotRepository>
-    	<id>github</id>
-			<url>https://maven.pkg.github.com/marco-brandizi/jutils</url>
-    </snapshotRepository>
-
-    <repository>
-    	<id>github</id>
-			<url>https://maven.pkg.github.com/marco-brandizi/jutils</url>
-    </repository>
-    
-  </distributionManagement>	  
-
+	</distributionManagement>  
+	    
 </project>

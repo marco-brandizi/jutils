@@ -1,7 +1,7 @@
 # Local customisations injected inside the workflow of build.sh
 # See https://github.com/Rothamsted/knetminer-common for details. 
 #
-if [[ "$GIT_BRANCH" == '_master' ]]; then
+if [[ "$GIT_BRANCH" == 'master' ]]; then
 	bash ./ci-build/mk-javadocs.sh
 	
 	echo -e "\n  Committing Javadocs\n"

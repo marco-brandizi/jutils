@@ -6,7 +6,7 @@
 * Current snapshot 
 
 ## 11.1 (TODO)
-* **WARNING**: Maven repository migrated to [GitHub Packages](https://maven.pkg.github.com/marco-brandizi/maven)
+* **WARNING**: Maven repository migrated to [my personal artifactory](https://artifactory.marcobrandizi.info/#/public)
 * Minor fix in the batch processors (more processors made abstract, #3e97258). 
 * `ListUtils.getRow()` added.
 * `ServletUtils` added.

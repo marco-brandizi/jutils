@@ -331,7 +331,7 @@
     <repository>
     	<id>marcobrandizi.info</id>
 			<url>https://artifactory.marcobrandizi.info/public</url>
-     </repository>
+    </repository>
 
 <!-- TODO: test
     <snapshotRepository>

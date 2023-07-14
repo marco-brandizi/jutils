@@ -3,6 +3,7 @@ package uk.ac.ebi.utils.exceptions;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
+import java.util.regex.Matcher;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.ConstructorUtils;
@@ -96,7 +97,10 @@ public class ExceptionUtils
 			
 			if ( cause != null )
 			{
-				msg = msg.replaceAll ( "(\\$cause|\\$\\{cause\\})", StringUtils.trimToEmpty ( getSignificantMessage ( cause ) ) );
+				String causeMsg = StringUtils.trimToEmpty ( getSignificantMessage ( cause ) );
+				causeMsg = Matcher.quoteReplacement ( causeMsg );
+				
+				msg = msg.replaceAll ( "(\\$cause|\\$\\{cause\\})", causeMsg );
 				
 				// Some exception wrappers like UncheckedIOException have constructors with mandatory cause
 				Constructor<E> constructor = ConstructorUtils.getMatchingAccessibleConstructor ( exType, String.class, cause.getClass () );

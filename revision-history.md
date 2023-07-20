@@ -1,9 +1,12 @@
 # Revision History
 
-*This file was last revised on 2023-04-05*. **Please keep this note updated**.
+*This file was last revised on 2023-07-20*. **Please keep this note updated**.
 
-## 11.1.1-SNAPSHOT
-* Current snapshot 
+## 12.0-SNAPSHOT
+* Migration to Java 17
+
+## 11.1.1
+* Minor bug in `ExceptionUtils` fixed (#ea6e7d8).
 
 ## 11.1 (TODO)
 * **WARNING**: Maven repository migrated to [my personal artifactory](https://artifactory.marcobrandizi.info/#/public).

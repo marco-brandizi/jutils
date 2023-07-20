@@ -3,7 +3,7 @@
 *This file was last revised on 2023-07-20*. **Please keep this note updated**.
 
 ## 12.0-SNAPSHOT
-* Migration to Java 17. **From now on, backward compatibility isn't guaranteed.
+* Migration to Java 17. **No backward compatibility guaranteed**.
 
 ## 11.1.1
 * Minor bug in `ExceptionUtils` fixed (#ea6e7d8).

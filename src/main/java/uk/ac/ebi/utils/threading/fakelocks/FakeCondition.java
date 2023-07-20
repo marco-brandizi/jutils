@@ -19,7 +19,7 @@ public class FakeCondition implements Condition
 	}
 
 	@Override
-	public void await () throws InterruptedException
+	public void await ()
 	{
 	}
 
@@ -29,19 +29,19 @@ public class FakeCondition implements Condition
 	}
 
 	@Override
-	public long awaitNanos ( long nanosTimeout ) throws InterruptedException
+	public long awaitNanos ( long nanosTimeout )
 	{
 		return nanosTimeout;
 	}
 
 	@Override
-	public boolean await ( long time, TimeUnit unit ) throws InterruptedException
+	public boolean await ( long time, TimeUnit unit )
 	{
 		return true;
 	}
 
 	@Override
-	public boolean awaitUntil ( Date deadline ) throws InterruptedException
+	public boolean awaitUntil ( Date deadline )
 	{
 		return true;
 	}

@@ -1,6 +1,10 @@
 # Revision History
 
-*This file was last revised on 2023-07-20*. **Please keep this note updated**.
+*This file was last revised on 2023-07-26*. **Please keep this note updated**.
+
+## 12.0.1-SNAPSHOT
+* Current snapshot
+
 
 ## 12.0-SNAPSHOT
 * Migration to Java 17. **No backward compatibility guaranteed**.

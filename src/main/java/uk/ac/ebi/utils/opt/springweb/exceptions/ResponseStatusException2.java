@@ -3,6 +3,7 @@ package uk.ac.ebi.utils.opt.springweb.exceptions;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.web.server.ResponseStatusException;
 
 /**
@@ -54,7 +55,12 @@ public class ResponseStatusException2 extends ResponseStatusException
 	 */
 	public String getMessage ()
 	{
-		int code = this.getRawStatusCode ();
+		HttpStatusCode statusCode = Optional.ofNullable ( this.getStatusCode () )
+				.orElse ( HttpStatus.INTERNAL_SERVER_ERROR );
+		
+		int code = statusCode.value ();
+		
+		// Finding a reason with Spring >= 6
 		HttpStatus status = HttpStatus.resolve ( code );
 		
 		String codeStr = "HTTP " + 

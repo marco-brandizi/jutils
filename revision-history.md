@@ -1,12 +1,15 @@
 # Revision History
 
-*This file was last revised on 2023-07-26*. **Please keep this note updated**.
+*This file was last revised on 2023-07-31*. **Please keep this note updated**.
 
-## 12.0.1-SNAPSHOT
-* Current snapshot
+## 13.0.1-SNAPSHOT
 
+## 13.0
+* **These migrations are incompatible with older versions**:
+  * `javax.servlet-api` migrated to `jakarta.servlet-api`.
+  * `spring-web` moved to 6.0.
 
-## 12.0-SNAPSHOT
+## 12.0
 * Migration to Java 17. **No backward compatibility guaranteed**.
 
 ## 11.1.1

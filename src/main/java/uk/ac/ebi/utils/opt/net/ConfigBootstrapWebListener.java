@@ -3,8 +3,8 @@ package uk.ac.ebi.utils.opt.net;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
 
 import uk.ac.ebi.utils.collections.OptionsMap;
 
@@ -54,7 +54,7 @@ public class ConfigBootstrapWebListener implements ServletContextListener
 	@Override
 	public void contextDestroyed ( ServletContextEvent sce )
 	{
-		// Does nothing, added just for compatibility with older servlet APIs.
+		// Does nothing, added just for compatibility with servlet APIs.
 	}
 
 	

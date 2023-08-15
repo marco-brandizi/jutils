@@ -1,8 +1,10 @@
 # Revision History
 
-*This file was last revised on 2023-07-31*. **Please keep this note updated**.
+*This file was last revised on 2023-08-15*. **Please keep this note updated**.
 
-## 13.0.1-SNAPSHOT
+## 14.0-SNAPSHOT
+* Old classes removed
+* `CollectionsUtils` added
 
 ## 13.0
 * **These migrations are incompatible with older versions**:

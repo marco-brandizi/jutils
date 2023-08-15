@@ -2,6 +2,7 @@ package uk.ac.ebi.utils.collections;
 
 import java.util.Comparator;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 
 /**
@@ -17,6 +18,9 @@ public class ArraySearchUtils
 	
 	/**
 	 * Tells if a value is equals to one of the values specified in an array.
+	 * 
+	 * This is different than similar functions, eg, {@link ArrayUtils#contains(Object[], Object)}, in the 
+	 * fact that the search can be based on a comparator.
 	 *  
 	 * @param value the value to check, if it is null, the method returns null in case comparator.compare ( null, null ) 
 	 *   returns 0 and testValues contains null.
@@ -30,6 +34,7 @@ public class ArraySearchUtils
 	public static <T extends Comparable<? super T>> boolean isOneOf ( T value, Comparator<T> comparator, T... testValues )
 	{
 		if ( testValues == null ) return false;
+
 		for ( T testValue: testValues ) 
 			if ( comparator.compare ( value, testValue ) == 0 ) return true;
 		return false;

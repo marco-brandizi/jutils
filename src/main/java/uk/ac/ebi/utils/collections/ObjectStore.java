@@ -60,7 +60,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ObjectStore<T, K, V>
 {
-	private Map<T, Map<K, V>> types = new HashMap<T, Map<K, V>> ();
+	private Map<T, Map<K, V>> types = new HashMap<> ();
 	protected int size = 0;
 
 	protected final Logger log = LoggerFactory.getLogger ( this.getClass () );

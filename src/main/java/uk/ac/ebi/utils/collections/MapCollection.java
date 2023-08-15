@@ -22,7 +22,7 @@ public class MapCollection<K, V> implements Collection<V>
 	private final Function<V, K> keyFunc; 
 	
 	/**
-	 * @see #getKey().
+	 * @see #getKey()
 	 */
 	public MapCollection ( Map<K, V> base, Function<V, K> keyFunc )
 	{

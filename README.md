@@ -11,4 +11,3 @@ See [Javadocs](https://marco-brandizi.github.io/jutils) for details (or, of cour
 
 **WARNING**: starting with version 11.0, jutils is a single Maven module with a number of optional dependencies, 
 which **you need to declare as needed** in your own projects. see the [POM](pom.xml) for details.
-

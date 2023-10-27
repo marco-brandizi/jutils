@@ -45,7 +45,7 @@ public abstract class CollectionBatchCollector<C extends Collection<E>, E>
 	
 	@Override
 	public BiConsumer<C, E> accumulator () {
-		return (coll,elem) -> coll.add ( elem );
+		return C::add;
 	}
 
 	@Override

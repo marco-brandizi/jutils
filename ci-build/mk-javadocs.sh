@@ -1,5 +1,5 @@
 # Make the javadocs of each module under the main docs directory.
-# This is usually run by Travis during builds
+# This is usually run during CI builds
 
 echo -e "\n\n\t---- Making Javadocs for jutils\n"
 

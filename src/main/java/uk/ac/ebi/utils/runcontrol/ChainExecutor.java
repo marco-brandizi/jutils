@@ -61,5 +61,21 @@ public class ChainExecutor implements Executor
 	 */
 	public ChainExecutor wrap ( Executor externalExecutor ) {
 		return new ChainExecutor ( externalExecutor, this );
-	} 
+	}
+	
+	/**
+	 * It's the reverse of {@link #wrap(Executor)}.
+	 * 
+	 * Returns an executor that passes {@link #execute(Runnable) its runnable} to this executor, which 
+	 * then invokes nextExecutor. 
+	 * 
+	 * This can be used to chain things inside-out:
+	 * {@code new ChainExecutor ( multiAttemptsExec ).andThen ( rateLimitedExec ) }
+	 * 
+	 * TODO: never tested!
+	 * 
+	 */
+	public ChainExecutor andThen ( Executor nextExecutor ) {
+		return new ChainExecutor ( this, nextExecutor );
+	}
 }

@@ -1,8 +1,7 @@
 package uk.ac.ebi.utils.runcontrol;
 
 import java.util.concurrent.Executor;
-
-import org.apache.commons.lang3.RandomUtils;
+import java.util.concurrent.ThreadLocalRandom;
 
 import com.machinezoo.noexception.throwing.ThrowingRunnable;
 
@@ -115,7 +114,9 @@ public class MultipleAttemptsExecutor implements Executor
 
 					// Let's pause
 					if ( this.maxPauseTime - this.minPauseTime > 0 )
-						Thread.sleep ( RandomUtils.nextLong ( this.minPauseTime, this.maxPauseTime + 1 ) );
+						Thread.sleep ( ThreadLocalRandom.current ().nextLong ( 
+							this.minPauseTime, this.maxPauseTime + 1 
+					));
 					
 				} // catch attempt
 				catch ( Throwable ex ) {

@@ -41,11 +41,11 @@ public class RateLimitedExecutor implements Executor
 	}
 	
 	/**
-	 * Note that the new actual rate might be slightly different than the passed parameters, dependa on how 
+	 * Note that the new actual rate might be slightly different than the passed parameters, depends on how 
 	 * {@link RateLimiter} is implemented. 
 	 */
 	public void setRate ( double requestsPerSecond ) 
 	{
 		this.rateLimiter.setRate ( requestsPerSecond );
-	}	
+	}
 }

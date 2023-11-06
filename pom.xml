@@ -31,7 +31,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <slf4j.version>1.7.36</slf4j.version>
+    <slf4j.version>2.0.9</slf4j.version>
   </properties>
 
   <scm>
@@ -72,7 +72,7 @@
 		<dependency>
 		  <groupId>com.google.guava</groupId>
 		  <artifactId>guava</artifactId>
-			<version>31.1-jre</version>
+			<version>32.1.3-jre</version>
 		</dependency>		
 
 		<dependency>
@@ -84,7 +84,7 @@
 		<dependency>
 		  <groupId>org.apache.commons</groupId>
 		  <artifactId>commons-text</artifactId>
-		  <version>1.10.0</version>
+		  <version>1.11.0</version>
 		</dependency>		
 
 	  <dependency>
@@ -106,7 +106,7 @@
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>1.2.11</version>
+			<version>1.4.11</version>
 			<scope>test</scope>
 		</dependency>
 		
@@ -142,7 +142,7 @@
 		<dependency>
 		  <groupId>org.springframework</groupId>
 		  <artifactId>spring-web</artifactId>
-		  <version>6.0.11</version>
+		  <version>6.0.13</version>
 		  <optional>true</optional>
 		</dependency>
 
@@ -171,7 +171,7 @@
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
-			<version>2.11.0</version>
+			<version>2.15.0</version>
 			<optional>true</optional>
 		</dependency>
 
@@ -225,7 +225,7 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.dataformat</groupId>
 			<artifactId>jackson-dataformat-yaml</artifactId>
-			<version>2.14.1</version>
+			<version>2.15.3</version>
 		</dependency>
 		
 	</dependencies>
@@ -259,7 +259,7 @@
 		  <plugin>
 		    <groupId>org.apache.maven.plugins</groupId>
 		    <artifactId>maven-surefire-plugin</artifactId>
-		    <version>3.1.2</version>
+		    <version>3.2.2</version>
 		    <configuration>
 		      <properties>
 		        <property>
@@ -283,7 +283,7 @@
 		  
 			<plugin>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.4.1</version>
+				<version>3.6.2</version>
 				<configuration>
 					<!-- TODO: the Markdown doclet doesn't work with JDK11 -->
 					<useStandardDocletOptions>false</useStandardDocletOptions>
@@ -310,13 +310,15 @@
 	    </resource>
     </resources>
 
+		<!-- TODO: remove?
     <extensions>
 	    <extension>
 	      <groupId>org.apache.maven.wagon</groupId>
 	      <artifactId>wagon-ssh</artifactId>
 	      <version>2.6</version>
 	    </extension>
-    </extensions>    
+    </extensions>
+    -->    
 
 	</build>
 	  
@@ -332,31 +334,6 @@
 			<url>https://artifactory.marcobrandizi.info/public</url>
     </repository>
 
-<!-- TODO: test
-    <snapshotRepository>
-    	<id>marcobrandizi.info</id>
-			<url>http://localhost:8100/public</url>
-    </snapshotRepository>
-
-    <repository>
-    	<id>marcobrandizi.info</id>
-			<url>http://localhost:8100/public</url>
-     </repository>
--->
-
-<!-- TODO: remove?
-    <snapshotRepository>
-    	<id>mbrandizi.jfrog.io</id>
-			<url>https://mbrandizi.jfrog.io/artifactory/maven</url>
-    </snapshotRepository>
-
-    <repository>
-    	<id>mbrandizi.jfrog.io</id>
-			<url>https://mbrandizi.jfrog.io/artifactory/maven</url>
-    </repository>	
--->
-
 	</distributionManagement>  
 
-	    
 </project>

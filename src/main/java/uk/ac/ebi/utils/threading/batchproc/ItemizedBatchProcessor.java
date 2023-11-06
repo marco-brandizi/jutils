@@ -17,7 +17,10 @@ import org.apache.commons.lang3.mutable.MutableObject;
  * @author brandizi
  * <dl><dt>Date:</dt><dd>23 Nov 2019</dd></dl>
  *
+ * @deprecated the functionality available in this package is provided by project 
+ * Reactor and we recommend to switch to that. TODO: helpers and examples about batching via Reactor.
  */
+@Deprecated
 public abstract class ItemizedBatchProcessor<E, B, BC extends ItemizedBatchCollector<B,E>, BJ extends Consumer<B>> 
   extends BatchProcessor<B, BC, BJ>
 {

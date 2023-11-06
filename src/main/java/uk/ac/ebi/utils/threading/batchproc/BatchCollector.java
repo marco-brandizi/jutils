@@ -5,7 +5,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collector;
 
 /**
- * ## The Batch Collector
+ * <h1>The Batch Collector</h1>
  * 
  * A batch collector is a container of methods to manage batches during the operations of 
  * {@link BatchProcessor}. This default interface offers a {@link #batchFactory() batch factory}, used
@@ -22,7 +22,10 @@ import java.util.stream.Collector;
  * @author brandizi
  * <dl><dt>Date:</dt><dd>23 Nov 2019</dd></dl>
  *
+ * @deprecated the functionality available in this package is provided by project 
+ * Reactor and we recommend to switch to that. TODO: helpers and examples about batching via Reactor.
  */
+@Deprecated
 public interface BatchCollector<B>
 {
 	public abstract Supplier<B> batchFactory();

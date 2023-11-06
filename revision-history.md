@@ -1,10 +1,13 @@
 # Revision History
 
-*This file was last revised on 2023-08-15*. **Please keep this note updated**.
+*This file was last revised on 2023-11-06*. **Please keep this note updated**.
 
 ## 14.0-SNAPSHOT
-* Old classes removed
-* `CollectionsUtils` added
+* `CollectionsUtils` added.
+* `Xvalidate` added.
+* Some old classes removed: `Pair`.
+* the `uk.ac.ebi.utils.threading.batchproc` package has been deprecated, since the same functionality is offered by [Project Reactor](https://projectreactor.io/). [Example](https://www.baeldung.com/java-stream-batch-processing#reactor).
+
 
 ## 13.0
 * **These migrations are incompatible with older versions**:

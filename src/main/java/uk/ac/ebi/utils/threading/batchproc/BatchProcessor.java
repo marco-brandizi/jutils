@@ -19,7 +19,7 @@ import uk.ac.ebi.utils.threading.batchproc.processors.CollectionBasedBatchProces
 
 
 /**  
- * ## Batch Processor Skeleton 
+ * <h1>Batch Processor Skeleton</h1> 
  * 
  * A simple skeleton to manage processing of data in multi-thread mode.  
  * 
@@ -65,7 +65,10 @@ import uk.ac.ebi.utils.threading.batchproc.processors.CollectionBasedBatchProces
  * @author brandizi
  * <dl><dt>Date:</dt><dd>1 Dec 2017</dd></dl>
  *
+ * @deprecated the functionality available in this package is provided by project 
+ * Reactor and we recommend to switch to that. TODO: helpers and examples about batching via Reactor.
  */
+@Deprecated
 public abstract class BatchProcessor<B, BC extends BatchCollector<B>, BJ extends Consumer<B>>
 {
 	private BJ batchJob;

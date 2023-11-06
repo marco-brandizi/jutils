@@ -7,7 +7,10 @@ package uk.ac.ebi.utils.threading.batchproc;
  * @author brandizi
  * <dl><dt>Date:</dt><dd>23 Nov 2019</dd></dl>
  *
+ * @deprecated the functionality available in this package is provided by project 
+ * Reactor and we recommend to switch to that. TODO: helpers and examples about batching via Reactor.
  */
+@Deprecated
 public interface ItemizedSizedBatchCollector<B,E> 
 	extends ItemizedBatchCollector<B, E>, SizedBatchCollector<B>
 {

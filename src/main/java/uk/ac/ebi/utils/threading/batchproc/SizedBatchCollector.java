@@ -10,7 +10,10 @@ import java.util.function.Predicate;
  * @author brandizi
  * <dl><dt>Date:</dt><dd>23 Nov 2019</dd></dl>
  *
+ * @deprecated the functionality available in this package is provided by project 
+ * Reactor and we recommend to switch to that. TODO: helpers and examples about batching via Reactor.
  */
+@Deprecated
 public interface SizedBatchCollector<B> extends BatchCollector<B>
 {
 	public abstract Function<B,Long> batchSizer ();

@@ -8,7 +8,11 @@ package uk.ac.ebi.utils.threading.batchproc;
  * <dl><dt>Date:</dt><dd>25 Nov 2019</dd></dl>
  *
  * @param <B>
+ * 
+ * @deprecated the functionality available in this package is provided by project 
+ * Reactor and we recommend to switch to that. TODO: helpers and examples about batching via Reactor.
  */
+@Deprecated
 public abstract class AbstractSizedBatchCollector<B> implements SizedBatchCollector<B>
 {
 	private long maxBatchSize = 1000;

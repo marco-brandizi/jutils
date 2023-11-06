@@ -2,7 +2,8 @@
 
 *This file was last revised on 2023-11-06*. **Please keep this note updated**.
 
-## 14.0.2-SNAPSHOT
+## 14.1-SNAPSHOT
+* `ChainExecutor.andThen()` added (to be tested).
 
 
 ## 14.0.1

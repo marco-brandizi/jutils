@@ -134,7 +134,9 @@ public class StatsExecutor implements Executor
 
 	
 	/**
-	 * @see #execute(Runnable). If true, exceptions are let to reach the invoker. If you have a service that is known
+	 * @see #execute(Runnable)
+	 * 
+	 * If true, exceptions are let to reach the invoker. If you have a service that is known
 	 * to fail, you may want to just record failures and let your program to continue, e.g., with null result.
 	 */
 	public boolean isPopUpExceptions ()

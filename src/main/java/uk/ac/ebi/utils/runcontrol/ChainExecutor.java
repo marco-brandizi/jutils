@@ -15,7 +15,7 @@ public class ChainExecutor implements Executor
 	private Executor externalExecutor; 
 	
 	/**
-	 * @see #execute(Runnable).
+	 * @see #execute(Runnable)
 	 */
 	public ChainExecutor ( Executor externalExecutor, Executor internalExecutor )
 	{

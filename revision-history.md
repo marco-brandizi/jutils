@@ -8,7 +8,7 @@
 
 
 ## 14.0.1
-* Various dependency ugrades.
+* Various dependency upgrades.
 
 
 ## 14.0

@@ -23,14 +23,20 @@ public class CleaningObjectTest
 			log.info ( "close() invoked for {}!", this.getClass ().getSimpleName () );
 			System.err.println ( "close() invoked for " + this.getClass ().getSimpleName () + "!" );
 		}
+		
+		public void doSomething ()
+		{
+			log.info ( "Doing something, just to avoid code analysis warnings" );
+		}
 	}
 	
 	@Test @Ignore ( "To be completed" )
 	public void testBasics ()
 	{
-		@SuppressWarnings ( { "resource", "unused" } )
+		@SuppressWarnings ( { "resource" } )
 		SelfDisposingObject obj = new SelfDisposingObject ();
 		// TODO: we need something to trigger the disposal, for the moment we just check 
 		// the logging output.
+		obj.doSomething ();
 	}
 }

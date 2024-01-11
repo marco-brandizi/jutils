@@ -1,10 +1,13 @@
 package uk.ac.ebi.utils.streams;
 
-import java.util.Iterator;
+import static uk.ac.ebi.utils.exceptions.ExceptionUtils.throwEx;
+
 import java.util.Spliterator;
-import java.util.Spliterators;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
+
+import org.apache.commons.lang3.Validate;
 
 import uk.ac.ebi.utils.collections.TupleSpliterator;
 
@@ -62,4 +65,53 @@ public class StreamUtils
 		return tupleStream ( false, streams );
 	}
 	
+	/**
+	 * <p>Returns a sampled stream, i.e., a stream where a quota of elements approximately equals to sampleRatio
+	 * is returned.</p>
+	 * 
+	 * <p>This is obtained by attaching a filter to the initial stream that returns true if 
+	 * {@code randomNumber[0,1) < sampleRatio}.</p>
+	 * 
+	 * sampleRatio must be between 0 and 1. 0 returns an empty stream, 1 returns the original stream.
+	 *     
+	 */
+	public static <T> Stream<T> sampleStream ( Stream<T> stream, double samplingRatio )
+	{
+		Validate.notNull ( stream, "sampleStream() with null stream" );
+		
+		if ( samplingRatio < 0 || samplingRatio > 1 ) throwEx ( 
+			IllegalArgumentException.class, 
+			"sampleStream() with invalid sample ratio %f", samplingRatio 
+		);
+					
+		return stream
+			.filter ( e -> ThreadLocalRandom.current ().nextDouble ( 0, 1 ) < samplingRatio );
+	}
+	
+	/**
+	 *  A variant of {@link #sampleStream(Stream, double)} that computes the sampling ratio
+	 *  as {@code sampleSize/totalSize}.
+	 *  
+	 *  @param totalSize must be >= 0. When 0, you'll end up having an empty stream.
+	 *  
+	 *  @param sampleSize must be < totalSize and >= 0. When 0, you'll end up having an empty 
+	 *  stream. 
+	 *  
+	 */
+	public static <T> Stream<T> sampleStream ( Stream<T> stream, long sampleSize, long totalSize )
+	{
+		if ( totalSize <= 0 ) throwEx ( 
+			IllegalArgumentException.class, 
+			"sampleStream() with invalid totalSize %d", totalSize 
+		);			
+					
+		if ( sampleSize < 0 || sampleSize > totalSize ) throwEx ( 
+			IllegalArgumentException.class, 
+			"sampleStream() with invalid sampleSize %d", sampleSize 
+		);			
+		
+		if ( totalSize == 0 ) return sampleStream ( stream, 0d );
+		
+		return sampleStream ( stream, 1d * sampleSize / totalSize );
+	}
 }

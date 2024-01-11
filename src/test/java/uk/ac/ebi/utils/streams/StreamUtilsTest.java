@@ -1,7 +1,12 @@
 package uk.ac.ebi.utils.streams;
 
+import static java.lang.String.format;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Arrays;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.junit.Assert;
@@ -137,5 +142,23 @@ public class StreamUtilsTest
 		
 		log.info ( "Results:\n{}\n", Arrays.deepToString ( results ) );
 		Assert.assertTrue ( "unexpected resulting array!", Arrays.deepEquals ( results, expectedResults ) );
+	}
+	
+	@Test
+	public void testSampleStream ()
+	{
+		var testSize = 1000;
+		var testSampleSize = 200;
+		var testStrm = IntStream.range ( 0, testSize ).parallel ().mapToObj ( Integer::valueOf );
+		
+		testStrm = StreamUtils.sampleStream ( testStrm, testSampleSize, testSize );
+		
+		var size = testStrm.map ( i -> {
+			assertTrue ( format ( "The sample stream has an invalid value: %d!", i ), i >= 0 && i < testSize );
+			return i;
+		})
+		.count ();
+				
+		assertEquals ( "The sample size is unexpected", testSampleSize, size, 0.025 * testSize );
 	}
 }

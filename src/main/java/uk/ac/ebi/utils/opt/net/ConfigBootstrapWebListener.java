@@ -5,7 +5,6 @@ import java.util.Map;
 
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
-
 import uk.ac.ebi.utils.collections.OptionsMap;
 
 /**

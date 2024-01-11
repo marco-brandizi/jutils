@@ -7,21 +7,23 @@ import java.util.stream.IntStream;
 import uk.ac.ebi.utils.streams.StreamUtils;
 
 /**
+ * 
+ * A Tuple Spliterator
+ * 
  * <p>Takes an array of spliterators and returns a spliterator of tuples. Each tuple is built by taking the 
  * {@link Spliterator#tryAdvance(Consumer) next element} of each spliterator. 
  * The iteration stops as soon as there is at least one spliterator which of {@link Spliterator#tryAdvance(Consumer)} 
  * method returns false.</p>
  * 
- * Parallelism support is limited: {@link #trySplit()} succeeds as long as all the underlining spliterators are able
+ * <p>Parallelism support is limited: {@link #trySplit()} succeeds as long as all the underlining spliterators are able
  * to return prefixes having all the same size (tails of different size have chances to be managed by the behaviour of
- * {@link #tryAdvance(Consumer)}, by cutting results at the shortest one).   
+ * {@link #tryAdvance(Consumer)}, by cutting results at the shortest one).</p>   
  * 
- * Another restriction is that all base spliterators must be {@link Spliterator#IMMUTABLE} and 
- * non-{@link Spliterator#CONCURRENT}.  
+ * <p>Another restriction is that all base spliterators must be {@link Spliterator#IMMUTABLE} and 
+ * non-{@link Spliterator#CONCURRENT}.</p>
  * 
- * 
- * @see StreamUtils#tupleStream(int, boolean, java.util.stream.Stream...) and 
- * {@link uk.ac.ebi.utils.streams.StreamUtilsTest} for usage examples.
+ * <p>See also {@link StreamUtils#tupleStream(boolean, java.util.stream.Stream...)} and 
+ * {@link uk.ac.ebi.utils.streams.StreamUtilsTest} for usage examples.</p>
  *
  * @author brandizi
  * <dl><dt>Date:</dt><dd>26 Jul 2017</dd></dl>

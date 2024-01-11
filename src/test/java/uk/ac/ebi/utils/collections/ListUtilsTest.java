@@ -3,7 +3,6 @@ package uk.ac.ebi.utils.collections;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 /**

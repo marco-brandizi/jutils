@@ -1,7 +1,6 @@
 package uk.ac.ebi.utils.objects;
 
 import java.util.Collection;
-import java.util.Objects;
 
 import org.apache.commons.lang3.Validate;
 

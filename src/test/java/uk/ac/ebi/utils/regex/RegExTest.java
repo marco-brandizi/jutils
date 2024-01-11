@@ -52,7 +52,6 @@ import static org.junit.Assert.assertTrue;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.junit.Assert;
 import org.junit.Test;
 
 public class RegExTest

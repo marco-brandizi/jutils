@@ -5,6 +5,7 @@
 ## 14.1-SNAPSHOT
 * `ChainExecutor.andThen()` added (to be tested).
 * `StreamUtils.sampleStream()` added.
+* `uk.ac.ebi.utils.statistics.FisherExact` imported from the USeq project.
 
 
 ## 14.0.1

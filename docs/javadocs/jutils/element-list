@@ -17,6 +17,7 @@ uk.ac.ebi.utils.reflection
 uk.ac.ebi.utils.regex
 uk.ac.ebi.utils.runcontrol
 uk.ac.ebi.utils.sql
+uk.ac.ebi.utils.statistics
 uk.ac.ebi.utils.streams
 uk.ac.ebi.utils.string
 uk.ac.ebi.utils.test.junit

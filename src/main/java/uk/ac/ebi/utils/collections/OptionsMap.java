@@ -33,7 +33,7 @@ public interface OptionsMap extends Map<String, Object>
 	{
 		Object v = this.get ( key );
 		if ( v == null ) return defaultValue;
-		if ( v instanceof String && converter != null ) return converter.apply ( (String) v );
+		if ( v instanceof String str && converter != null ) return converter.apply ( str );
 		return (V) v;
 	}
 	

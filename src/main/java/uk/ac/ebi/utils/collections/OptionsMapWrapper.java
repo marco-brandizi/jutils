@@ -31,6 +31,8 @@ public class OptionsMapWrapper implements OptionsMap
 
 	public OptionsMapWrapper ( Map<String, Object> base )
 	{
+		// So that we don't keep nesting wrappers.
+		if ( base instanceof OptionsMapWrapper wbase ) base = wbase.base;
 		this.base = base;
 	}
 		
@@ -169,7 +171,7 @@ public class OptionsMapWrapper implements OptionsMap
 	@Override
 	public String toString ()
 	{
-		return "[" + this.getClass ().getSimpleName () + "] " + base.toString ();
+		return base.toString ();
 	}
 	
 }

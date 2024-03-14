@@ -169,7 +169,7 @@ public class OptionsMapWrapper implements OptionsMap
 	@Override
 	public String toString ()
 	{
-		return this.getClass ().getSimpleName () + base.toString ();
+		return "[" + this.getClass ().getSimpleName () + "] " + base.toString ();
 	}
 	
 }

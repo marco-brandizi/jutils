@@ -3,10 +3,16 @@ package uk.ac.ebi.utils.collections;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 /**
  * Collections-related utils.
@@ -114,5 +120,74 @@ public class CollectionsUtils
 	{
 		return asValue ( value, false );
 	}
+	
+	
+	/**
+	 * TODO: newXXX() and unmodifiableXXX(), comment and test 
+	 */
+	
+	public static <T, C extends Collection<T>> C newCollection ( Collection<? extends T> coll, Supplier<C> provider )
+	{
+		C result = provider.get ();
+		if ( coll != null && !coll.isEmpty () ) result.addAll ( coll );
+		return result;
+	}
+	
+	public static <T> Set<T> newSet ( Collection<? extends T> coll )
+	{
+		return newCollection ( coll, HashSet::new );
+	}
 
+	public static <T> List<T> newList ( Collection<? extends T> coll )
+	{
+		return newCollection ( coll, ArrayList::new );
+	}
+
+	public static <K,V> Map<K,V> newMap ( Map<? extends K, ? extends V> map, Supplier<Map<K, V>> provider )
+	{
+		Map<K,V> result = provider.get ();
+		if ( map != null && !map.isEmpty () ) result.putAll ( map );
+		return result;
+	}
+
+	public static <K,V> Map<K,V> newMap ( Map<? extends K, ? extends V> map )
+	{
+		return newMap ( map, HashMap::new );
+	}
+	
+	
+	public static <T, C extends Collection<T>, CP extends Collection<? extends T>> 
+	C unmodifiableCollection ( 
+		CP coll,
+		Function<CP, C> wrapper,
+		Supplier<C> emptyProvider
+	)
+	{
+		if ( coll == null || coll.isEmpty () ) return emptyProvider.get ();
+		return wrapper.apply ( coll );
+	}
+	
+	public static <T> Set<T> unmodifiableSet ( Set<? extends T> set )
+	{
+		return unmodifiableCollection ( set, Collections::unmodifiableSet, Set::of );
+	}
+
+	public static <T> List<T> unmodifiableList ( List<? extends T> list )
+	{
+		return unmodifiableCollection ( list, Collections::unmodifiableList, List::of );
+	}
+	
+	public static <K, V> Map<K, V> unmodifiableMap ( 
+		Map<? extends K, ? extends V> map,
+		Supplier<Map<K, V>> emptyProvider
+	)
+	{
+		if ( map == null || map.isEmpty () ) return emptyProvider.get ();
+		return Collections.unmodifiableMap ( map );
+	}
+
+	public static <K, V> Map<K, V> unmodifiableMap ( Map<? extends K, ? extends V> map )
+	{
+		return unmodifiableMap ( map, Map::of );
+	}
 }

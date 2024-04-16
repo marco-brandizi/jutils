@@ -26,6 +26,54 @@ import java.util.function.UnaryOperator;
 public class CollectionsUtils
 {
 	/**
+	 * Utility for as$Collection( value ) methods.
+	 * 
+	 * @return a collection containing the value parameter. If value is null, 
+	 * an empty collection, if it's already of type C/collClass, return the 
+	 * value itself, if it's another collection, return an instance of C
+	 * with the values copied into it. 
+	 * 
+	 * @param value
+	 * @param collClass needed to know if value is an instance of C
+	 * @param collCreator how to create a new empty collection when value is a collection, but
+	 * not an instance of C/collClass. If this is null, returns value in this case (WARN: it must 
+	 * be compatible).
+	 * @param emptyCollCreator creates and empty collection when value is null
+	 * @param singletonCreator creates a unmodifiable singleton of type C when value is not a collection
+	 * @param unmodifiableWrapper used to wrap the result into an unmodifiable collection of type C
+	 */
+	@SuppressWarnings ( "unchecked" )
+	private static <T, C extends Collection<T>> C asCollection ( 
+		Object value,
+		Class<C> collClass,
+		Supplier<C> collCreator,
+		Supplier<C> emptyCollCreator,
+		Function<Object, C> singletonCreator,
+		UnaryOperator<C> unmodifiableWrapper
+	)
+	{
+		if ( value == null ) return emptyCollCreator.get ();
+		
+		C result;
+		if ( collClass.isInstance ( value ) )
+			result = (C) value;
+		else if ( value instanceof Collection coll )
+		{
+			if ( collCreator == null )
+				result = (C) coll;
+			else {
+				result = collCreator.get ();
+				result.addAll ( coll );
+			}
+		}
+		else
+			return singletonCreator.apply ( value );
+		
+		return unmodifiableWrapper.apply ( result );
+	}
+	
+	
+	/**
 	 * Converts the value into an immutable {@link Collection}. 
 	 * 
 	 * If the value is null, returns an {@link Collections#emptySet() empty set}.
@@ -33,47 +81,59 @@ public class CollectionsUtils
 	 * If the value is already a collection, returns its 
 	 * {@link Collections#unmodifiableCollection(Collection) unmodifiable wrapper}.
 	 * 
+	 * Note that, in the latter case, it <b>doesn't copy</b> the original collection.
+	 * 
+	 * This is based on {@link #asCollection(Object, Class, Supplier, Supplier, Function, UnaryOperator)}.
 	 */
 	@SuppressWarnings ( "unchecked" )
 	public static <T> Collection<T> asCollection ( Object value )
 	{
-		if ( value == null ) return Collections.emptySet ();
-		
-		if ( value instanceof Collection ) 
-			return Collections.unmodifiableCollection ( (Collection<T>) value );
-		
-		return Collections.singleton ( (T) value );
+		return asCollection ( value,
+			Collection.class, // collection class
+			null, // collCreator
+			Collections::emptySet, // emptyCollCreator
+			Collections::singleton, // singletonCreator
+			Collections::unmodifiableCollection // unmodifiableWrapper
+		);
 	}
 	
 	/**
-	 * Uses {@link #asCollection(Object)} to return an unmodifiable list out of the value.
+	 * Similar to {@link #asCollection(Object)}, returns an unmodifiable 
+	 * list out of the value.
 	 * 
-	 * If the result from {@link #asCollection(Object)} is a list, returns it, else 
-	 * creates a list from such result and returns an unmodifiable wrapper of it.
+	 * This is based on {@link #asCollection(Object, Class, Supplier, Supplier, Function, UnaryOperator)}.
 	 */
-	@SuppressWarnings ( { "unchecked", "rawtypes" } )
+	@SuppressWarnings ( { "unchecked" } )
 	public static <T> List<T> asList ( Object value )
 	{
-		var result = asCollection ( value );
-		if ( result instanceof List ) return (List<T>) result;
-		
-		return Collections.unmodifiableList ( new ArrayList ( result ) );
+		return asCollection (
+			value,
+			List.class, // coll class
+			ArrayList::new, // coll creator
+			List::of, // empty coll creator
+			List::of, // singleton creator
+			Collections::unmodifiableList // unmodifiable wrapper
+		);
 	}
 	
 
 	/**
-	 * Uses {@link #asCollection(Object)} to return an unmodifiable set out of the value.
+	 * Similar to {@link #asCollection(Object)}, returns an unmodifiable set out of the value.
+	 * if the value is a collection, uses it to create a new set copy.
 	 * 
-	 * If the result from {@link #asCollection(Object)} is a set, returns it, else 
-	 * creates a set from such result and returns an unmodifiable wrapper of it.
+	 * This is based on {@link #asCollection(Object, Class, Supplier, Supplier, Function, UnaryOperator)}.
 	 */
-	@SuppressWarnings ( { "unchecked", "rawtypes" } )
+	@SuppressWarnings ( { "unchecked" } )
 	public static <T> Set<T> asSet ( Object value )
 	{
-		var result = asCollection ( value );
-		if ( result instanceof Set ) return (Set<T>) result;
-		
-		return Collections.unmodifiableSet ( new HashSet ( result ) );
+		return asCollection (
+			value,
+			Set.class, // coll class
+			HashSet::new, // coll creator
+			Set::of, // empty coll creator
+			Set::of, // singleton creator
+			Collections::unmodifiableSet // unmodifiable wrapper
+		);
 	}
 	
 	
@@ -90,13 +150,14 @@ public class CollectionsUtils
 	 *   if failIfMany is true, throws {@link IllegalArgumentException}
 	 *   if failIfMany is false, returns the first element in the collection value, which is then 
 	 *   undetermined
+	 *   
+	 * TODO: consider other iterables.
 	 */
 	@SuppressWarnings ( "unchecked" )
 	public static <T> T asValue ( Object value, boolean failIfMany )
 	{
 		if ( value == null ) return null;
-		
-		if ( ! ( value instanceof Collection ) ) return (T) value;
+		if ( !( value instanceof Collection ) ) return (T) value;
 			
 		// Deal with a collection
 		var coll = (Collection<T>) value;
@@ -156,6 +217,35 @@ public class CollectionsUtils
 	}
 	
 	
+	public static <T, C extends Collection<T>> C 
+	  newCollectionIfNull ( C coll, Supplier<C> provider )
+	{
+		if ( coll != null ) return coll;
+		return provider.get ();
+	}
+	
+	public static <T> Set<T> newSetIfNull ( Set<T> set )
+	{
+		return newCollectionIfNull ( set, HashSet::new );
+	}
+	
+	public static <T> List<T> newListIfNull ( List<T> list )
+	{
+		return newCollectionIfNull ( list, ArrayList::new );
+	}
+	
+	public static <K, V, M extends Map<K,V>> M newMapIfNull ( M map, Supplier<M> provider )
+	{
+		if ( map != null && !map.isEmpty () ) return map;
+		return provider.get ();
+	}
+	
+	public static <K, V> Map<K, V> newMapIfNull ( Map<K, V> map )
+	{
+		return newMapIfNull ( map, HashMap::new );
+	}
+	
+	
 	public static <T, C extends Collection<T>, CP extends Collection<? extends T>> 
 	C unmodifiableCollection ( 
 		CP coll,
@@ -190,4 +280,5 @@ public class CollectionsUtils
 	{
 		return unmodifiableMap ( map, Map::of );
 	}
+	
 }

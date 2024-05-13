@@ -1,6 +1,5 @@
 package uk.ac.ebi.utils.opt.json;
 
-import static java.util.stream.Collector.Characteristics.IDENTITY_FINISH;
 import static java.util.stream.Collector.Characteristics.UNORDERED;
 
 import java.util.function.BiConsumer;

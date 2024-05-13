@@ -7,6 +7,7 @@ uk.ac.ebi.utils.memory
 uk.ac.ebi.utils.objects
 uk.ac.ebi.utils.opt.config
 uk.ac.ebi.utils.opt.io
+uk.ac.ebi.utils.opt.json
 uk.ac.ebi.utils.opt.net
 uk.ac.ebi.utils.opt.net.exceptions
 uk.ac.ebi.utils.opt.orm.test

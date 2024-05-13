@@ -221,6 +221,7 @@
 		
 		<!-- Required by 
 		  uk.ac.ebi.utils.opt.config
+		  uk.ac.ebi.utils.opt.json
 		-->
 		<dependency>
 			<groupId>com.fasterxml.jackson.dataformat</groupId>

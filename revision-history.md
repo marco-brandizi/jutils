@@ -1,12 +1,13 @@
 # Revision History
 
-*This file was last revised on 2024-04-15*. **Please keep this note updated**.
+*This file was last revised on 2024-05-13*. **Please keep this note updated**.
 
 ## 14.1-SNAPSHOT
 * `ChainExecutor.andThen()` added (to be tested).
 * `StreamUtils.sampleStream()` added.
 * `uk.ac.ebi.utils.statistics.FisherExact` imported from the USeq project.
-* `CollectionUtils`, adding functions to copy collections and make them read-only.
+* `CollectionUtils`, adding functions to copy collections and making them read-only.
+* `JacksonJsUtils.toArrayNode()` added.
 
 ## 14.0.1
 * Various dependency upgrades.

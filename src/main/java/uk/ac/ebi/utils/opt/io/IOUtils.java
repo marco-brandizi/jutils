@@ -54,6 +54,9 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.UncheckedIOException;
@@ -67,14 +70,18 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 
 import org.apache.commons.io.input.ReaderInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.io.Resources;
+import com.machinezoo.noexception.Exceptions;
 
 import uk.ac.ebi.utils.exceptions.UncheckedFileNotFoundException;
+import uk.ac.ebi.utils.threading.HackedBlockingQueue;
 
 
 
@@ -448,4 +455,5 @@ public class IOUtils
 			);
 		}
 	}
+	
 }

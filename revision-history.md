@@ -6,8 +6,8 @@
 * `ChainExecutor.andThen()` added (to be tested).
 * `StreamUtils.sampleStream()` added.
 * `uk.ac.ebi.utils.statistics.FisherExact` imported from the USeq project.
-* `CollectionUtils`, adding functions to copy collections and making them read-only.
-* `JacksonJsUtils.toArrayNode()` added.
+* `CollectionsUtils`, adding functions to copy collections and making them read-only (to be tested, but used in dependants).
+* `JacksonJsUtils.toArrayNode()` added (to be tested, but used in dependants).
 
 ## 14.0.1
 * Various dependency upgrades.

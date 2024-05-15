@@ -9,6 +9,7 @@
 * `CollectionsUtils`, adding functions to copy collections and making them read-only (to be tested, but used in dependants).
 * `JacksonJsUtils.toArrayNode()` added (to be tested, but used in dependants).
 
+
 ## 14.0.1
 * Various dependency upgrades.
 
@@ -25,17 +26,21 @@
   * `javax.servlet-api` migrated to `jakarta.servlet-api`.
   * `spring-web` moved to 6.0.
 
+
 ## 12.0
 * Migration to Java 17. **No backward compatibility guaranteed**.
 
+
 ## 11.1.1
 * Minor bug in `ExceptionUtils` fixed (#ea6e7d8).
+
 
 ## 11.1 (TODO)
 * **WARNING**: Maven repository migrated to [my personal artifactory](https://artifactory.marcobrandizi.info/#/public).
 * Minor fix in the batch processors (more processors made abstract, #3e97258). 
 * `ListUtils.getRow()` added.
 * `ServletUtils` added.
+
 
 ## 11.0.1
 
@@ -45,6 +50,7 @@
   * `XmlFilterUtils.cdataWrapper()`, case with [tags having the same prefix][10].
 
 [10]: https://github.com/marco-brandizi/jutils/commit/e4a7ac
+
 
 ## 11.0
 * **Big refactoring**: previous split into multiple jutils-xxx modules removed, 
@@ -58,6 +64,7 @@
 * `RegEx`, pattern-based cached instances added for efficiency.
 
 *If not otherwise specified, items refer to the base module (`jutils`)*.
+
 
 ## 10.0
 * **FROM NOW ON, JDK < 11 IS NO LONGER SUPPORTED**. jutils will possibly work with 1.8 for a

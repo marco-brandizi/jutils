@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -26,7 +25,7 @@ import java.util.function.UnaryOperator;
 public class CollectionsUtils
 {
 	/**
-	 * Utility for as$Collection( value ) methods.
+	 * Utility for asCollection( value ) methods.
 	 * 
 	 * @return a collection containing the value parameter. If value is null, 
 	 * an empty collection, if it's already of type C/collClass, return the 
@@ -182,11 +181,15 @@ public class CollectionsUtils
 		return asValue ( value, false );
 	}
 	
-	
+		
 	/**
-	 * TODO: newXXX() and unmodifiableXXX(), comment and test 
+	 * Returns a new collection containing the elements in the parameter, using
+	 * the provider.
+	 * 
+	 * If the param is null or empty, returns a new empty collection.
+	 * 
+	 * This is the base for newXXX() methods.
 	 */
-	
 	public static <T, C extends Collection<T>> C newCollection ( Collection<? extends T> coll, Supplier<C> provider )
 	{
 		C result = provider.get ();
@@ -194,16 +197,42 @@ public class CollectionsUtils
 		return result;
 	}
 	
+	/**
+	 * @see #newCollection(Collection, Supplier)
+	 */
+	public static <T> Set<T> newSet ( Collection<? extends T> coll, Supplier<Set<T>> provider )
+	{
+		return newCollection ( coll, provider );
+	}
+	
+	/**
+	 * Defaults to {@link HashSet} as provider. 
+	 */
 	public static <T> Set<T> newSet ( Collection<? extends T> coll )
 	{
-		return newCollection ( coll, HashSet::new );
+		return newSet ( coll, HashSet::new );
 	}
 
+
+	/**
+	 * @see #newCollection(Collection, Supplier)
+	 */
+	public static <T> List<T> newList ( Collection<? extends T> coll, Supplier<List<T>> provider )
+	{
+		return newCollection ( coll, provider );
+	}
+	
+	/**
+	 * Defaults to {@link ArrayList} as provider
+	 */
 	public static <T> List<T> newList ( Collection<? extends T> coll )
 	{
-		return newCollection ( coll, ArrayList::new );
+		return newList ( coll, ArrayList::new );
 	}
 
+	/**
+	 * @see #newCollection(Collection, Supplier)
+	 */
 	public static <K,V> Map<K,V> newMap ( Map<? extends K, ? extends V> map, Supplier<Map<K, V>> provider )
 	{
 		Map<K,V> result = provider.get ();
@@ -211,12 +240,20 @@ public class CollectionsUtils
 		return result;
 	}
 
+	/**
+	 * Defaults to {@link HashMap} as provider
+	 */
 	public static <K,V> Map<K,V> newMap ( Map<? extends K, ? extends V> map )
 	{
 		return newMap ( map, HashMap::new );
 	}
 	
-	
+	/**
+	 * If coll is not null, returns, it, else returns a new empty collection, 
+	 * using the provider.
+	 * 
+	 * This is the base for newXXXIfNull() methods.
+	 */
 	public static <T, C extends Collection<T>> C 
 	  newCollectionIfNull ( C coll, Supplier<C> provider )
 	{
@@ -224,28 +261,63 @@ public class CollectionsUtils
 		return provider.get ();
 	}
 	
+	/**
+	 * @see #newCollectionIfNull(Collection, Supplier)
+	 */
+	public static <T> Set<T> newSetIfNull ( Set<T> set, Supplier<Set<T>> provider )
+	{
+		return newCollectionIfNull ( set, provider );
+	}
+
+	/**
+	 * Defaults to {@link HashSet} as provider.
+	 */
 	public static <T> Set<T> newSetIfNull ( Set<T> set )
 	{
-		return newCollectionIfNull ( set, HashSet::new );
+		return newSetIfNull ( set, HashSet::new );
 	}
 	
+	/**
+	 * @see #newCollectionIfNull(Collection, Supplier)
+	 */	
+	public static <T> List<T> newListIfNull ( List<T> list, Supplier<List<T>> provider )
+	{
+		return newCollectionIfNull ( list, provider );
+	}
+
+	/**
+	 * Defaults to {@link ArrayList} as provider.
+	 */
 	public static <T> List<T> newListIfNull ( List<T> list )
 	{
-		return newCollectionIfNull ( list, ArrayList::new );
+		return newListIfNull ( list, ArrayList::new );
 	}
 	
+	/**
+	 * @see #newCollectionIfNull(Collection, Supplier)
+	 */
 	public static <K, V, M extends Map<K,V>> M newMapIfNull ( M map, Supplier<M> provider )
 	{
 		if ( map != null && !map.isEmpty () ) return map;
 		return provider.get ();
 	}
 	
+	/**
+	 * Defaults to {@link HashMap} as provider.
+	 */
 	public static <K, V> Map<K, V> newMapIfNull ( Map<K, V> map )
 	{
 		return newMapIfNull ( map, HashMap::new );
 	}
 	
-	
+	/**
+	 * Always returns an unmodifiable collection wrapping the parameter.
+	 * If the input collection is null or empty, it provides an unmodifiable 
+	 * collection via {@code emptyProvider}, else, it uses the {@code wrapper}
+	 * to make the parameter read-only.
+	 * 
+	 * This is the base for unmodifiableXXX() methods.
+	 */
 	public static <T, C extends Collection<T>, CP extends Collection<? extends T>> 
 	C unmodifiableCollection ( 
 		CP coll,
@@ -257,16 +329,27 @@ public class CollectionsUtils
 		return wrapper.apply ( coll );
 	}
 	
+	/**
+	 * {@link #unmodifiableCollection(Collection, Function, Supplier)}
+	 */
 	public static <T> Set<T> unmodifiableSet ( Set<? extends T> set )
 	{
 		return unmodifiableCollection ( set, Collections::unmodifiableSet, Set::of );
 	}
 
+	/**
+	 * {@link #unmodifiableCollection(Collection, Function, Supplier)}
+	 */
 	public static <T> List<T> unmodifiableList ( List<? extends T> list )
 	{
 		return unmodifiableCollection ( list, Collections::unmodifiableList, List::of );
 	}
 	
+	/**
+	 * This doesn't use
+	 * {@link #unmodifiableCollection(Collection, Function, Supplier)}, but
+	 * has an implementation based on the same logic.
+	 */
 	public static <K, V> Map<K, V> unmodifiableMap ( 
 		Map<? extends K, ? extends V> map,
 		Supplier<Map<K, V>> emptyProvider

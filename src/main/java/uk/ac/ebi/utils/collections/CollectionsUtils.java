@@ -249,7 +249,7 @@ public class CollectionsUtils
 	}
 	
 	/**
-	 * If coll is not null, returns, it, else returns a new empty collection, 
+	 * If coll is not null, returns it, else returns a new empty collection, 
 	 * using the provider.
 	 * 
 	 * This is the base for newXXXIfNull() methods.

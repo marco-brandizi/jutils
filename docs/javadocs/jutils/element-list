@@ -11,6 +11,7 @@ uk.ac.ebi.utils.opt.json
 uk.ac.ebi.utils.opt.net
 uk.ac.ebi.utils.opt.net.exceptions
 uk.ac.ebi.utils.opt.orm.test
+uk.ac.ebi.utils.opt.runcontrol
 uk.ac.ebi.utils.opt.springweb.exceptions
 uk.ac.ebi.utils.opt.xml
 uk.ac.ebi.utils.orm

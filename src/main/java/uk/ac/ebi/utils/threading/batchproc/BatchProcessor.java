@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.ac.ebi.utils.exceptions.UnexpectedEventException;
+import uk.ac.ebi.utils.opt.runcontrol.ReactorUtils;
 import uk.ac.ebi.utils.threading.HackedBlockingQueue;
 import uk.ac.ebi.utils.threading.ThreadUtils;
 import uk.ac.ebi.utils.threading.batchproc.collectors.CollectionBatchCollector;
@@ -66,7 +67,7 @@ import uk.ac.ebi.utils.threading.batchproc.processors.CollectionBasedBatchProces
  * <dl><dt>Date:</dt><dd>1 Dec 2017</dd></dl>
  *
  * @deprecated the functionality available in this package is provided by project 
- * Reactor and we recommend to switch to that. TODO: helpers and examples about batching via Reactor.
+ * Reactor and we recommend to switch to that. @see ReactorUtils
  */
 @Deprecated
 public abstract class BatchProcessor<B, BC extends BatchCollector<B>, BJ extends Consumer<B>>

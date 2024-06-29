@@ -16,7 +16,10 @@ import uk.ac.ebi.utils.threading.batchproc.ItemizedSizedBatchCollector;
  *
  * @param <C>
  * @param <E>
+ * @deprecated the functionality available in this package is provided by project 
+ * Reactor and we recommend to switch to that. @see ReactorUtils
  */
+@Deprecated
 public abstract class CollectionBatchCollector<C extends Collection<E>, E>
 	extends AbstractSizedBatchCollector<C>
 	implements ItemizedSizedBatchCollector<C, E>

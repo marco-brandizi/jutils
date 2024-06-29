@@ -14,7 +14,10 @@ import uk.ac.ebi.utils.threading.batchproc.collectors.CollectionBatchCollector;
  * @author brandizi
  * <dl><dt>Date:</dt><dd>25 Nov 2019</dd></dl>
  *
+ * @deprecated the functionality available in this package is provided by project 
+ * Reactor and we recommend to switch to that. @see ReactorUtils
  */
+@Deprecated
 public abstract class CollectionBasedBatchProcessor
 	<E, B extends Collection<E>, BC extends CollectionBatchCollector<B,E>, BJ extends Consumer<B>>
   extends ItemizedBatchProcessor<E, B, BC, BJ>

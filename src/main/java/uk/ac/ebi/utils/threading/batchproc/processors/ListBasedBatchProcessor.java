@@ -6,6 +6,11 @@ import java.util.function.Supplier;
 
 import uk.ac.ebi.utils.threading.batchproc.collectors.ListBatchCollector;
 
+/**
+ * @deprecated the functionality available in this package is provided by project 
+ * Reactor and we recommend to switch to that. @see ReactorUtils
+ */
+@Deprecated
 public abstract class ListBasedBatchProcessor<E, BJ extends Consumer<List<E>>>
 	extends CollectionBasedBatchProcessor<E, List<E>, ListBatchCollector<E>, BJ>
 {

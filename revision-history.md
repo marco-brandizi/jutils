@@ -1,6 +1,6 @@
 # Revision History
 
-*This file was last revised on 2024-06-07*. **Please keep this note updated**.
+*This file was last revised on 2024-06-30*. **Please keep this note updated**.
 
 ## 14.1-SNAPSHOT
 * `ChainExecutor.andThen()` added (to be tested).
@@ -8,6 +8,7 @@
 * `uk.ac.ebi.utils.statistics.FisherExact` imported from the USeq project.
 * `CollectionsUtils`, adding functions to copy collections and making them read-only (to be tested, but used in dependants).
 * `JacksonJsUtils` added.
+* `ReactorUtils` added.
 
 
 ## 14.0.1

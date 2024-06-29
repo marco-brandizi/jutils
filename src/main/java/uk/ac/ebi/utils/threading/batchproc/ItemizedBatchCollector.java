@@ -12,7 +12,7 @@ import java.util.function.BiConsumer;
  * <dl><dt>Date:</dt><dd>23 Nov 2019</dd></dl>
  *
  * @deprecated the functionality available in this package is provided by project 
- * Reactor and we recommend to switch to that. TODO: helpers and examples about batching via Reactor.
+ * Reactor and we recommend to switch to that. @see ReactorUtils
  */
 @Deprecated
 public interface ItemizedBatchCollector<B,E> extends BatchCollector<B>

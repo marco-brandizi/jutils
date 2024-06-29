@@ -4,6 +4,8 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 
+import uk.ac.ebi.utils.opt.runcontrol.ReactorUtils;
+
 /**
  * <h1>The Batch Collector</h1>
  * 
@@ -23,7 +25,7 @@ import java.util.stream.Collector;
  * <dl><dt>Date:</dt><dd>23 Nov 2019</dd></dl>
  *
  * @deprecated the functionality available in this package is provided by project 
- * Reactor and we recommend to switch to that. TODO: helpers and examples about batching via Reactor.
+ * Reactor and we recommend to switch to that. @see ReactorUtils
  */
 @Deprecated
 public interface BatchCollector<B>

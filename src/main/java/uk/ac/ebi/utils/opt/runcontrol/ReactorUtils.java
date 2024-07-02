@@ -24,23 +24,6 @@ import reactor.core.scheduler.Schedulers;
 public class ReactorUtils
 {
 	/**
-	 * {@link Schedulers#newBoundedElastic(int, int, String)} with the {@link Schedulers#DEFAULT_BOUNDED_ELASTIC_SIZE default threadCap} 
-	 * and a low limit for queuedTaskCap. This is suitable for cases where the source is
-	 * much faster than the downstream processing and hence there is little point with queueing 
-	 * too much stuff.
-	 * 
-	 */
-	public static final Scheduler DEFAULT_FLUX_SCHEDULER = newBoundedElastic ( 
-		DEFAULT_BOUNDED_ELASTIC_SIZE, 100, 
-		"jutils.batchSched" 
-	);
-	
-	/**
-	 * This has been tested in tasks like saving data on a database.
-	 */
-	public static final int DEFAULT_BATCH_SIZE = 2500;
-
-	/**
 	 * Little helper to build a common {@link ParallelFlux} to process a source of items
 	 * in parallel batches.
 	 *
@@ -50,6 +33,24 @@ public class ReactorUtils
 	 */
 	public static class ParallelBatchFluxBuilder<T, B extends Collection<T>>
 	{
+		/**
+		 * {@link Schedulers#newBoundedElastic(int, int, String)} with the {@link Schedulers#DEFAULT_BOUNDED_ELASTIC_SIZE default threadCap} 
+		 * and a low limit for queuedTaskCap. This is suitable for cases where the source is
+		 * much faster than the downstream processing and hence there is little point with queueing 
+		 * too much stuff.
+		 * 
+		 */
+		public static final Scheduler DEFAULT_FLUX_SCHEDULER = newBoundedElastic ( 
+			DEFAULT_BOUNDED_ELASTIC_SIZE, 100, 
+			"jutils.batchSched" 
+		);
+		
+		/**
+		 * This has been tested in tasks like saving data on a database.
+		 */
+		public static final int DEFAULT_BATCH_SIZE = 2500;
+
+		
 		private Flux<T> flux;
 		private Scheduler scheduler = DEFAULT_FLUX_SCHEDULER;
 		private int batchSize = DEFAULT_BATCH_SIZE;
@@ -83,7 +84,7 @@ public class ReactorUtils
 		}
 		
 		/**
-		 * Default is {@link ReactorUtils#DEFAULT_FLUX_SCHEDULER}.
+		 * Default is {@link #DEFAULT_FLUX_SCHEDULER}.
 		 */
 		public ParallelBatchFluxBuilder<T, B> withScheduler ( Scheduler scheduler )
 		{
@@ -92,7 +93,7 @@ public class ReactorUtils
 		}
 		
 		/**
-		 * Default it {@link ReactorUtils#DEFAULT_BATCH_SIZE}.
+		 * Default it {@link #DEFAULT_BATCH_SIZE}.
 		 */
 		public ParallelBatchFluxBuilder<T, B> withBatchSize ( int batchSize )
 		{
@@ -110,6 +111,28 @@ public class ReactorUtils
 			return this;
 		}
 	} // class ParallelBatchFluxBuilder
+	
+	
+	/**
+	 * Just uses {@link ParallelBatchFluxBuilder} with its defaults. 
+	 */
+	public static <T> ParallelFlux<List<T>> parallelBatchFlux ( Flux<? extends T> flux ) {
+		return new ParallelBatchFluxBuilder<T, List<T>> ( flux ).build ();
+	}
+
+	/**
+	 * Just uses {@link ParallelBatchFluxBuilder} with its defaults. 
+	 */
+	public static <T> ParallelFlux<List<T>> parallelBatchFlux ( Stream<? extends T> stream  ) {
+		return new ParallelBatchFluxBuilder<T, List<T>> ( stream ).build ();
+	}
+	
+	/**
+	 * Just uses {@link ParallelBatchFluxBuilder} with its defaults. 
+	 */
+	public static <T> ParallelFlux<List<T>> parallelBatchFlux ( Collection<? extends T> collection  ) {
+		return new ParallelBatchFluxBuilder<T, List<T>> ( collection ).build ();
+	}
 	
 	
 	/**
@@ -134,8 +157,7 @@ public class ReactorUtils
 		Flux<T> flux, Consumer<List<T>> task		
 	)
 	{
-		ParallelFlux<List<T>> parFlux = new ParallelBatchFluxBuilder<T,List<T>> ( flux ).build ();
-		batchProcessing ( parFlux, task );
+		batchProcessing ( parallelBatchFlux ( flux ), task );
 	}
 
 	/**
@@ -145,8 +167,7 @@ public class ReactorUtils
 		Stream<T> stream, Consumer<List<T>> task		
 	)
 	{
-		ParallelFlux<List<T>> parFlux = new ParallelBatchFluxBuilder<T, List<T>> ( stream ).build ();
-		batchProcessing ( parFlux, task );
+		batchProcessing ( parallelBatchFlux ( stream ), task );
 	}
 
 	/**
@@ -156,8 +177,7 @@ public class ReactorUtils
 		Collection<T> collection, Consumer<List<T>> task		
 	)
 	{
-		ParallelFlux<List<T>> parFlux = new ParallelBatchFluxBuilder<T,List<T>> ( collection ).build ();
-		batchProcessing ( parFlux, task );
+		batchProcessing ( parallelBatchFlux ( collection ), task );
 	}
 	
 }

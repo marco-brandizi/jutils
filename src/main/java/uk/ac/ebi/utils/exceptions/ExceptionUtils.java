@@ -20,7 +20,7 @@ public class ExceptionUtils
 	private ExceptionUtils () {}
 	
 	/**
-	 * Gets the root cause of an exception. To do that, it trace back the hierarchy of the exception's 
+	 * Gets the root cause of an exception. To do that, it traces back the hierarchy of the exception's 
 	 * {@link Throwable#getCause() causes}, until it finds an exception that has no upper cause.
 	 * 
 	 * Eventually, it returns the first exception that has no cause attached and hence it always returns
@@ -38,7 +38,7 @@ public class ExceptionUtils
 	}
 	
 	/**
-	 * Goes through the {@link Throwable#getCause() exception's hierarchy} until it finds one that has a non null
+	 * Goes through the {@link Throwable#getCause() exception's hierarchy} until it finds one that has a non-null
 	 * {@link Throwable#getMessage() message}.
 	 * 
 	 * This might return the initial exception itself. If none of the exceptions in the exception hierarchy has a 

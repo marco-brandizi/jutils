@@ -50,7 +50,7 @@ public class ResponseStatusException2 extends ResponseStatusException
 	 * If {@link #getRawStatusCode()} only is available, the second part reports the int code only.
 	 * 
 	 * This version of the message getter doesn't yield the cause's message and this is up to you 
-	 * to pass in the constructor.
+	 * to pass it in the constructor.
 	 * 
 	 */
 	public String getMessage ()

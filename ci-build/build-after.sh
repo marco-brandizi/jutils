@@ -10,5 +10,3 @@ if [[ "$GIT_BRANCH" == 'master' ]]; then
 
   export NEEDS_PUSH=true # instructs build.sh to push the changes above
 fi
-
-echo "::warning ::Warning test"

@@ -24,7 +24,7 @@ public class XmlFilterUtils
 	 * to buffer it).</p>
 	 * 
 	 * <p><b>WARNING</b>: In order to avoid too many dependency for jUtils, you have to declare the dependency on
-	 * both Unix4j and EasyStream (copy-paste them from the junit-io's pom).</p>
+	 * both Unix4j and EasyStream.</p>
 	 * 
 	 * <b>TODO</b>: this doesn't work when tags are nested, like in:
 	 * {@code <foo>bla bla bla <foo> bla </foo>}. In this case, the inner foo will have a CDATA block appended.

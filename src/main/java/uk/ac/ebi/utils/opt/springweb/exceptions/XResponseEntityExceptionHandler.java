@@ -27,7 +27,7 @@ import uk.ac.ebi.utils.opt.io.IOUtils;
  * based on {@link #createProblemDetail(Exception, HttpStatusCode, String, String, Object[], WebRequest)},
  * which in turn, is based on <a href = "https://datatracker.ietf.org/doc/html/rfc9457">RFC-9457</a>.
  *
- * TODO: I've tested it in dependants only.
+ * TODO: I've tested it in dependents only.
  * 
  * @author Marco Brandizi
  * <dl><dt>Date:</dt><dd>30 Aug 2024</dd></dl>

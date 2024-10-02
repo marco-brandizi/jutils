@@ -32,6 +32,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <slf4j.version>2.0.9</slf4j.version>
+   	<spring.version>6.1.12</spring.version>
   </properties>
 
   <scm>
@@ -139,12 +140,20 @@
 		<!-- Required by:
 			uk.ac.ebi.utils.opt.springweb
 		-->
-		<dependency>
+		<!-- TODO: remove, it's bring in by webmvc -->
+		<!-- dependency>
 		  <groupId>org.springframework</groupId>
 		  <artifactId>spring-web</artifactId>
-		  <version>6.0.13</version>
+		  <version>${spring.version}</version>
 		  <optional>true</optional>
-		</dependency>
+		</!dependency -->
+
+		<dependency>
+		  <groupId>org.springframework</groupId>
+		  <artifactId>spring-webmvc</artifactId>
+		  <version>${spring.version}</version>
+		  <optional>true</optional>
+		</dependency>		
 
 		<!-- Required by
 			uk.ac.ebi.utils.opt.net.exceptions

@@ -13,6 +13,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.ParallelFlux;
 import reactor.core.scheduler.Scheduler;
 import reactor.core.scheduler.Schedulers;
+import reactor.util.concurrent.Queues;
 
 /**
  * Utilities based on the Project Reactor library.
@@ -52,6 +53,8 @@ public class ReactorUtils
 
 		
 		private Flux<T> flux;
+		private int parallelism = Schedulers.DEFAULT_POOL_SIZE,
+			parallelismPreFetch = Queues.SMALL_BUFFER_SIZE;
 		private Scheduler scheduler = DEFAULT_FLUX_SCHEDULER;
 		private int batchSize = DEFAULT_BATCH_SIZE;
 		private Supplier<B> batchSupplier;
@@ -71,20 +74,33 @@ public class ReactorUtils
 		{
 			this ( collection.stream () );
 		}
-		
-		public ParallelFlux<B> build ()
+				
+		/**
+		 * The degree of parallelism of the resulting flux. This is passed to 
+		 * {@link Flux#parallel(int, int)}. Defaults to {@link Schedulers#DEFAULT_POOL_SIZE}, as
+		 * per Reactor default.
+		 */
+		public ParallelBatchFluxBuilder<T, B> withParallelism ( int parallelism )
 		{
-			@SuppressWarnings ( "unchecked" )
-			Flux<B> result = this.batchSupplier == null 
-				? (Flux<B>) flux.buffer ( batchSize ) : flux.buffer ( batchSize, batchSupplier );
-			
-			return result
-			.parallel ()
-			.runOn ( scheduler );
+			this.parallelism = parallelism;
+			return this;
 		}
 		
 		/**
-		 * Default is {@link #DEFAULT_FLUX_SCHEDULER}.
+		 * The prefetch parameter passed to {@link Flux#parallel(int, int)}. Default is 
+		 * {@link Queues#SMALL_BUFFER_SIZE}, as per Reactor default.
+		 */
+		public ParallelBatchFluxBuilder<T, B> withParallelismPreFetch ( int parallelismPreFetch )
+		{
+			this.parallelismPreFetch = parallelismPreFetch;
+			return this;
+		}
+		
+		/**
+		 * The scheduler used to run the resulting flux. This is passed to 
+		 * {@link ParallelFlux#runOn(Scheduler)}. 
+		 * 
+		 * Default is {@link #DEFAULT_FLUX_SCHEDULER}, as per Reactor default.
 		 */
 		public ParallelBatchFluxBuilder<T, B> withScheduler ( Scheduler scheduler )
 		{
@@ -93,7 +109,8 @@ public class ReactorUtils
 		}
 		
 		/**
-		 * Default it {@link #DEFAULT_BATCH_SIZE}.
+		 * The parallel flux scheduler to use. This is passed to {@link ParallelFlux#runOn(Scheduler)}.
+		 * Defaults it {@link #DEFAULT_BATCH_SIZE}, as per Reactor default.
 		 */
 		public ParallelBatchFluxBuilder<T, B> withBatchSize ( int batchSize )
 		{
@@ -102,7 +119,7 @@ public class ReactorUtils
 		}
 
 		/**
-		 * Default is null, which fallback to {@link Flux#buffer(int)}, usually a {@link List} supplier.
+		 * Default is null, which falls back to {@link Flux#buffer(int)}, usually a {@link List} supplier.
 		 */
 		@SuppressWarnings ( "unchecked" )
 		public ParallelBatchFluxBuilder<T, B> withBatchSupplier ( Supplier<? extends Collection<? super T>> batchSupplier )
@@ -110,6 +127,17 @@ public class ReactorUtils
 			this.batchSupplier = (Supplier<B>) batchSupplier;
 			return this;
 		}
+		
+		public ParallelFlux<B> build ()
+		{
+			@SuppressWarnings ( "unchecked" )
+			Flux<B> result = this.batchSupplier == null 
+				? (Flux<B>) flux.buffer ( batchSize ) : flux.buffer ( batchSize, batchSupplier );
+			
+			return result
+			.parallel ( parallelism, parallelismPreFetch )
+			.runOn ( scheduler );
+		}		
 	} // class ParallelBatchFluxBuilder
 	
 	

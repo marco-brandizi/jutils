@@ -98,9 +98,10 @@ public class ExceptionLogger
 		String baseMessage, String errorMsgTail, String debugMsgTail, Throwable ex, Object... msgParams 
 	) 
 	{
-		// If debug isn't active, then error level isn't either, so let's save a few CPU cycles by nesting.
+		// If error isn't active, then debug level isn't either, so let's save a few CPU cycles 
+		// by checking error first.
 		
-		if ( log.isDebugEnabled () )
+		if ( log.isErrorEnabled () )
 		{
 			/*
 			 * We manage the case of no parameters separately, since that can be done more efficiently than 
@@ -110,10 +111,11 @@ public class ExceptionLogger
 			if ( msgParams == null || msgParams.length == 0 )
 			{
 				// Usually it's cleaner to read the error level first
-				if ( log.isErrorEnabled () )
-					log.error ( baseMessage + errorMsgTail, ex.getMessage () );
+				log.error ( baseMessage + errorMsgTail, ex.getMessage () );
 
-				log.debug ( baseMessage + debugMsgTail, ex );
+				// So, debug message comes afterwards
+				if ( log.isDebugEnabled () ) 
+					log.debug ( baseMessage + debugMsgTail, ex );
 
 				return;
 			}
@@ -126,17 +128,16 @@ public class ExceptionLogger
 			System.arraycopy ( msgParams, 0, out, 0, msgParams.length );
 
 			// Again, let's report in the naturally expected order
-			if ( log.isErrorEnabled () )
-			{
-				out[ msgParams.length ] = ex.getMessage ();
-				log.error ( baseMessage + errorMsgTail, out );
-			}
+			out[ msgParams.length ] = ex.getMessage ();
+			log.error ( baseMessage + errorMsgTail, out );
 
-			// And then the debug message
-			out[ msgParams.length ] = ex;
-			log.debug ( baseMessage + debugMsgTail, out );
-		
-		} // if isDebug
+			if ( log.isDebugEnabled () )
+			{
+				// And then the debug message
+				out[ msgParams.length ] = ex;
+				log.debug ( baseMessage + debugMsgTail, out );
+			}
+		} // if isError
 	} // logEx()
 	
 	/**

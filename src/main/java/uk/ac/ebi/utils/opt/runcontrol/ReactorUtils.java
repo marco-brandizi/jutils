@@ -35,14 +35,15 @@ public class ReactorUtils
 	public static class ParallelBatchFluxBuilder<T, B extends Collection<T>>
 	{
 		/**
-		 * {@link Schedulers#newBoundedElastic(int, int, String)} with the {@link Schedulers#DEFAULT_BOUNDED_ELASTIC_SIZE default threadCap} 
-		 * and a low limit for queuedTaskCap. This is suitable for cases where the source is
-		 * much faster than the downstream processing and hence there is little point with queueing 
-		 * too much stuff.
-		 * 
+		 * {@link Schedulers#newBoundedElastic(int, int, String)} with the number of 
+		 * processors as thread cap and that number * 50 as queue max size.
+		 *  
+		 * This seems suitable for batch processing, where we don't have much thread
+		 * switching and we enqueue a flood of tasks.
 		 */
-		public static final Scheduler DEFAULT_FLUX_SCHEDULER = newBoundedElastic ( 
-			DEFAULT_BOUNDED_ELASTIC_SIZE, 100, 
+		public static final Scheduler DEFAULT_FLUX_SCHEDULER = newBoundedElastic (
+			Runtime.getRuntime ().availableProcessors (),
+			Runtime.getRuntime ().availableProcessors () * 50,				
 			"jutils.batchSched" 
 		);
 		

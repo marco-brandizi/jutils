@@ -43,7 +43,7 @@ public class ReactorUtils
 		 */
 		public static final Scheduler DEFAULT_FLUX_SCHEDULER = newBoundedElastic (
 			Runtime.getRuntime ().availableProcessors (),
-			Runtime.getRuntime ().availableProcessors () * 50,				
+			Runtime.getRuntime ().availableProcessors () * 100,				
 			"jutils.batchSched" 
 		);
 		

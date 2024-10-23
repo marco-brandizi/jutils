@@ -12,7 +12,6 @@
 * `XResponseEntityExceptionHandler` added.
 * Many dependency and Maven plug-in upgrades.
 
-
 ## 14.0.1
 * Various dependency upgrades.
 

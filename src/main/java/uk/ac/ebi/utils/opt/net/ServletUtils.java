@@ -5,8 +5,9 @@ import java.io.UncheckedIOException;
 import java.nio.charset.Charset;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
+import org.apache.hc.core5.http.ClassicHttpResponse;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.HttpResponse;
 
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 
@@ -27,7 +28,7 @@ public class ServletUtils
 	 * 
 	 * TODO: write a test.
 	 */
-	public static String getResponseBody ( HttpResponse response )
+	public static String getResponseBody ( ClassicHttpResponse response )
 	{
 		try
 		{

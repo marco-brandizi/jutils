@@ -14,18 +14,23 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.Credentials;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.CredentialsProvider;
-import org.apache.http.client.HttpClient;
-import org.apache.http.conn.ssl.NoopHostnameVerifier;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.ssl.SSLContexts;
-import org.apache.http.ssl.TrustStrategy;
+import org.apache.hc.client5.http.auth.AuthScope;
+import org.apache.hc.client5.http.auth.Credentials;
+import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
+import org.apache.hc.client5.http.auth.CredentialsProvider;
+import org.apache.hc.client5.http.classic.HttpClient;
+import org.apache.hc.client5.http.ssl.ClientTlsStrategyBuilder;
+import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
+import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
+import org.apache.hc.client5.http.impl.nio.PoolingAsyncClientConnectionManagerBuilder;
+import org.apache.hc.core5.http.nio.ssl.TlsStrategy;
+import org.apache.hc.client5.http.ssl.DefaultClientTlsStrategy;
+import org.apache.hc.core5.ssl.SSLContexts;
+import org.apache.hc.core5.ssl.TrustStrategy;
 
 /**
  * SSL Utilities.
@@ -58,13 +63,13 @@ public final class SSLUtils
 		public X509Certificate[] getAcceptedIssuers () {
 			return new X509Certificate [ 0 ];
 		}
-		public void checkClientTrusted ( X509Certificate[] certs, String authType ) {}
-		public void checkServerTrusted ( X509Certificate[] certs, String authType )	{}
+		public void checkClientTrusted ( X509Certificate[] certs, String authType ) {/**/}
+		public void checkServerTrusted ( X509Certificate[] certs, String authType )	{/**/}
 	}
 	
 	
 	/**
-	 * Set the default Hostname Verifier to an instance of a fake class that trust all hostnames.
+	 * Set the default host name Verifier to an instance of a fake class that trust all hostnames.
 	 */
 	public static void trustAllHostnames ()
 	{
@@ -108,12 +113,12 @@ public final class SSLUtils
 	{
 		try
 		{
-			CredentialsProvider credsProvider = null;
+			BasicCredentialsProvider credsProvider = null;
 			if ( user != null )
 			{
 				credsProvider = new BasicCredentialsProvider ();
-				Credentials credentials = new UsernamePasswordCredentials ( user, pwd );
-				credsProvider.setCredentials ( AuthScope.ANY, credentials );
+				Credentials credentials = new UsernamePasswordCredentials ( user, pwd.toCharArray () );
+				credsProvider.setCredentials ( new AuthScope ( null, -1 ), credentials );
 			}
 			
 			SSLContext sslcontext = 
@@ -129,13 +134,16 @@ public final class SSLUtils
 					})
 				.build();
 				
-			SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory ( 
-				sslcontext, null, null, new NoopHostnameVerifier () 
-			);
+			
+			var tlsStrategy = new DefaultClientTlsStrategy ( sslcontext );
+			
+			var connMgr = PoolingHttpClientConnectionManagerBuilder.create ()
+			.setTlsSocketStrategy ( tlsStrategy )
+			.build ();
 			
 			HttpClientBuilder builder = HttpClients
 				.custom()
-				.setSSLSocketFactory ( sslsf );
+				.setConnectionManager ( connMgr );
 			
 			if ( credsProvider != null ) builder.setDefaultCredentialsProvider ( credsProvider );
 			

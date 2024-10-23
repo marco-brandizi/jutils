@@ -1,6 +1,6 @@
 package uk.ac.ebi.utils.opt.net.exceptions;
 
-import org.apache.http.HttpException;
+import org.apache.hc.core5.http.HttpException;
 
 /**
  * An unchecked verision of {@link HttpException}

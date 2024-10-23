@@ -71,11 +71,11 @@ public final class SSLUtils
 	}
 	
 	
-	private static final SSLContext FAKE_SSL_CONTEXT; 
-	private static final DefaultClientTlsStrategy FAKE_TLS_STRATEGY;
-	private static final HttpClientConnectionManager FAKE_HTTP_CLIENT_CONNECTION_MANAGER;
+	public static final SSLContext FAKE_SSL_CONTEXT; 
+	public static final DefaultClientTlsStrategy FAKE_TLS_STRATEGY;
+	public static final HttpClientConnectionManager FAKE_HTTP_CLIENT_CONNECTION_MANAGER;
 	
-	private static final AuthScope FAKE_CLIENT_CREDENTIALS = new AuthScope ( null, -1 );
+	public static final AuthScope FAKE_AUTH_SCOPE = new AuthScope ( null, -1 );
 	
 	static
 	{
@@ -163,7 +163,7 @@ public final class SSLUtils
 		{
 			var credsProvider = new BasicCredentialsProvider ();
 			Credentials credentials = new UsernamePasswordCredentials ( user, pwd.toCharArray () );
-			credsProvider.setCredentials ( FAKE_CLIENT_CREDENTIALS, credentials );
+			credsProvider.setCredentials ( FAKE_AUTH_SCOPE, credentials );
 			
 			builder.setDefaultCredentialsProvider ( credsProvider );
 		}

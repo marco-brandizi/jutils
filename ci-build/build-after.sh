@@ -5,7 +5,7 @@ if [[ "$GIT_BRANCH" == 'master' ]]; then
 	bash ./ci-build/mk-javadocs.sh
 	
 	echo -e "\n  Committing Javadocs\n"
-	git add docs/javadocs
+	git add docs/apidocs
   git commit -a -m "Updating auto-generated files from CI $CI_SKIP_TAG"
 
   export NEEDS_PUSH=true # instructs build.sh to push the changes above

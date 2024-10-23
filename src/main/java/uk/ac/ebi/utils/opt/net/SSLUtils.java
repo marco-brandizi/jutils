@@ -75,6 +75,8 @@ public final class SSLUtils
 	private static final DefaultClientTlsStrategy FAKE_TLS_STRATEGY;
 	private static final HttpClientConnectionManager FAKE_HTTP_CLIENT_CONNECTION_MANAGER;
 	
+	private static final AuthScope FAKE_CLIENT_CREDENTIALS = new AuthScope ( null, -1 );
+	
 	static
 	{
 		try
@@ -152,20 +154,19 @@ public final class SSLUtils
 	 * that does basic {@link BasicCredentialsProvider HTTP Auth}. 
 	 */
 	public static HttpClient noCertClient ( String user, String pwd )
-	{
-		BasicCredentialsProvider credsProvider = null;
-		if ( user != null )
-		{
-			credsProvider = new BasicCredentialsProvider ();
-			Credentials credentials = new UsernamePasswordCredentials ( user, pwd.toCharArray () );
-			credsProvider.setCredentials ( new AuthScope ( null, -1 ), credentials );
-		}
-		
+	{		
 		HttpClientBuilder builder = HttpClients
 			.custom()
 			.setConnectionManager ( FAKE_HTTP_CLIENT_CONNECTION_MANAGER );
 		
-		if ( credsProvider != null ) builder.setDefaultCredentialsProvider ( credsProvider );
+		if ( user != null )
+		{
+			var credsProvider = new BasicCredentialsProvider ();
+			Credentials credentials = new UsernamePasswordCredentials ( user, pwd.toCharArray () );
+			credsProvider.setCredentials ( FAKE_CLIENT_CREDENTIALS, credentials );
+			
+			builder.setDefaultCredentialsProvider ( credsProvider );
+		}
 		
 	  return builder.build();
 	}

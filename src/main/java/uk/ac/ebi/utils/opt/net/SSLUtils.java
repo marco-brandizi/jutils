@@ -27,10 +27,13 @@ import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
 import org.apache.hc.client5.http.impl.nio.PoolingAsyncClientConnectionManagerBuilder;
+import org.apache.hc.client5.http.io.HttpClientConnectionManager;
 import org.apache.hc.core5.http.nio.ssl.TlsStrategy;
 import org.apache.hc.client5.http.ssl.DefaultClientTlsStrategy;
 import org.apache.hc.core5.ssl.SSLContexts;
 import org.apache.hc.core5.ssl.TrustStrategy;
+
+import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 
 /**
  * SSL Utilities.
@@ -66,6 +69,45 @@ public final class SSLUtils
 		public void checkClientTrusted ( X509Certificate[] certs, String authType ) {/**/}
 		public void checkServerTrusted ( X509Certificate[] certs, String authType )	{/**/}
 	}
+	
+	
+	private static final SSLContext FAKE_SSL_CONTEXT; 
+	private static final DefaultClientTlsStrategy FAKE_TLS_STRATEGY;
+	private static final HttpClientConnectionManager FAKE_HTTP_CLIENT_CONNECTION_MANAGER;
+	
+	static
+	{
+		try
+		{
+			FAKE_SSL_CONTEXT = SSLContexts
+			.custom ()
+			.loadTrustMaterial ( 
+				null, 
+				new TrustStrategy ()
+				{
+					public boolean isTrusted ( X509Certificate[] chain, String authType ) throws CertificateException {
+						return true;
+					}
+				})
+			.build();
+		}
+		catch ( KeyManagementException | NoSuchAlgorithmException | KeyStoreException ex )
+		{
+			throw ExceptionUtils.buildEx (
+				RuntimeException.class,
+				ex,
+				"Error while trust-all fake SSL context: $cause"
+			);
+		}
+		
+		FAKE_TLS_STRATEGY = new DefaultClientTlsStrategy ( FAKE_SSL_CONTEXT );
+		
+		FAKE_HTTP_CLIENT_CONNECTION_MANAGER = PoolingHttpClientConnectionManagerBuilder.create ()
+		.setTlsSocketStrategy ( FAKE_TLS_STRATEGY )
+		.build ();
+	
+	} // /static{}
+	
 	
 	
 	/**
@@ -111,50 +153,20 @@ public final class SSLUtils
 	 */
 	public static HttpClient noCertClient ( String user, String pwd )
 	{
-		try
+		BasicCredentialsProvider credsProvider = null;
+		if ( user != null )
 		{
-			BasicCredentialsProvider credsProvider = null;
-			if ( user != null )
-			{
-				credsProvider = new BasicCredentialsProvider ();
-				Credentials credentials = new UsernamePasswordCredentials ( user, pwd.toCharArray () );
-				credsProvider.setCredentials ( new AuthScope ( null, -1 ), credentials );
-			}
-			
-			SSLContext sslcontext = 
-				SSLContexts
-				.custom ()
-				.loadTrustMaterial ( 
-					null, 
-					new TrustStrategy ()
-					{
-						public boolean isTrusted ( X509Certificate[] chain, String authType ) throws CertificateException {
-							return true;
-						}
-					})
-				.build();
-				
-			
-			var tlsStrategy = new DefaultClientTlsStrategy ( sslcontext );
-			
-			var connMgr = PoolingHttpClientConnectionManagerBuilder.create ()
-			.setTlsSocketStrategy ( tlsStrategy )
-			.build ();
-			
-			HttpClientBuilder builder = HttpClients
-				.custom()
-				.setConnectionManager ( connMgr );
-			
-			if ( credsProvider != null ) builder.setDefaultCredentialsProvider ( credsProvider );
-			
-		  return builder.build();
+			credsProvider = new BasicCredentialsProvider ();
+			Credentials credentials = new UsernamePasswordCredentials ( user, pwd.toCharArray () );
+			credsProvider.setCredentials ( new AuthScope ( null, -1 ), credentials );
 		}
-		catch ( KeyManagementException | NoSuchAlgorithmException | KeyStoreException ex )
-		{
-			throw new RuntimeException ( 
-				"Internal error while setting up no-cert HTTP connection: " + ex.getMessage (),
-				ex 
-			);
-		}			
+		
+		HttpClientBuilder builder = HttpClients
+			.custom()
+			.setConnectionManager ( FAKE_HTTP_CLIENT_CONNECTION_MANAGER );
+		
+		if ( credsProvider != null ) builder.setDefaultCredentialsProvider ( credsProvider );
+		
+	  return builder.build();
 	}
 }

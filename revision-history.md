@@ -1,8 +1,11 @@
 # Revision History
 
-*This file was last revised on 2024-10-23*. **Please keep this note updated**.
+*This file was last revised on 2024-11-18*. **Please keep this note updated**.
 
-## 14.1-SNAPSHOT
+## 15.0.1-SNAPSHOT
+* Current snapshot
+
+## 15.0
 * `ChainExecutor.andThen()` added (to be tested).
 * `StreamUtils.sampleStream()` added.
 * `uk.ac.ebi.utils.statistics.FisherExact` imported from the USeq project.

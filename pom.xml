@@ -4,7 +4,7 @@
 
   <groupId>uk.ac.ebi</groupId>
   <artifactId>jutils</artifactId>
-  <version>14.1-SNAPSHOT</version>
+  <version>15.0</version>
   
   
   <name>JUtils - Miscellanea of Java Utils</name>

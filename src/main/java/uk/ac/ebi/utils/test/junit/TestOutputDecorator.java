@@ -36,18 +36,25 @@ public class TestOutputDecorator extends RunListener implements TestRule
 {
 	private Logger log = LoggerFactory.getLogger ( this.getClass () );
 	
+	/**
+	 * Common head/trail log reporter.
+	 */
+	private void decorateTestOutput ( String logFormat, Description testDescriptor  )
+	{
+		String msg = MessageFormat.format ( logFormat, testDescriptor.getDisplayName () );
+		log.info ( "     " + StringUtils.center ( msg, 110, "=-" ) );
+	}
+	
 	@Override
 	public void testStarted ( Description description ) throws Exception
 	{
-		String label = MessageFormat.format ( " {0} ", description.getDisplayName () );
-		log.info ( "     " + StringUtils.center ( label, 110, "=-" ) );
+		decorateTestOutput ( " {0} ", description );
 	}
 
 	@Override
 	public void testFinished ( Description description ) throws Exception
 	{
-		String label = MessageFormat.format ( " /end: {0} ", description.getDisplayName () );
-		log.info ( "    " + StringUtils.center ( label, 110, "=-" ) + "\n" );
+		decorateTestOutput ( " /end: {0} ", description );
 	}
 
 	/**

@@ -72,8 +72,11 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
+import java.util.stream.Stream;
 
 import org.apache.commons.io.input.ReaderInputStream;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -89,6 +92,7 @@ import uk.ac.ebi.utils.threading.HackedBlockingQueue;
  * Miscellanea of small IO utilities.
  * 
  * TODO: complete the migration to unchecked exceptions.
+ * TODO: does it need to be an *.opt.* package?
  * 
  * <dl><dt>date</dt><dd>July 29, 2007, 1:03 PM</dd></dl>
  * @author brandizi
@@ -220,6 +224,39 @@ public class IOUtils
 
 	
 	/**
+	 * Returns a new stream assuming that the input comes from some I/O describing one
+	 * item per line. Currently, 
+	 * 
+	 * <ul>
+	 *   <li>if doTrim, {@link StringUtils#trimToNull(String) trims to null} and then passes the result 
+	 *   downstream</li>
+	 *   <li>it removes blank lines (empty and space-like only lines)</li>
+	 *   <li>it removes lines starting with '#', ie, comments (spaces before are allowed)</li>
+	 * </ul>
+	 * 
+	 * TODO: write unit tests (it's being used in KnetMiner)
+	 */
+	public static Stream<String> processIOItems ( Stream<String> ioItemsStrm, boolean doTrim )
+	{
+		Validate.notNull ( ioItemsStrm, "processIOItems(), can't process a null stream" );
+		
+		if ( doTrim ) ioItemsStrm = ioItemsStrm.map ( StringUtils::trimToNull );
+		
+		return ioItemsStrm.filter ( p -> p != null )
+		.filter ( p -> !StringUtils.isWhitespace ( p ) )
+		.filter ( p -> !p.trim ().startsWith ( "#" ) );
+	}
+
+	/**
+	 * Defaults to ioItemsStrm = true
+	 */
+	public static Stream<String> processIOItems ( Stream<String> ioItemsStrm )
+	{
+		return processIOItems ( ioItemsStrm, true );
+	}
+
+	
+	/**
 	 * Facility to get a reader from a resource, uses {@link Resources#getResource(Class, String)} and
 	 * {@link URL#openStream()}.
 	 */
@@ -294,7 +331,7 @@ public class IOUtils
 	
 	/**
 	 * Facility to read a resource from a class loader.
-	 * @see ClassLoader#getResource(String).
+	 * @see ClassLoader#getResource(String)
 	 * 
 	 */
 	public static String readResource ( ClassLoader classLoader, String path, Charset charset ) throws IOException
@@ -377,8 +414,12 @@ public class IOUtils
 	public static String getHash ( String string, String algorithm ) throws NoSuchAlgorithmException
 	{
 		try {
-			return getHash ( new ReaderInputStream ( new StringReader ( string ), "UTF-8" ), algorithm
-			);
+			var in = ReaderInputStream.builder ()
+			.setReader ( new StringReader ( string ) )
+			.setCharset ( "UTF-8" )
+			.get ();
+			
+			return getHash ( in, algorithm );
 		}
 		catch ( IOException ex ) {
 			throw new IllegalArgumentException ( "Internal error: " + ex.getMessage (), ex );

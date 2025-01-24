@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
+import java.util.stream.Collectors;
 
 /**
  * Collections-related utils.
@@ -364,4 +365,42 @@ public class CollectionsUtils
 		return unmodifiableMap ( map, Map::of );
 	}
 	
+	
+	/**
+	 * A string representation of a collection, which is useful in {@link #toString()} methods.
+	 * Returns "<null>" when the {@code coll} is null.
+	 * 
+	 * TODO: tests.
+	 */
+	public static String toString ( Collection<?> coll, int maxSize, String prefx, String postfx )
+	{
+		if ( coll == null ) return "<null>";
+				
+		return coll.stream ()
+		.limit ( maxSize )
+		.map ( Object::toString )
+		.collect ( Collectors.joining ( prefx, ", ", postfx ) );		
+	}
+	
+	/**
+	 * Default wrappers are "[]"
+	 */
+	public static String toString ( Collection<?> coll, int maxSize )
+	{
+		return toString ( coll, maxSize, "[", "]" );
+	}
+
+	public static String toString ( Map<?,?> map, int maxSize, String prefx, String postfx )
+	{
+		return toString ( map != null ? map.entrySet () : null, maxSize, prefx, postfx );
+	}
+	
+	/**
+	 * Default wrappers are "{}"
+	 */
+	public static String toString ( Map<?,?> map, int maxSize )
+	{
+		return toString ( map, maxSize, "{", "}" );
+	}
+
 }

@@ -1,9 +1,9 @@
 # Revision History
 
-*This file was last revised on 2024-11-18*. **Please keep this note updated**.
+*This file was last revised on 2025-01-24*. **Please keep this note updated**.
 
 ## 15.0.1-SNAPSHOT
-* Current snapshot
+* `CollectionsUtils.toString(Collection,...)` added.
 
 ## 15.0
 * `ChainExecutor.andThen()` added (to be tested).

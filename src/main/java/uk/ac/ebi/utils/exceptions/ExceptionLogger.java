@@ -8,9 +8,9 @@ import org.slf4j.LoggerFactory;
  * <p>This is a simple utility to log an exception by producing one log event at 'error' level that only
  * shows a user-provided message and reports the {@link Throwable#getMessage() exception's message}, followed
  * by a debug event that shows the same user message plus the exception's 
- * {@link Throwable#getStackTrace() stack trace}. As you can imagine this is useful when you have log targets 
- * with different granularity reporting, eg, a console log at 'warning' level, plus a 'detailed.log' file at
- * debug level.</p>
+ * {@link Throwable#getStackTrace() stack trace}. As you can imagine, this is useful when you have log targets 
+ * with different granularity reporting, eg, a console log at 'warning' level, plus a file at debug level, with
+ * specific packages having DEBUG logging too.</p>
  * 
  * <p>{@code getLogger()} methods are provided, so that you can use this class the same way common logging
  * libraries are used, eg, define a field like {@code exlog = ExceptionLogger.getLogger(...)} and then use

@@ -53,7 +53,13 @@ public class XResponseEntityExceptionHandler extends ResponseEntityExceptionHand
 	 */
 	protected boolean isStackTraceEnabled = true;
 	
-	private final ExceptionLogger exLog = ExceptionLogger.getLogger ( this.getClass () );
+	/**
+	 * Here, it's better that this is an instance field, not static, since 
+	 * 1) you're likely to define a subclass of this for your Spring app and
+	 * 2) you can use the FQN of such subclass to tell your logger you want
+	 * these exceptions to be logged with the DEBUG level.
+	 */
+	protected final ExceptionLogger exLog = ExceptionLogger.getLogger ( this.getClass () );
 
 	/**
 	 * Our own catch-all wrapper

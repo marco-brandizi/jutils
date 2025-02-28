@@ -376,10 +376,12 @@ public class CollectionsUtils
 	{
 		if ( coll == null ) return "<null>";
 				
+		if ( coll.size () > maxSize ) postfx = " ..." + postfx;
+		
 		return coll.stream ()
 		.limit ( maxSize )
 		.map ( Object::toString )
-		.collect ( Collectors.joining ( prefx, ", ", postfx ) );		
+		.collect ( Collectors.joining ( ", ", prefx, postfx ) );		
 	}
 	
 	/**

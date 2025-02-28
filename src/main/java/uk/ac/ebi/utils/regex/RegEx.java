@@ -43,6 +43,7 @@
 
 package uk.ac.ebi.utils.regex;
 
+import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -113,6 +114,35 @@ public class RegEx
 		return matcher ( input ).matches ();
 	}
 
+	/**
+	 * Matches multiple strings.
+	 * 
+	 * TODO: tests
+	 */
+	public boolean matchesAny ( CharSequence... inputs )
+	{
+		if ( inputs == null || inputs.length == 0 ) return false;
+		for ( var input: inputs )
+			if ( matcher ( input ).matches () ) return true;
+		
+		return false;
+	}
+
+	/**
+	 * Matches multiple strings.
+	 * 
+	 * TODO: tests
+	 *	 
+	 */
+	public <C extends Collection<? extends CharSequence>> boolean matchesAny ( C inputs )
+	{
+		if ( inputs == null || inputs.size () == 0 ) return false;
+		
+		return inputs.parallelStream ()
+			.anyMatch ( input -> matcher ( input ).matches () );
+	}
+	
+	
 	public String getPattern () {
 		return pattern.toString ();
 	}

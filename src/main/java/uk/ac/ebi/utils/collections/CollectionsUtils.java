@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 public class CollectionsUtils
 {
 	/**
-	 * Utility for asCollection( value ) methods.
+	 * Utility for asUnmodifiedCollection( value ) methods.
 	 * 
 	 * @return a collection containing the value parameter. If value is null, 
 	 * an empty collection, if it's already of type C/collClass, return the 
@@ -43,7 +43,7 @@ public class CollectionsUtils
 	 * @param unmodifiableWrapper used to wrap the result into an unmodifiable collection of type C
 	 */
 	@SuppressWarnings ( "unchecked" )
-	private static <T, C extends Collection<T>> C asCollection ( 
+	private static <T, C extends Collection<T>> C asUnmodifiableCollection ( 
 		Object value,
 		Class<C> collClass,
 		Supplier<C> collCreator,
@@ -83,12 +83,12 @@ public class CollectionsUtils
 	 * 
 	 * Note that, in the latter case, it <b>doesn't copy</b> the original collection.
 	 * 
-	 * This is based on {@link #asCollection(Object, Class, Supplier, Supplier, Function, UnaryOperator)}.
+	 * This is based on {@link #asUnmodifiableCollection(Object, Class, Supplier, Supplier, Function, UnaryOperator)}.
 	 */
 	@SuppressWarnings ( "unchecked" )
-	public static <T> Collection<T> asCollection ( Object value )
+	public static <T> Collection<T> asUnmodifiableCollection ( Object value )
 	{
-		return asCollection ( value,
+		return asUnmodifiableCollection ( value,
 			Collection.class, // collection class
 			null, // collCreator
 			Collections::emptySet, // emptyCollCreator
@@ -98,15 +98,15 @@ public class CollectionsUtils
 	}
 	
 	/**
-	 * Similar to {@link #asCollection(Object)}, returns an unmodifiable 
+	 * Similar to {@link #asUnmodifiableCollection(Object)}, returns an unmodifiable 
 	 * list out of the value.
 	 * 
-	 * This is based on {@link #asCollection(Object, Class, Supplier, Supplier, Function, UnaryOperator)}.
+	 * This is based on {@link #asUnmodifiableCollection(Object, Class, Supplier, Supplier, Function, UnaryOperator)}.
 	 */
 	@SuppressWarnings ( { "unchecked" } )
-	public static <T> List<T> asList ( Object value )
+	public static <T> List<T> asUnmodifiableList ( Object value )
 	{
-		return asCollection (
+		return asUnmodifiableCollection (
 			value,
 			List.class, // coll class
 			ArrayList::new, // coll creator
@@ -118,15 +118,15 @@ public class CollectionsUtils
 	
 
 	/**
-	 * Similar to {@link #asCollection(Object)}, returns an unmodifiable set out of the value.
+	 * Similar to {@link #asUnmodifiableCollection(Object)}, returns an unmodifiable set out of the value.
 	 * if the value is a collection, uses it to create a new set copy.
 	 * 
-	 * This is based on {@link #asCollection(Object, Class, Supplier, Supplier, Function, UnaryOperator)}.
+	 * This is based on {@link #asUnmodifiableCollection(Object, Class, Supplier, Supplier, Function, UnaryOperator)}.
 	 */
 	@SuppressWarnings ( { "unchecked" } )
-	public static <T> Set<T> asSet ( Object value )
+	public static <T> Set<T> asUnmodifiableSet ( Object value )
 	{
-		return asCollection (
+		return asUnmodifiableCollection (
 			value,
 			Set.class, // coll class
 			HashSet::new, // coll creator
@@ -135,6 +135,87 @@ public class CollectionsUtils
 			Collections::unmodifiableSet // unmodifiable wrapper
 		);
 	}
+	
+	
+	/**
+	 * Converts the value parameter into a collection of type C with element types T, 
+	 * based on the following criteria.
+	 * 
+	 * <ul>
+	 * <li>If value is null, uses collCreator to create an empty collection.</li> 
+	 * <li>If value is a collection of type C (and collClass), returns it as-is.</li>
+	 * <li>If value is a collection of a type other than C, returns type-casted value when
+	 * doCopyIfAnotherCollection is false, else, uses collCreator to copy the parameter values
+	 * into a new collection of type C. Types must be compatible with the operations in this case.</li>
+	 * <li>If value is not a collection, collCreator is used to create a new singleton collection,
+	 * containing the value.</li>
+	 * </ul> 
+	 */
+	@SuppressWarnings ( "unchecked" )
+	private static <T, C extends Collection<T>> C asCollection ( 
+		Object value,
+		Class<C> collClass,
+		Supplier<C> collCreator,
+		boolean doCopyIfAnotherCollection
+	)
+	{
+		if ( value == null ) return collCreator.get ();
+		if ( collClass.isInstance ( value ) ) return (C) value;
+		
+		if ( value instanceof Collection coll )
+		{
+			if ( !doCopyIfAnotherCollection ) return (C) coll;
+
+			C result = collCreator.get ();
+			result.addAll ( coll );
+			return result;
+		}
+
+		// else It's a singleton
+		C result = collCreator.get ();
+		result.add ( (T) value );
+		return result;
+	}
+	
+	/**
+	 * The implementation is just a wrapper of {@link #asSet(Object)}.
+	 */
+	public static <T> Collection<T> asCollection ( Object value )
+	{
+		return asSet ( value );
+	}	
+
+	/**
+	 * Returns a modifiable list based on the parameter.
+	 * If value is null, returns an empty list.
+	 * If value is a list, returns the value as-is.
+	 * If value is a collection other than a list, copies its values into a new list.
+	 * If value is not a collection, returns a singleton list, with the value.
+	 */
+	@SuppressWarnings ( { "unchecked" } )
+	public static <T> List<T> asList ( Object value )
+	{
+		return asCollection (
+			value,
+			List.class, // coll class
+			ArrayList::new, // coll creator
+			true // Copy if not a list
+		);
+	}	
+	
+	/**
+	 * Works like {@link #asList(Object)}, with the only difference that it returns a set.
+	 */
+	@SuppressWarnings ( { "unchecked" } )
+	public static <T> Set<T> asSet ( Object value )
+	{
+		return asCollection (
+			value,
+			Set.class, // coll class
+			HashSet::new, // coll creator
+			true // Copy if not a list
+		);
+	}	
 	
 	
 	/**

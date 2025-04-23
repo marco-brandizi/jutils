@@ -2,9 +2,13 @@
 
 *This file was last revised on 2025-04-23*. **Please keep this note updated**.
 
-## 16.0-SNAPSHOT
+## 16.0.1-SNAPSHOT
+
+
+## 16.0
 * Migrated to Java 21. **WARNING**: compatibility with older versions isn't guaranteed.
 * `CollectionsUtils.toString(Collection,...)` added.
+
 
 ## 15.0
 * `ChainExecutor.andThen()` added (to be tested).
@@ -15,6 +19,7 @@
 * `ReactorUtils` added.
 * `XResponseEntityExceptionHandler` added.
 * Many dependency and Maven plug-in upgrades.
+
 
 ## 14.0.1
 * Various dependency upgrades.

@@ -1,8 +1,8 @@
 # Revision History
 
-*This file was last revised on 2025-02-10*. **Please keep this note updated**.
+*This file was last revised on 2025-04-23*. **Please keep this note updated**.
 
-## 15.0.1-SNAPSHOT
+## 16.0-SNAPSHOT
 * Migrated to Java 21. **WARNING**: compatibility with older versions isn't guaranteed.
 * `CollectionsUtils.toString(Collection,...)` added.
 

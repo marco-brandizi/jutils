@@ -201,7 +201,7 @@ public class ProgressLogger
 	}
 
 	/**
-	 * @see #appendProgressReportAction(BiConsumer).
+	 * @see #appendProgressReportAction(BiConsumer)
 	 */
 	public void setProgressReportAction ( BiConsumer<Long, Long> progressReportAction )
 	{

@@ -4,8 +4,6 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 
-import uk.ac.ebi.utils.opt.runcontrol.ReactorUtils;
-
 /**
  * <h1>The Batch Collector</h1>
  * 

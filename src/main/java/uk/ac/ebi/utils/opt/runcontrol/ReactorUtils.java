@@ -1,6 +1,5 @@
 package uk.ac.ebi.utils.opt.runcontrol;
 
-import static reactor.core.scheduler.Schedulers.DEFAULT_BOUNDED_ELASTIC_SIZE;
 import static reactor.core.scheduler.Schedulers.newBoundedElastic;
 
 import java.util.Collection;

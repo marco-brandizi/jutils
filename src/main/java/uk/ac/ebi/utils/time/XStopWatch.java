@@ -3,7 +3,6 @@ package uk.ac.ebi.utils.time;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.time.StopWatch;
-import org.checkerframework.checker.units.qual.A;
 
 /**
  * A {@link StopWatch} with extended functionality.

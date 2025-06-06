@@ -1,7 +1,7 @@
 package uk.ac.ebi.utils.runcontrol;
 
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.Executors;
 
 import com.google.common.util.concurrent.SimpleTimeLimiter;
 import com.google.common.util.concurrent.TimeLimiter;
@@ -15,7 +15,7 @@ import com.google.common.util.concurrent.TimeLimiter;
  */
 public class RunControlUtils
 {
-	private static final ExecutorService TIME_LIMITER_SERVICE = new ForkJoinPool ();
+	private static final ExecutorService TIME_LIMITER_SERVICE = Executors.newCachedThreadPool ();
 	
 	private RunControlUtils () {
 	}

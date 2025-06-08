@@ -3,7 +3,7 @@
 *This file was last revised on 2025-06-03*. **Please keep this note updated**.
 
 ## 16.0.1-SNAPSHOT
-* `RunControlUtils` added.
+* `XTimeLimiter` added.
 
 ## 16.0
 * Migrated to Java 21. **WARNING**: compatibility with older versions isn't guaranteed.

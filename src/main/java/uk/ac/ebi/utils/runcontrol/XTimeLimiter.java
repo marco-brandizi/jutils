@@ -70,12 +70,12 @@ public class XTimeLimiter implements TimeLimiter
 		}
 		catch ( TimeoutException ex ) {
 			throw ExceptionUtils.buildEx ( UncheckedTimeoutException.class, ex, 
-				"Timeout during timed execution", ex	
+				"Error: an operation exceeded a set timeout", ex	
 			);
 		}
 		catch ( InterruptedException ex ) {
 			throw ExceptionUtils.buildEx ( UncheckedInterruptedException.class, ex, 
-				"Interruption during timed execution", ex	
+				"Error: an operation was interrupted", ex	
 			);
 		}
 		catch ( ExecutionException ex ) {

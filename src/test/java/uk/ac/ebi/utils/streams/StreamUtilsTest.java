@@ -159,6 +159,6 @@ public class StreamUtilsTest
 		})
 		.count ();
 				
-		assertEquals ( "The sample size is unexpected", testSampleSize, size, 0.025 * testSize );
+		assertEquals ( "The sample size is unexpected", testSampleSize, size, (3d/100) * testSampleSize );
 	}
 }

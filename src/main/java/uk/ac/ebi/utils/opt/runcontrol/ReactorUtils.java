@@ -128,40 +128,108 @@ public class ReactorUtils
 			return this;
 		}
 		
-		public ParallelFlux<B> build ()
+		
+		public int getParallelism ()
+		{
+			return parallelism;
+		}
+
+		public void setParallelism ( int parallelism )
+		{
+			this.parallelism = parallelism;
+		}
+
+		public int getParallelismPreFetch ()
+		{
+			return parallelismPreFetch;
+		}
+
+		public Scheduler getScheduler ()
+		{
+			return scheduler;
+		}
+
+		public int getBatchSize ()
+		{
+			return batchSize;
+		}
+
+		public Supplier<B> getBatchSupplier ()
+		{
+			return batchSupplier;
+		}
+		
+		/**
+		 * @param visitor if non-null, I'll call it with myself before creating the result. This can be
+		 * used to inspect a builder during the build process, to set info from defaults (eg, from
+		 * {@link #getParallelism()}).
+		 *
+		 */
+		public ParallelFlux<B> build ( Consumer<ParallelBatchFluxBuilder<? super T, ? super B>> visitor )
 		{
 			@SuppressWarnings ( "unchecked" )
 			Flux<B> result = this.batchSupplier == null 
 				? (Flux<B>) flux.buffer ( batchSize ) : flux.buffer ( batchSize, batchSupplier );
+
+			if ( visitor != null ) visitor.accept ( this );
 			
 			return result
 			.parallel ( parallelism, parallelismPreFetch )
 			.runOn ( scheduler );
-		}		
+		}
+		
+		public ParallelFlux<B> build ()
+		{
+			return build ( null );
+		}
+		
 	} // class ParallelBatchFluxBuilder
 	
 	
 	/**
 	 * Just uses {@link ParallelBatchFluxBuilder} with its defaults. 
 	 */
-	public static <T> ParallelFlux<List<T>> parallelBatchFlux ( Flux<? extends T> flux ) {
-		return new ParallelBatchFluxBuilder<T, List<T>> ( flux ).build ();
+	public static <T> ParallelFlux<List<T>> parallelBatchFlux (
+		Flux<? extends T> flux, Consumer<ParallelBatchFluxBuilder<? super T, ? super List<T>>> visitor
+	)
+	{
+		return new ParallelBatchFluxBuilder<T, List<T>> ( flux )
+		.build ( visitor );
 	}
 
+	public static <T> ParallelFlux<List<T>> parallelBatchFlux ( Flux<? extends T> flux ) {
+		return parallelBatchFlux ( flux, null );
+	}
+	
+	
 	/**
 	 * Just uses {@link ParallelBatchFluxBuilder} with its defaults. 
 	 */
+	public static <T> ParallelFlux<List<T>> parallelBatchFlux (
+		Stream<? extends T> stream, Consumer<ParallelBatchFluxBuilder<? super T, ? super List<T>>> visitor
+	) 
+	{
+		return new ParallelBatchFluxBuilder<T, List<T>> ( stream ).build ( visitor );
+	}
+
 	public static <T> ParallelFlux<List<T>> parallelBatchFlux ( Stream<? extends T> stream  ) {
-		return new ParallelBatchFluxBuilder<T, List<T>> ( stream ).build ();
+		return parallelBatchFlux ( stream, null );
 	}
+	
 	
 	/**
 	 * Just uses {@link ParallelBatchFluxBuilder} with its defaults. 
 	 */
-	public static <T> ParallelFlux<List<T>> parallelBatchFlux ( Collection<? extends T> collection  ) {
-		return new ParallelBatchFluxBuilder<T, List<T>> ( collection ).build ();
+	public static <T> ParallelFlux<List<T>> parallelBatchFlux (
+		Collection<? extends T> collection, Consumer<ParallelBatchFluxBuilder<? super T, ? super List<T>>> visitor
+	) 
+	{
+		return new ParallelBatchFluxBuilder<T, List<T>> ( collection ).build ( visitor );
 	}
 	
+	public static <T> ParallelFlux<List<T>> parallelBatchFlux ( Collection<? extends T> collection  ) {
+		return parallelBatchFlux ( collection );
+	}
 	
 	/**
 	 * Uses {@link ParallelBatchFluxBuilder} to process a source of batches.
@@ -191,9 +259,7 @@ public class ReactorUtils
 	/**
 	 * Variant of {@link #batchProcessing(Flux, Consumer)}
 	 */
-	public static <T> void batchProcessing (
-		Stream<T> stream, Consumer<List<T>> task		
-	)
+	public static <T> void batchProcessing ( Stream<T> stream, Consumer<List<T>> task	)
 	{
 		batchProcessing ( parallelBatchFlux ( stream ), task );
 	}
@@ -201,9 +267,7 @@ public class ReactorUtils
 	/**
 	 * Variant of {@link #batchProcessing(Flux, Consumer)}
 	 */
-	public static <T> void batchProcessing (
-		Collection<T> collection, Consumer<List<T>> task		
-	)
+	public static <T> void batchProcessing ( Collection<T> collection, Consumer<List<T>> task	)
 	{
 		batchProcessing ( parallelBatchFlux ( collection ), task );
 	}

@@ -56,9 +56,11 @@ function install_and_import
 	. ./ci-build-v2/java-maven/_common.sh	
 
 	# WARNING: the best way to override functions defined in these imported files is 
-	# doing it in your own definition file and then importing it after the original ones.
+	# doing it in your own definition file and then importing it after the original ones, like
+	# it's shown here.
 	# This is not necessary if you only have stage_xxx_local() functions (or only your own new
-	# functions) 
+	# functions).
+	#
 	# . ./ci-build-v2/java-maven/_common-local.sh
 }
 

@@ -19,7 +19,7 @@ function stage_build_local
 	
 	[[ "$CI_GIT_BRANCH" == 'master' ]] || return 0
 
-	bash ./ci-build/mk-javadocs.sh
+	bash ./ci-build-v2/java-maven/mk-javadocs.sh
 	
 	printf "== Committing Javadocs\n"
 	git add docs/apidocs

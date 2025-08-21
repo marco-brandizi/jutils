@@ -1,9 +1,17 @@
 # Revision History
 
-*This file was last revised on 2025-06-03*. **Please keep this note updated**.
+*This file was last revised on 2025-08-21*. **Please keep this note updated**.
 
 ## 16.0.1-SNAPSHOT
-* `XTimeLimiter` added.
+* Continuous Integration (CI) system fully reworked and integrated, with several improvements and cleanups ([code](https://github.com/Rothamsted/knetminer-common/tree/ci-build-v2), [c5df5e6](https://github.com/marco-brandizi/jutils/commit/c5df5e6), [3cb7176](https://github.com/marco-brandizi/jutils/commit/3cb7176), [c47ff44](https://github.com/marco-brandizi/jutils/commit/c47ff44), [ba266b6](https://github.com/marco-brandizi/jutils/commit/ba266b6), [96cfb81](https://github.com/marco-brandizi/jutils/commit/96cfb81)).
+* `XTimeLimiter` added, an extension of the Guava `TimeLimiter` ([fc271f9](https://github.com/marco-brandizi/jutils/commit/fc271f9)).
+* `ParallelBatchFluxBuilder` now supports builder visitor pattern ([45ca564](https://github.com/marco-brandizi/jutils/commit/45ca564)).
+* `RunControlUtils` internal executor fixed ([00127af](https://github.com/marco-brandizi/jutils/commit/00127af)).
+* Minor bugfixes and improvements to exception messages ([8e70527](https://github.com/marco-brandizi/jutils/commit/8e70527)).
+* Test improvements: fixed tolerance in `testSampleStream()` and other test error corrections ([77e4f5d](https://github.com/marco-brandizi/jutils/commit/77e4f5d), [2663c69](https://github.com/marco-brandizi/jutils/commit/2663c69)).
+* Dependency upgrades ([f80796c](https://github.com/marco-brandizi/jutils/commit/f80796c), [7b3a28e](https://github.com/marco-brandizi/jutils/commit/7b3a28e)).
+* Cleaning imports ([e1930a0](https://github.com/marco-brandizi/jutils/commit/e1930a0)).
+
 
 ## 16.0
 * Migrated to Java 21. **WARNING**: compatibility with older versions isn't guaranteed.

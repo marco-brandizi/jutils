@@ -147,18 +147,20 @@ public class StreamUtilsTest
 	@Test
 	public void testSampleStream ()
 	{
-		var testSize = 1000;
-		var testSampleSize = 200;
+		var testSize = 10000;
+		var testSampleSize = 1000;
 		var testStrm = IntStream.range ( 0, testSize ).parallel ().mapToObj ( Integer::valueOf );
 		
 		testStrm = StreamUtils.sampleStream ( testStrm, testSampleSize, testSize );
 		
-		var size = testStrm.map ( i -> {
+		var actualSize = testStrm.map ( i -> {
 			assertTrue ( format ( "The sample stream has an invalid value: %d!", i ), i >= 0 && i < testSize );
 			return i;
 		})
+		.parallel ()
 		.count ();
 				
-		assertEquals ( "The sample size is unexpected", testSampleSize, size, (10d/100) * testSampleSize );
+		var error = 20d / 100;
+		assertEquals ( "The sample size is unexpected", testSampleSize, actualSize, error * testSampleSize );
 	}
 }

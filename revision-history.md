@@ -1,10 +1,9 @@
 # Revision History
 
-*This file was last revised on 2025-08-21*. **Please keep this note updated**.
+*This file was last revised on 2025-08-27*. **Please keep this note updated**.
 
 ## 16.1.1-SNAPSHOT
-
-* Next snapshot.
+* Current snapshot.
 
 ## 16.1
 * Continuous Integration (CI) system fully reworked and integrated, with several improvements and cleanups ([code](https://github.com/Rothamsted/knetminer-common/tree/ci-build-v2), [c5df5e6](https://github.com/marco-brandizi/jutils/commit/c5df5e6), [3cb7176](https://github.com/marco-brandizi/jutils/commit/3cb7176), [c47ff44](https://github.com/marco-brandizi/jutils/commit/c47ff44), [ba266b6](https://github.com/marco-brandizi/jutils/commit/ba266b6), [96cfb81](https://github.com/marco-brandizi/jutils/commit/96cfb81)).

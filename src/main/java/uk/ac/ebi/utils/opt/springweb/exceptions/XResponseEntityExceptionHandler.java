@@ -20,10 +20,10 @@ import uk.ac.ebi.utils.exceptions.ExceptionLogger;
 import uk.ac.ebi.utils.opt.io.IOUtils;
 
 /**
- * A better web exception handler.
+ * A better web exception handler for Spring.
  * 
- * This catches all exceptions happening while answering to a web requests (ie, in the controllers)
- * and return a proper HTTP status with a proper response body. Namely, the latter is
+ * This catches all exceptions happening while answering to web requests (i.e., in the controllers)
+ * and returns a proper HTTP status with a proper response body. Namely, the latter is
  * based on {@link #createProblemDetail(Exception, HttpStatusCode, String, String, Object[], WebRequest)},
  * which in turn, is based on <a href = "https://datatracker.ietf.org/doc/html/rfc9457">RFC-9457</a>.
  *

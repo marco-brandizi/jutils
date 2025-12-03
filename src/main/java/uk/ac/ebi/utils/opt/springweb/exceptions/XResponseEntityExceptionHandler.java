@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.server.ResponseStatusException;
@@ -40,7 +41,6 @@ public class XResponseEntityExceptionHandler extends ResponseEntityExceptionHand
 	 * and that MUST be from the most specific one to the more generic.
 	 * 
 	 */
-	@SuppressWarnings ( "serial" )
 	protected Map<Class<? extends Exception>, HttpStatusCode> exception2StatusCode = new LinkedHashMap<> () 
 	{{
 		this.put ( SecurityException.class, HttpStatus.UNAUTHORIZED );
@@ -48,7 +48,7 @@ public class XResponseEntityExceptionHandler extends ResponseEntityExceptionHand
 	
 	/**
 	 * If true, {@link #createProblemDetail(Exception, HttpStatusCode, String, String, Object[], WebRequest)}
-	 * adds a 'trace' field to the RFC-9457 output all the exceptions in this class
+	 * adds a 'trace' field to the RFC-9457 with the output all the exceptions in this class
 	 * produce.
 	 */
 	protected boolean isStackTraceEnabled = true;
@@ -73,7 +73,8 @@ public class XResponseEntityExceptionHandler extends ResponseEntityExceptionHand
 	 * defaults in the parent handler. We have tried the alternative route to call this
 	 * method with a {@link ResponseStatusException} wrapper, but we don't want the latter
 	 * to be returned to the client as top-level exception. Instead, we intercept
-	 * occurred exceptions here and then we call {@link #handleExceptionInternal(Exception, Object, HttpHeaders, HttpStatusCode, WebRequest)}.
+	 * occurred exceptions here and then we call 
+	 * {@link #handleExceptionInternal(Exception, Object, HttpHeaders, HttpStatusCode, WebRequest)}.
 	 */
 	@ExceptionHandler
 	public ResponseEntity<Object> handleMappedException (
@@ -87,13 +88,19 @@ public class XResponseEntityExceptionHandler extends ResponseEntityExceptionHand
 	/**
 	 * All exceptions are eventually routed here.
 	 * 
-	 * <p>Does some tweaking of the default parent internal handler, before calling 
+	 * <p>This does some tweaking of the default parent internal handler, before calling 
 	 * it as delegate:
 	 * 
 	 * <ul>
-	 *   <li>it always assign a status code, with 50x as fallback</li>
+	 *   <li>it always assigns a status code, either the one obtained from {@link #findExceptionMapping(Exception)}
+	 *       (which is invoked by {@link #handleMappedException(Exception, WebRequest)}), the original one
+	 *       or the 50x fallback</li>
 	 *   <li>if body is null, it uses {@link #createProblemDetail(Exception, HttpStatusCode, String, String, Object[], WebRequest)}
-	 *   with the reason taken from statusCode (original or 50x fallback)</li>
+	 *       with the reason taken from statusCode (the original one or the 50x fallback)</li>
+	 * </ul>
+	 * 
+	 * Note that, if {@code ex} is an {@link ErrorResponse}, then {@code statusCode} is coming from it and thus will be correctly returned, thanks to 
+	 * calls to the super class handlers, eg, {@link #handleErrorResponseException(org.springframework.web.ErrorResponseException, HttpHeaders, HttpStatusCode, WebRequest)}.
 	 * </p>
 	 */
 	@Nullable

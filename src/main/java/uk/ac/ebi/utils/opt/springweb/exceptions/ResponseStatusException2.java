@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.lang.NonNull;
 import org.springframework.web.server.ResponseStatusException;
 
 /**
@@ -53,7 +54,8 @@ public class ResponseStatusException2 extends ResponseStatusException
 	 * to pass it in the constructor.
 	 * 
 	 */
-	public String getMessage ()
+	@Override
+	public @NonNull String getMessage ()
 	{
 		HttpStatusCode statusCode = Optional.ofNullable ( this.getStatusCode () )
 				.orElse ( HttpStatus.INTERNAL_SERVER_ERROR );

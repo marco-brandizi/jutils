@@ -17,13 +17,15 @@ function stage_build_local
 {
 	stage_build
 	
+	# Javadocs only for the main trunk
+	#
 	[[ "$CI_GIT_BRANCH" == 'master' ]] || return 0
 
 	bash ./ci-build-v2/java-maven/mk-javadocs.sh
 	
 	printf "== Committing Javadocs\n"
 	git add docs/apidocs
-  git commit -a -m "Updating auto-generated files from CI $CI_SKIP_TAG"
+  git commit -a -m "docs: update CI-generated javadoc files $CI_SKIP_TAG"
 
   export CI_NEEDS_PUSH=true # Instructs the git update stage that we have stuff to push
 }

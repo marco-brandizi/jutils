@@ -4,10 +4,6 @@ name: Standard Build
 
 on:
   push:
-  # You should use this (instead of push) for large, time and resource-consuming codebases.
-  # build.sh uses CI_SCHEDULE_PERIOD to decide if there has been changes recently that actually need
-  # a rebuild.
-  #
   workflow_dispatch:
     inputs:
       # These can be set when the build is invoked manually, from GH Actions.

@@ -54,7 +54,7 @@ jobs:
         # This also can be passed from act CLI
         CI_DEPLOY_BRANCHES: ${{ secrets.CI_DEPLOY_BRANCHES }}
       
-      # We reuse the general CI scripts in knetminer-common, see https://github.com/Rothamsted/knetminer-common  
+      # We reuse the general CI scripts in knetminer-common, see https://github.com/KnetMiner/knetminer-ci  
       run: 
         ./ci-build-v2/java-maven/build.sh
    

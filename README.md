@@ -5,7 +5,7 @@ They should be fairly stable and bug-free, despite the fact there aren't many un
 (the code is rather simple).  
 
 See [this post](http://www.marcobrandizi.info/jutils) for a description of what the library offers.  
-See [Javadocs](https://marco-brandizi.github.io/jutils) for details (or, of course, sources!).  
+See [Javadocs](https://marcobrandizigeek.github.io/jutils) for details (or, of course, sources!).  
 
 **WARNING**: See the [revision history](revision-history.md) to verify you're using a compatible JDK version.
 

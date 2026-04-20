@@ -300,9 +300,12 @@
 		  
 			<plugin>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.10.1</version>
+				<version>3.12.0</version>
 				<configuration>
-					<!-- TODO: the Markdown doclet doesn't work with JDK11 -->
+					<!-- 
+						TODO: the Markdown doclet doesn't work with JDK11.
+						Support for Markdown was added in JDK23 and should work off-the-shelf.
+					-->
 					<useStandardDocletOptions>false</useStandardDocletOptions>
           <additionalOptions>-Xdoclint:none</additionalOptions>
 					<!-- 

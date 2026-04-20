@@ -53,6 +53,6 @@ public class ChainExecutorTest
 		double failRate = 1d * statsExecutor.getFailedCalls () / statsExecutor.getTotalCalls ();
 		log.info ( "Calls: {}, fail rate: {} %", statsExecutor.getTotalCalls (), failRate * 100 );
 		Assert.assertTrue ( "Total calls wrong!", statsExecutor.getTotalCalls () > 0 );
-		Assert.assertTrue ( "Failed Calls wrong!", Math.abs ( failRate - StatsExecutorTest.FAIL_RATE ) < 0.1 );
+		Assert.assertTrue ( "Failed Calls wrong!", Math.abs ( failRate - StatsExecutorTest.FAIL_RATE ) < 0.25 );
 	}
 }

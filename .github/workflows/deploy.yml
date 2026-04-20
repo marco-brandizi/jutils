@@ -17,7 +17,12 @@ on:
       NEW_SNAPSHOT_VER:
         description: "New Snapshot Version"
         required: false
-    
+
+permissions:
+  # needed to push and when the repo belongs to an organisation.
+  contents: write
+
+
 jobs:
   build:
 

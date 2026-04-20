@@ -51,7 +51,7 @@ jobs:
 
         CI_MAVEN_REPO_USER: ${{secrets.CI_MAVEN_REPO_USER}}
         CI_MAVEN_REPO_PASSWORD: ${{secrets.CI_MAVEN_REPO_PASSWORD}}
-				
+
 				
         # This is only set when using the act tool
         CI_IS_ACT_TOOL: ${{ secrets.CI_IS_ACT_TOOL }}

@@ -16,10 +16,11 @@ import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.MutablePropertySources;
 import org.springframework.core.env.StandardEnvironment;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.dataformat.yaml.YAMLFactory;
+import tools.jackson.dataformat.yaml.YAMLMapper;
 import uk.ac.ebi.utils.exceptions.ExceptionUtils;
 import uk.ac.ebi.utils.opt.io.IOUtils;
 
@@ -108,7 +109,11 @@ public class YAMLLoader
 		throws UncheckedIOException
 	{
 		Map<String, Object> yamlo = rawLoadingFromString ( yamlStr, new LinkedHashMap<> (), filePath, new StandardEnvironment () );
-		var mapper = new ObjectMapper ();
+		
+		var mapper = YAMLMapper.builder ()
+		.configure ( DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true )
+		.build ();
+						
 		var result = mapper.convertValue ( yamlo, targetClass );
 		
 		return result;
@@ -279,7 +284,7 @@ public class YAMLLoader
 		try {
 			return mapper.readValue ( yamlStr, LinkedHashMap.class );
 		}
-		catch ( JsonProcessingException ex ) {
+		catch ( JacksonException ex ) {
 			throw ExceptionUtils.buildEx ( UncheckedIOException.class, ex, 
 				"Error while processing the YAML file: %s: $cause", fileLabel ( filePath )
 			);

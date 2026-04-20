@@ -12,10 +12,10 @@ import java.util.stream.Stream;
 
 import org.apache.commons.lang3.function.TriConsumer;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.node.ObjectNode;
 
 /**
  * JSON utils based on the Jackson library.
@@ -108,8 +108,8 @@ public class JacksonJsUtils
 		
 		BinaryOperator<ObjectNode> jsMerger = (js1, js2) ->
 		{
-			js2.fieldNames ()
-			.forEachRemaining ( k -> jsValMerge.accept ( js1, k, js2.get ( k ) ));
+			for ( String pname: js2.propertyNames () )
+				jsValMerge.accept ( js1, pname, js2.get ( pname ) );
 			return js1;
 		};
 		

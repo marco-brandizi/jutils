@@ -17,9 +17,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.StandardEnvironment;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.exc.UnrecognizedPropertyException;
 import uk.ac.ebi.utils.opt.config.YAMLLoader;
 
 /**
@@ -168,11 +168,11 @@ public class YAMLLoaderTest
 	 * {@link ObjectMapper} throws errors if a YAML field can't be mapped to the target POJO.
 	 * TODO: should we more liberal, via {@link DeserializationFeature#FAIL_ON_UNKNOWN_PROPERTIES}?
 	 */
-	@Test ( expected = IllegalArgumentException.class )
+	@Test ( expected = UnrecognizedPropertyException.class )
 	public void testMappingWithUnusedFields ()
 	{
 		// We expect it to work, despite the file has a non-mapped field.
-		// So, if there is no exception is thrown, we're done.
+		// So, if there is no exception that is thrown, we're done.
 		YAMLLoader.loadYAMLFromFile ( TEST_DATA_DIR + "mapping-unused-fields.yml", TestTarget.class );
 	}
 	

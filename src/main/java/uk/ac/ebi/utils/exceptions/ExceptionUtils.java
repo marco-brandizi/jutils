@@ -170,6 +170,31 @@ public class ExceptionUtils
 
 	
 	/**
+	 * Helper that adds a cause to the given exception. This might be useful for exceptions that don't
+	 * have this option in their constructor, eg, {@link NumberFormatException}.
+	 * 
+	 * Adding a cause to an exception is always possible, via {@link Throwable#initCause(Throwable)}.
+	 * 
+	 * @return the given exception (not a copy), with the cause added.
+	 * 
+	 * @throws IllegalArgumentException if the exception already has a cause. 
+	 * @throws NullPointerException if ex is null. If cause is null, nothing happens and the exception
+	 * is returned untouched.
+	 *  
+	 */
+	public static <E extends Throwable> E addCause ( E ex, Throwable cause )
+	{
+		if ( ex == null ) throw new NullPointerException ( "Cannot add a cause to a null exception" );
+		if ( ex.getCause () != null ) throwEx ( 
+			IllegalArgumentException.class,
+			"Error while creating an exception of type %s: the exception has already a cause",
+			ex.getClass ()
+		);
+		ex.initCause ( cause );
+		return ex;
+	}
+	
+	/**
 	 * This calls {@link #buildEx(Class, Throwable, String, Object...)} and then throws the built exception. 
 	 * Note that Java will consider this method as throwing checked/unchecked exception code, depending on
 	 * the type of E.

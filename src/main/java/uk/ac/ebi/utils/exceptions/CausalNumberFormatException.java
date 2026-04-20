@@ -3,6 +3,8 @@ package uk.ac.ebi.utils.exceptions;
 /**
  * A {@link NumberFormatException} that allows to include a reference to what caused the exception.
  * 
+ * @deprecated This is not needed, use {@link ExceptionUtils#addCause(Throwable, Throwable)} instead.
+ *
  * In Java, number format exceptions cannot have a cause, yet, this might be useful, eg, when you want
  * to wrap a number parsing error with details on what you were doing when the problem occurred.
  *
@@ -10,6 +12,7 @@ package uk.ac.ebi.utils.exceptions;
  * <dl><dt>Date:</dt><dd>19 Jun 2019</dd></dl>
  *
  */
+@Deprecated
 public class CausalNumberFormatException extends NumberFormatException
 {
 

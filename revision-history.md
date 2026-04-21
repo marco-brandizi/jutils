@@ -1,8 +1,12 @@
 # Revision History
 
-*This file was last revised on 2026-04-20*. **Please keep this note updated**.
+*This file was last revised on 2026-04-21*. **Please keep this note updated**.
 
-## 16.1.1-SNAPSHOT
+## 16.2.1-SNAPSHOT
+* Current dev version
+
+
+## 16.2
 * `ExceptionUtils.addCause()` added [commit](https://github.com/marco-brandizi/jutils/commit/970aced).
 * Various dependencies upgraded.
 * CI scripts pointers switched to the [new repo](https://github.com/KnetMiner/knetminer-ci).

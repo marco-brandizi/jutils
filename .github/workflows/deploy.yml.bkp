@@ -45,11 +45,6 @@ jobs:
         path: ~/.m2
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
-        
-    - name: Forward all GH secrets to env
-      uses: oNaiPs/secrets-to-env-action@v1
-      with:
-        secrets: ${{ toJSON(secrets) }}
 
     - name: Build
       env:
@@ -58,6 +53,17 @@ jobs:
         CI_NEW_RELEASE_VER: ${{github.event.inputs.NEW_RELEASE_VER}}
         CI_NEW_SNAPSHOT_VER: ${{github.event.inputs.NEW_SNAPSHOT_VER}}
         CI_TRIGGERING_EVENT: ${{github.event_name}}
+
+        CI_MAVEN_REPO_USER: ${{secrets.CI_MAVEN_REPO_USER}}
+        CI_MAVEN_REPO_PASSWORD: ${{secrets.CI_MAVEN_REPO_PASSWORD}}
+        
+        
+        # This is only set when using the act tool
+        CI_IS_ACT_TOOL: ${{ secrets.CI_IS_ACT_TOOL }}
+        ACT_GIT_PASSWORD: ${{secrets.GITHUB_PAT}}
+        
+        # This also can be passed from act CLI
+        CI_DEPLOY_BRANCHES: ${{ secrets.CI_DEPLOY_BRANCHES }}
       
       # We reuse the general CI scripts in knetminer-common, see https://github.com/KnetMiner/knetminer-ci  
       run: 

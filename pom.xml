@@ -73,7 +73,7 @@
 		<dependency>
 		  <groupId>com.google.guava</groupId>
 		  <artifactId>guava</artifactId>
-			<version>33.4.8-jre</version>
+			<version>33.6.0-jre</version>
 		</dependency>		
 
 		<dependency>
@@ -200,7 +200,7 @@
 		<dependency>
 			<groupId>org.apache.httpcomponents.client5</groupId>
 			<artifactId>httpclient5</artifactId>
-			<version>5.5</version>
+			<version>5.6</version>
 			<optional>true</optional>			
 		</dependency>
 		
@@ -240,7 +240,7 @@
 		<dependency>
 		  <groupId>io.projectreactor</groupId>
 		  <artifactId>reactor-core</artifactId>
-		  <version>3.6.10</version>
+		  <version>3.8.5</version>
 		  <optional>true</optional>
 		</dependency>			
 		
@@ -253,7 +253,7 @@
 		
       <plugin>
 	      <artifactId>maven-compiler-plugin</artifactId>
-	      <version>3.13.0</version>
+	      <version>3.15.0</version>
 	      <configuration>
 	      	<release>21</release>
 	        <encoding>utf-8</encoding>
@@ -262,7 +262,7 @@
 	
 	    <plugin>
 		    <artifactId>maven-source-plugin</artifactId>
-		    <version>3.3.1</version>
+		    <version>3.4.0</version>
 		    <executions>
 		      <execution>
 		        <id>attach-source</id>
@@ -295,7 +295,7 @@
 		  <plugin>
 		    <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
-		    <version>3.3.1</version>
+		    <version>3.5.0</version>
 		  </plugin>
 		  
 			<plugin>

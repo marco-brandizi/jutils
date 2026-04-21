@@ -22,7 +22,7 @@ function stage_build_local
 printf "== Installing ci-build scripts and then running the build\n"
 
 # TODO: DO USE a version tag in place of main, DO MAKE your builds stable and predictable
-ci_build_url_base="https://raw.githubusercontent.com/KnetMiner/knetminer-ci/refs/heads/1.0"
+ci_build_url_base="https://raw.githubusercontent.com/KnetMiner/knetminer-ci/refs/tags/1.0"
 script_url="$ci_build_url_base/ci-build-v2/install.sh"
 . <(curl --fail-with-body -o - "$script_url") "$ci_build_url_base" java-maven
 

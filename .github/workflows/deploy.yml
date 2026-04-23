@@ -1,5 +1,7 @@
 # The GitHub Actions file
 
+# This is based on the knetminer-ci template, see there for details.
+
 name: Standard Build
 
 on:
@@ -55,15 +57,11 @@ jobs:
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
         
-    # Avoids re-listing all the secrets again. As they recommend, use the commit hash to point to 
-    # an exact version, using tags might be compromised by malicious commits.
-    #
-    # See knetminer-ci docs for a list of secrets and other variables we use.
-    #
-    - name: Forward all GH secrets to env
-      uses: oNaiPs/secrets-to-env-action@75f319b3c8c926ac2eabcca34daa6cf531daf32f
-      with:
-        secrets: ${{ toJSON(secrets) }}
+    - name: Forward secrets to env vars
+      env:
+        _SECRETS_JS_STR: ${{ toJSON(secrets) }}
+      run: |
+        echo "$_SECRETS_JS_STR" | jq -r 'to_entries[] | "\(.key)<<EOF\n\(.value)\nEOF"' >> $GITHUB_ENV    
 
     - name: Build
       # You still need this for variables that aren't secrets, but better than nothing
